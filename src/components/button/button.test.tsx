@@ -40,7 +40,7 @@ describe("Button", () => {
     render(<Button loading>Loading</Button>);
 
     const button = screen.getByRole("button", {
-      name: /Loading LOADING\.\.\./,
+      name: /Loading Loading\.\.\./,
     });
     expect(button).toBeInTheDocument();
     expect(button).toBeDisabled();
