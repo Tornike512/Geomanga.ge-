@@ -3,6 +3,7 @@
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import Marquee from "react-fast-marquee";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
@@ -19,12 +20,11 @@ import { useChaptersByManga } from "@/features/reader";
 import { formatDate, formatNumber, formatRating } from "@/utils/formatters";
 import { getCoverUrl } from "@/utils/image-urls";
 
-export default function MangaDetailPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const { data: manga, isLoading } = useMangaBySlug(params.slug);
+export default function MangaDetailPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+
+  const { data: manga, isLoading } = useMangaBySlug(slug);
   const { data: chapters } = useChaptersByManga(manga?.id || 0);
 
   const { data: user } = useCurrentUser();
