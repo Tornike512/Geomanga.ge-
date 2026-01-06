@@ -14,13 +14,22 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 font-semibold text-xs transition-colors",
+        // Base styles - sharp corners, uppercase, minimal padding, border
+        "inline-flex items-center rounded-none border-2 px-3 py-1 font-bold text-xs uppercase tracking-wide transition-colors",
         {
-          "bg-gray-100 text-gray-800": variant === "default",
-          "bg-blue-100 text-blue-800": variant === "secondary",
-          "bg-green-100 text-green-800": variant === "success",
-          "bg-yellow-100 text-yellow-800": variant === "warning",
-          "bg-red-100 text-red-800": variant === "danger",
+          // Default - muted with border
+          "border-[#3F3F46] bg-[#27272A] text-[#A1A1AA]": variant === "default",
+          // Secondary - accent colored
+          "border-[#DFE104] bg-transparent text-[#DFE104]":
+            variant === "secondary",
+          // Success - green
+          "border-green-500 bg-transparent text-green-500":
+            variant === "success",
+          // Warning - yellow/orange
+          "border-yellow-500 bg-transparent text-yellow-500":
+            variant === "warning",
+          // Danger - red
+          "border-red-500 bg-transparent text-red-500": variant === "danger",
         },
         className,
       )}

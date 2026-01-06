@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
 import { Footer, Header } from "@/components/layout";
+import { NoiseTexture } from "@/components/noise-texture";
 import { AppProviders } from "@/providers";
 import { cn } from "@/utils/cn";
 
@@ -17,7 +18,20 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("h-full")}>
-      <body className={cn("min-h-screen bg-gray-50 font-roboto text-gray-900")}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className={cn("min-h-screen antialiased")}>
+        <NoiseTexture />
         <AppProviders>
           <div className="flex min-h-screen flex-col">
             <Header />

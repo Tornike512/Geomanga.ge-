@@ -7,7 +7,10 @@ export function Card({ className, children, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md",
+        // Base styles - sharp corners, 2px border, flat (no shadow)
+        "rounded-none border-2 border-[#3F3F46] bg-[#09090B] p-8 transition-all duration-300",
+        // Hover state - flood with accent color, invert all text
+        "group hover:border-[#DFE104] hover:bg-[#DFE104]",
         className,
       )}
       {...props}
@@ -19,7 +22,7 @@ export function Card({ className, children, ...props }: CardProps) {
 
 export function CardHeader({ className, children, ...props }: CardProps) {
   return (
-    <div className={cn("flex flex-col space-y-1.5 p-6", className)} {...props}>
+    <div className={cn("mb-6 flex flex-col space-y-4", className)} {...props}>
       {children}
     </div>
   );
@@ -28,7 +31,11 @@ export function CardHeader({ className, children, ...props }: CardProps) {
 export function CardTitle({ className, children, ...props }: CardProps) {
   return (
     <h3
-      className={cn("font-semibold text-2xl leading-none", className)}
+      className={cn(
+        "font-bold text-3xl uppercase leading-none tracking-tighter",
+        "text-[#FAFAFA] group-hover:text-[#000000]",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -38,7 +45,10 @@ export function CardTitle({ className, children, ...props }: CardProps) {
 
 export function CardContent({ className, children, ...props }: CardProps) {
   return (
-    <div className={cn("p-6 pt-0", className)} {...props}>
+    <div
+      className={cn("text-[#FAFAFA] group-hover:text-[#000000]", className)}
+      {...props}
+    >
       {children}
     </div>
   );
