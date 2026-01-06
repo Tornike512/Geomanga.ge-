@@ -11,8 +11,8 @@ import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { useGenres } from "@/features/genres/hooks/use-genres";
 import { useCreateManga } from "@/features/manga/hooks/use-create-manga";
 import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
-import type { MangaStatus } from "@/types/manga";
-
+import type { MangaStatus } from "@/types/manga.types";
+import { UserRole } from "@/types/user.types";
 export default function UploadMangaPage() {
   const router = useRouter();
   const { data: user } = useCurrentUser();
@@ -34,7 +34,7 @@ export default function UploadMangaPage() {
   });
 
   // Check if user has permission
-  if (user && user.role !== "UPLOADER" && user.role !== "ADMIN") {
+  if (user && user.role !== UserRole.UPLOADER && user.role !== UserRole.ADMIN) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
         <h1 className="mb-4 font-bold text-2xl">Access Denied</h1>
@@ -85,7 +85,7 @@ export default function UploadMangaPage() {
     createManga.mutate(
       {
         ...formData,
-        coverImage: coverImageUrl,
+        cover_image_url: coverImageUrl,
       },
       {
         onSuccess: (manga) => {
@@ -156,13 +156,16 @@ export default function UploadMangaPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full border-2"
+                  className="w-full cursor-pointer border-2"
                   size="lg"
-                  asChild
+                  onClick={() => {
+                    const input = document.querySelector(
+                      'input[type="file"]',
+                    ) as HTMLInputElement;
+                    input?.click();
+                  }}
                 >
-                  <span className="cursor-pointer">
-                    {coverPreview ? "CHANGE COVER" : "UPLOAD COVER"}
-                  </span>
+                  {coverPreview ? "CHANGE COVER" : "UPLOAD COVER"}
                 </Button>
               </label>
             </Card>
@@ -356,7 +359,7 @@ export default function UploadMangaPage() {
                       variant={
                         formData.genreIds.includes(genre.id)
                           ? "default"
-                          : "outline"
+                          : "secondary"
                       }
                       className="cursor-pointer transition-transform hover:scale-105"
                     >

@@ -14,7 +14,7 @@ type RequestOptions = {
   requiresAuth?: boolean;
 };
 
-function buildUrlWithParams(
+export function buildUrlWithParams(
   url: string,
   params?: RequestOptions["params"],
 ): string {
@@ -75,7 +75,10 @@ async function refreshAccessToken(): Promise<string | undefined> {
       return undefined;
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as {
+      access_token: string;
+      refresh_token: string;
+    };
     setTokens(data.access_token, data.refresh_token);
     return data.access_token;
   } catch (error) {
@@ -104,7 +107,7 @@ export function getServerCookies() {
   });
 }
 
-async function fetchApi<T>(
+export async function fetchApi<T>(
   url: string,
   options: RequestOptions = {},
 ): Promise<T> {
@@ -180,7 +183,7 @@ async function fetchApi<T>(
   if (!response.ok) {
     let errorResponse: ApiErrorResponse | undefined;
     try {
-      errorResponse = await response.json();
+      errorResponse = (await response.json()) as ApiErrorResponse;
     } catch {
       // If parsing fails, continue without error details
     }

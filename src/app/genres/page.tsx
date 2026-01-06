@@ -24,9 +24,9 @@ export default function GenresPage() {
   );
 
   const { data: mangaData, isLoading: mangaLoading } = useMangaList({
-    genre_id: selectedGenreId || undefined,
+    genre: selectedGenreId || undefined,
     page: 1,
-    page_size: 12,
+    limit: 12,
   });
 
   if (genresLoading) {
@@ -78,7 +78,7 @@ export default function GenresPage() {
                 </p>
               )}
               <Badge
-                variant="outline"
+                variant="secondary"
                 className="border-2 uppercase tracking-wider"
               >
                 {genre.manga_count || 0} MANGA
@@ -135,7 +135,7 @@ export default function GenresPage() {
                     <Card className="overflow-hidden transition-shadow hover:shadow-lg">
                       <div className="relative aspect-[2/3]">
                         <Image
-                          src={manga.cover_image}
+                          src={manga.cover_image_url || "/placeholder.png"}
                           alt={manga.title}
                           width={300}
                           height={450}
@@ -152,11 +152,7 @@ export default function GenresPage() {
                           {manga.title}
                         </h3>
                         <div className="mt-2 flex items-center gap-2 text-gray-600 text-sm">
-                          <span>
-                            ⭐ {manga.average_rating?.toFixed(1) || "N/A"}
-                          </span>
-                          <span>•</span>
-                          <span>{manga.chapters_count} chapters</span>
+                          <span>⭐ {manga.rating?.toFixed(1) || "N/A"}</span>
                         </div>
                       </div>
                     </Card>

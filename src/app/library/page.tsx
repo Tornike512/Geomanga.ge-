@@ -26,13 +26,13 @@ export default function LibraryPage() {
     data: bookmarksData,
     isLoading: bookmarksLoading,
     error: bookmarksError,
-  } = useBookmarks({ page: currentPage, pageSize: pageSize });
+  } = useBookmarks({ page: currentPage, limit: pageSize });
 
   const {
     data: historyData,
     isLoading: historyLoading,
     error: historyError,
-  } = useReadingHistory({ page: currentPage, pageSize: pageSize });
+  } = useReadingHistory({ page: currentPage, limit: pageSize });
 
   const isLoading =
     activeTab === "bookmarks" ? bookmarksLoading : historyLoading;
@@ -151,23 +151,21 @@ export default function LibraryPage() {
                   className="flex gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-blue-300 hover:shadow-md"
                 >
                   <Image
-                    src={history.chapter.manga.cover_image}
-                    alt={history.chapter.manga.title}
+                    src={history.manga.cover_image_url || "/placeholder.png"}
+                    alt={history.manga.title}
                     width={64}
                     height={96}
                     className="h-24 w-16 rounded object-cover"
                   />
                   <div className="flex-1">
                     <h3 className="mb-1 font-bold text-lg">
-                      {history.chapter.manga.title}
+                      {history.manga.title}
                     </h3>
                     <p className="mb-2 text-gray-600">
                       Chapter {history.chapter.chapter_number}:{" "}
                       {history.chapter.title}
                     </p>
                     <div className="flex items-center gap-4 text-gray-500 text-sm">
-                      <span>Page {history.page_number}</span>
-                      <span>•</span>
                       <span>
                         {new Date(history.last_read_at).toLocaleDateString()}
                       </span>

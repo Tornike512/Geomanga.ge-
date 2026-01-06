@@ -4,14 +4,14 @@ import { useState } from "react";
 import { Button } from "@/components/button";
 import { useMangaList } from "@/features/manga";
 import { MangaGrid } from "@/features/manga/components";
-import type { MangaStatus } from "@/types/manga.types";
+import type { MangaListParams, MangaStatus } from "@/types/manga.types";
 
 export default function BrowsePage() {
   const [filters, setFilters] = useState({
     page: 1,
     limit: 20,
     status: undefined as MangaStatus | undefined,
-    sort_by: "rating" as const,
+    sort_by: "rating" as MangaListParams["sort_by"],
     order_desc: true,
   });
 

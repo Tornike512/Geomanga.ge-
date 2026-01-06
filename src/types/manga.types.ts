@@ -64,4 +64,5 @@ export interface MangaListParams {
   readonly genre?: number;
   readonly sort_by?: "created_at" | "updated_at" | "rating" | "views" | "title";
   readonly order_desc?: boolean;
+  [key: string]: string | number | boolean | undefined;
 }

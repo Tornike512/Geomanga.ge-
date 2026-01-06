@@ -30,8 +30,8 @@ export default function ReaderPage() {
 
     if (chapter) {
       trackReading.mutate({
+        manga_id: chapter.manga_id,
         chapter_id: chapter.id,
-        page_number: newIndex + 1,
       });
     }
   };
@@ -81,15 +81,17 @@ export default function ReaderPage() {
       <div className="fixed top-0 right-0 left-0 z-50 border-[#3F3F46] border-b-2 bg-[#09090B]/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-6">
           <div className="flex items-center gap-6">
-            <Link href={`/manga/${chapter.manga.slug}`}>
-              <Button variant="outline" className="border-2">
-                <ArrowLeft className="mr-2 h-5 w-5" />
-                BACK
-              </Button>
-            </Link>
+            {chapter.manga && (
+              <Link href={`/manga/${chapter.manga.slug}`}>
+                <Button variant="outline" className="border-2">
+                  <ArrowLeft className="mr-2 h-5 w-5" />
+                  BACK
+                </Button>
+              </Link>
+            )}
             <div className="text-white">
               <h1 className="font-bold text-2xl uppercase tracking-tighter">
-                {chapter.manga.title}
+                {chapter.manga?.title || "Unknown Manga"}
               </h1>
               <p className="text-[#A1A1AA] text-lg">
                 CHAPTER {chapter.chapter_number}: {chapter.title}

@@ -1,3 +1,4 @@
+import type { Manga } from "./manga.types";
 import type { Page } from "./page.types";
 
 export interface Chapter {
@@ -16,6 +17,9 @@ export interface ChapterDetail extends Chapter {
 
 export interface ChapterWithPages extends Chapter {
   readonly pages: Page[];
+  readonly manga?: Pick<Manga, "slug" | "title">;
+  readonly next_chapter_id?: number;
+  readonly previous_chapter_id?: number;
 }
 
 export interface ChapterCreate {
