@@ -1,3 +1,9 @@
+## <small>1.0.1 (2026-01-06)</small>
+
+* fix: correct loading button name in test for consistency ([b549d7d](https://github.com/Tornike512/Geomanga.ge-/commit/b549d7d))
+* fix: correct order of border classes in TrendingSection component ([7062b44](https://github.com/Tornike512/Geomanga.ge-/commit/7062b44))
+* fix: remove unnecessary line breaks in globals.css for cleaner code ([eb7e219](https://github.com/Tornike512/Geomanga.ge-/commit/eb7e219))
+
 ## 1.0.0 (2026-01-06)
 
 * fix: resolve TypeScript compilation errors ([b2983bc](https://github.com/Tornike512/Geomanga.ge-/commit/b2983bc))
