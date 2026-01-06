@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/button";
@@ -148,9 +149,11 @@ export default function LibraryPage() {
                   href={`/read/${history.chapter.id}`}
                   className="flex gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-blue-300 hover:shadow-md"
                 >
-                  <img
+                  <Image
                     src={history.chapter.manga.cover_image}
                     alt={history.chapter.manga.title}
+                    width={64}
+                    height={96}
                     className="h-24 w-16 rounded object-cover"
                   />
                   <div className="flex-1">

@@ -36,7 +36,13 @@ export function SearchBar() {
           ) : results && results.length > 0 ? (
             <div className="grid grid-cols-2 gap-3 p-3 sm:grid-cols-3">
               {results.map((manga) => (
-                <div key={manga.id} onClick={() => setIsOpen(false)}>
+                <div
+                  key={manga.id}
+                  onClick={() => setIsOpen(false)}
+                  onKeyDown={(e) => e.key === "Enter" && setIsOpen(false)}
+                  role="button"
+                  tabIndex={0}
+                >
                   <MangaCard manga={manga} />
                 </div>
               ))}
@@ -54,6 +60,9 @@ export function SearchBar() {
           className="fixed inset-0 z-40"
           onClick={() => setIsOpen(false)}
           onKeyDown={(e) => e.key === "Escape" && setIsOpen(false)}
+          role="button"
+          tabIndex={-1}
+          aria-label="Close search"
         />
       )}
     </div>

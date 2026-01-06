@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -101,12 +102,22 @@ export default function ReaderPage() {
       <div className="pt-20 pb-24">
         <div className="mx-auto max-w-5xl px-4">
           {currentPage && (
-            <img
-              src={currentPage.image_url}
-              alt={`Page ${currentPage.page_number}`}
-              className="h-auto w-full"
+            <button
+              type="button"
               onClick={goToNextPage}
-            />
+              onKeyDown={(e) => e.key === "Enter" && goToNextPage()}
+              className="w-full cursor-pointer"
+              aria-label="Go to next page"
+            >
+              <Image
+                src={currentPage.image_url}
+                alt={`Page ${currentPage.page_number}`}
+                width={1200}
+                height={1800}
+                className="h-auto w-full"
+                priority
+              />
+            </button>
           )}
         </div>
       </div>

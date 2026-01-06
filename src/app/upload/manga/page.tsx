@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/badge";
@@ -109,9 +110,11 @@ export default function UploadMangaPage() {
               <h3 className="mb-4 font-bold">Cover Image</h3>
               <div className="mb-4 aspect-[2/3] overflow-hidden rounded-lg bg-gray-100">
                 {coverPreview ? (
-                  <img
+                  <Image
                     src={coverPreview}
                     alt="Cover preview"
+                    width={400}
+                    height={600}
                     className="h-full w-full object-cover"
                   />
                 ) : (

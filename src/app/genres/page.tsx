@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Badge } from "@/components/badge";
@@ -135,9 +136,11 @@ export default function GenresPage() {
                   >
                     <Card className="overflow-hidden transition-shadow hover:shadow-lg">
                       <div className="relative aspect-[2/3]">
-                        <img
+                        <Image
                           src={manga.cover_image}
                           alt={manga.title}
+                          width={300}
+                          height={450}
                           className="h-full w-full object-cover"
                         />
                         {manga.status === MangaStatus.ONGOING && (

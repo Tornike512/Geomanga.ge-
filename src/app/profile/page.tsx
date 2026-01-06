@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
@@ -68,9 +69,11 @@ export default function ProfilePage() {
           <Card className="p-6 text-center">
             {/* Avatar */}
             <div className="relative mb-4 inline-block">
-              <img
+              <Image
                 src={user.avatar_url || "/default-avatar.png"}
                 alt={user.username}
+                width={128}
+                height={128}
                 className="h-32 w-32 rounded-full border-4 border-gray-200 object-cover"
               />
               <label

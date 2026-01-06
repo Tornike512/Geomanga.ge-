@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/badge";
 import { Card } from "@/components/card";
@@ -33,9 +34,11 @@ export function MangaCard({ manga }: MangaCardProps) {
     <Link href={`/manga/${manga.slug}`}>
       <Card className="group cursor-pointer overflow-hidden transition-all hover:scale-105">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
-          <img
+          <Image
             src={getCoverUrl(manga.cover_image_url)}
             alt={manga.title}
+            width={300}
+            height={400}
             className="h-full w-full object-cover transition-transform group-hover:scale-110"
             loading="lazy"
           />

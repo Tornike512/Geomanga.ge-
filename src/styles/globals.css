@@ -2,25 +2,25 @@
 
 :root {
   color-scheme: dark;
-  
+
   /* Kinetic Typography Design Tokens */
-  
+
   /* Foundation Colors */
-  --background: #09090B; /* Rich black - softer on eyes */
-  --foreground: #FAFAFA; /* Off-white - less harsh */
-  --muted: #27272A; /* Dark gray for secondary surfaces */
-  --muted-foreground: #A1A1AA; /* Zinc 400 for body text */
-  
+  --background: #09090b; /* Rich black - softer on eyes */
+  --foreground: #fafafa; /* Off-white - less harsh */
+  --muted: #27272a; /* Dark gray for secondary surfaces */
+  --muted-foreground: #a1a1aa; /* Zinc 400 for body text */
+
   /* Accent Strategy */
-  --accent: #DFE104; /* Acid yellow/lime - high energy */
+  --accent: #dfe104; /* Acid yellow/lime - high energy */
   --accent-foreground: #000000; /* Pure black for contrast on accent */
-  --border: #3F3F46; /* Zinc 700 - subtle structural lines */
-  
+  --border: #3f3f46; /* Zinc 700 - subtle structural lines */
+
   /* Legacy support (mapped to new tokens) */
-  --foreground-100: #FAFAFA;
-  --foreground-200: #A1A1AA;
-  --background-100: #09090B;
-  --background-200: #27272A;
+  --foreground-100: #fafafa;
+  --foreground-200: #a1a1aa;
+  --background-100: #09090b;
+  --background-200: #27272a;
 
   /* FONT WEIGHT */
   --fw-thin: 100;
@@ -70,8 +70,12 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-feature-settings: "ss01" on, "ss02" on;
+  font-family:
+    "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-feature-settings:
+    "ss01" on,
+    "ss02" on;
 }
 
 /* Focus states with accent color */
@@ -112,9 +116,9 @@ p {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
   }
 }
 
