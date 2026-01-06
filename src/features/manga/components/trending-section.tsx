@@ -7,12 +7,12 @@ export function TrendingSection() {
   const { data: trending, isLoading } = useTrendingManga();
 
   return (
-    <section className="mb-12">
-      <div className="mb-6">
-        <h2 className="mb-2 font-bold text-3xl text-gray-900">
-          🔥 Trending Now
+    <section className="mb-32 border-[#3F3F46] border-b-2 pb-24">
+      <div className="mb-16">
+        <h2 className="mb-6 font-bold text-[clamp(2rem,6vw,4rem)] uppercase tracking-tighter">
+          🔥 TRENDING NOW
         </h2>
-        <p className="text-gray-600">Most popular manga this week</p>
+        <p className="text-2xl text-[#A1A1AA]">MOST POPULAR MANGA THIS WEEK</p>
       </div>
       <MangaGrid manga={trending || []} isLoading={isLoading} />
     </section>

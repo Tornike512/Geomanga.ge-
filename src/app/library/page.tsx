@@ -44,44 +44,44 @@ export default function LibraryPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto max-w-[95vw] px-8 py-32">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="mb-2 font-bold text-3xl">My Library</h1>
-        <p className="text-gray-600">
-          Your bookmarked manga and reading history
+      <div className="mb-24">
+        <h1 className="mb-8 font-bold text-[clamp(2.5rem,8vw,6rem)] uppercase leading-none tracking-tighter">
+          MY LIBRARY
+        </h1>
+        <p className="text-2xl text-[#A1A1AA]">
+          YOUR BOOKMARKED MANGA AND READING HISTORY
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="mb-8 flex gap-4 border-gray-200 border-b">
+      <div className="mb-16 flex gap-0 border-[#3F3F46] border-b-4">
         <button
           type="button"
           onClick={() => handleTabChange("bookmarks")}
-          className={`px-4 py-2 font-medium transition-colors ${
+          className={`px-12 py-6 font-bold text-2xl uppercase tracking-wider transition-all ${
             activeTab === "bookmarks"
-              ? "border-blue-600 border-b-2 text-blue-600"
-              : "text-gray-600 hover:text-gray-800"
+              ? "border-[#DFE104] border-b-4 bg-[#DFE104] text-[#000000]"
+              : "text-[#A1A1AA] hover:text-[#FAFAFA]"
           }`}
         >
-          Bookmarks
+          BOOKMARKS
           {bookmarksData && (
-            <span className="ml-2 text-sm">({bookmarksData.total})</span>
+            <span className="ml-3">({bookmarksData.total})</span>
           )}
         </button>
         <button
           type="button"
           onClick={() => handleTabChange("history")}
-          className={`px-4 py-2 font-medium transition-colors ${
+          className={`px-12 py-6 font-bold text-2xl uppercase tracking-wider transition-all ${
             activeTab === "history"
-              ? "border-blue-600 border-b-2 text-blue-600"
-              : "text-gray-600 hover:text-gray-800"
+              ? "border-[#DFE104] border-b-4 bg-[#DFE104] text-[#000000]"
+              : "text-[#A1A1AA] hover:text-[#FAFAFA]"
           }`}
         >
-          Reading History
-          {historyData && (
-            <span className="ml-2 text-sm">({historyData.total})</span>
-          )}
+          READING HISTORY
+          {historyData && <span className="ml-3">({historyData.total})</span>}
         </button>
       </div>
 

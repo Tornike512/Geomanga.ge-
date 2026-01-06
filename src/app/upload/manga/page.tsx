@@ -96,19 +96,25 @@ export default function UploadMangaPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
-      <div className="mb-8">
-        <h1 className="mb-2 font-bold text-3xl">Upload New Manga</h1>
-        <p className="text-gray-600">Add a new manga series to the platform</p>
+    <div className="container mx-auto max-w-[95vw] px-8 py-32">
+      <div className="mb-24">
+        <h1 className="mb-8 font-bold text-[clamp(2.5rem,8vw,6rem)] uppercase leading-none tracking-tighter">
+          UPLOAD MANGA
+        </h1>
+        <p className="text-2xl text-[#A1A1AA]">
+          ADD A NEW MANGA SERIES TO THE PLATFORM
+        </p>
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
           {/* Left Column - Cover Image */}
           <div className="lg:col-span-1">
-            <Card className="p-4">
-              <h3 className="mb-4 font-bold">Cover Image</h3>
-              <div className="mb-4 aspect-[2/3] overflow-hidden rounded-lg bg-gray-100">
+            <Card className="border-2 p-8">
+              <h3 className="mb-8 font-bold text-2xl uppercase tracking-tighter">
+                COVER IMAGE
+              </h3>
+              <div className="mb-8 aspect-[2/3] overflow-hidden rounded-none bg-[#27272A]">
                 {coverPreview ? (
                   <Image
                     src={coverPreview}
@@ -118,10 +124,10 @@ export default function UploadMangaPage() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-gray-400">
+                  <div className="flex h-full w-full items-center justify-center text-[#A1A1AA]">
                     <div className="text-center">
                       <svg
-                        className="mx-auto mb-2 h-12 w-12"
+                        className="mx-auto mb-4 h-20 w-20"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -135,7 +141,7 @@ export default function UploadMangaPage() {
                           d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                         />
                       </svg>
-                      <p className="text-sm">No cover image</p>
+                      <p className="text-lg uppercase">NO COVER IMAGE</p>
                     </div>
                   </div>
                 )}
@@ -150,11 +156,12 @@ export default function UploadMangaPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full"
+                  className="w-full border-2"
+                  size="lg"
                   asChild
                 >
                   <span className="cursor-pointer">
-                    {coverPreview ? "Change Cover" : "Upload Cover"}
+                    {coverPreview ? "CHANGE COVER" : "UPLOAD COVER"}
                   </span>
                 </Button>
               </label>
@@ -162,17 +169,19 @@ export default function UploadMangaPage() {
           </div>
 
           {/* Right Column - Form Fields */}
-          <div className="space-y-6 lg:col-span-2">
-            <Card className="p-6">
-              <h3 className="mb-4 font-bold">Basic Information</h3>
-              <div className="space-y-4">
+          <div className="space-y-8 lg:col-span-2">
+            <Card className="border-2 p-8">
+              <h3 className="mb-8 font-bold text-2xl uppercase tracking-tighter">
+                BASIC INFORMATION
+              </h3>
+              <div className="space-y-8">
                 {/* Title */}
                 <div>
                   <label
                     htmlFor="title"
-                    className="mb-1 block font-medium text-sm"
+                    className="mb-4 block text-[#A1A1AA] text-sm uppercase tracking-widest"
                   >
-                    Title *
+                    TITLE *
                   </label>
                   <Input
                     id="title"
@@ -185,7 +194,8 @@ export default function UploadMangaPage() {
                       }))
                     }
                     required
-                    placeholder="Enter manga title"
+                    placeholder="ENTER MANGA TITLE"
+                    className="h-16 border-[#3F3F46] border-t-0 border-r-0 border-b-2 border-l-0 bg-transparent px-0 font-bold text-2xl uppercase tracking-tight focus:border-[#DFE104]"
                   />
                 </div>
 
@@ -193,9 +203,9 @@ export default function UploadMangaPage() {
                 <div>
                   <label
                     htmlFor="alternativeTitle"
-                    className="mb-1 block font-medium text-sm"
+                    className="mb-4 block text-[#A1A1AA] text-sm uppercase tracking-widest"
                   >
-                    Alternative Title
+                    ALTERNATIVE TITLE
                   </label>
                   <Input
                     id="alternativeTitle"
@@ -207,7 +217,8 @@ export default function UploadMangaPage() {
                         alternativeTitle: e.target.value,
                       }))
                     }
-                    placeholder="Alternative or Japanese title"
+                    placeholder="ALTERNATIVE OR JAPANESE TITLE"
+                    className="h-16 border-[#3F3F46] border-t-0 border-r-0 border-b-2 border-l-0 bg-transparent px-0 font-bold text-2xl uppercase tracking-tight focus:border-[#DFE104]"
                   />
                 </div>
 
@@ -215,9 +226,9 @@ export default function UploadMangaPage() {
                 <div>
                   <label
                     htmlFor="description"
-                    className="mb-1 block font-medium text-sm"
+                    className="mb-4 block text-[#A1A1AA] text-sm uppercase tracking-widest"
                   >
-                    Description *
+                    DESCRIPTION *
                   </label>
                   <textarea
                     id="description"
@@ -230,19 +241,19 @@ export default function UploadMangaPage() {
                     }
                     required
                     rows={6}
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter manga description..."
+                    className="w-full rounded-none border-2 border-[#3F3F46] bg-transparent px-6 py-4 text-xl focus:border-[#DFE104] focus:outline-none"
+                    placeholder="ENTER MANGA DESCRIPTION..."
                   />
                 </div>
 
                 {/* Author & Artist */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-8">
                   <div>
                     <label
                       htmlFor="author"
-                      className="mb-1 block font-medium text-sm"
+                      className="mb-4 block text-[#A1A1AA] text-sm uppercase tracking-widest"
                     >
-                      Author *
+                      AUTHOR *
                     </label>
                     <Input
                       id="author"
@@ -255,14 +266,15 @@ export default function UploadMangaPage() {
                         }))
                       }
                       required
+                      className="h-16 border-[#3F3F46] border-t-0 border-r-0 border-b-2 border-l-0 bg-transparent px-0 font-bold text-2xl uppercase tracking-tight focus:border-[#DFE104]"
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="artist"
-                      className="mb-1 block font-medium text-sm"
+                      className="mb-4 block text-[#A1A1AA] text-sm uppercase tracking-widest"
                     >
-                      Artist
+                      ARTIST
                     </label>
                     <Input
                       id="artist"

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
+import { Card, CardContent } from "@/components/card";
 import { Input } from "@/components/input";
 import { useLogin } from "@/features/auth";
 
@@ -22,20 +22,22 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="mx-auto max-w-md">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-center">Login to Geomanga.ge</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="container mx-auto max-w-[95vw] px-8 py-32">
+      <div className="mx-auto max-w-2xl">
+        {/* Kinetic Typography Title */}
+        <h1 className="mb-12 text-center font-bold text-[clamp(2.5rem,8vw,6rem)] uppercase leading-none tracking-tighter">
+          LOGIN
+        </h1>
+
+        <Card className="border-2">
+          <CardContent className="p-12">
+            <form onSubmit={handleSubmit} className="space-y-8">
               <div>
                 <label
                   htmlFor="login"
-                  className="mb-1 block font-medium text-gray-700 text-sm"
+                  className="mb-4 block text-[#A1A1AA] text-sm uppercase tracking-widest"
                 >
-                  Email or Username
+                  EMAIL OR USERNAME
                 </label>
                 <Input
                   id="login"
@@ -44,7 +46,8 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, login: e.target.value })
                   }
-                  placeholder="Enter your email or username"
+                  className="h-20 border-[#3F3F46] border-t-0 border-r-0 border-b-2 border-l-0 bg-transparent px-0 font-bold text-3xl uppercase tracking-tight focus:border-[#DFE104]"
+                  placeholder="ENTER EMAIL"
                   required
                 />
               </div>
@@ -52,9 +55,9 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="password"
-                  className="mb-1 block font-medium text-gray-700 text-sm"
+                  className="mb-4 block text-[#A1A1AA] text-sm uppercase tracking-widest"
                 >
-                  Password
+                  PASSWORD
                 </label>
                 <Input
                   id="password"
@@ -63,15 +66,16 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
-                  placeholder="Enter your password"
+                  className="h-20 border-[#3F3F46] border-t-0 border-r-0 border-b-2 border-l-0 bg-transparent px-0 font-bold text-3xl uppercase tracking-tight focus:border-[#DFE104]"
+                  placeholder="ENTER PASSWORD"
                   required
                 />
               </div>
 
               {login.isError && (
-                <div className="rounded-md border border-red-200 bg-red-50 p-3">
-                  <p className="text-red-600 text-sm">
-                    {login.error?.message || "Login failed. Please try again."}
+                <div className="border-red-500 border-l-4 bg-[#27272A] p-6">
+                  <p className="font-bold text-red-500 text-xl">
+                    {login.error?.message || "LOGIN FAILED"}
                   </p>
                 </div>
               )}
@@ -79,17 +83,21 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 className="w-full"
+                size="lg"
                 loading={login.isPending}
                 disabled={login.isPending}
               >
-                Login
+                {login.isPending ? "LOGGING IN..." : "LOGIN"}
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-gray-600 text-sm">
-              Don't have an account?{" "}
-              <Link href="/register" className="text-blue-600 hover:underline">
-                Sign up
+            <div className="mt-8 text-center text-[#A1A1AA] text-lg">
+              DON'T HAVE AN ACCOUNT?{" "}
+              <Link
+                href="/register"
+                className="font-bold text-[#DFE104] transition-colors hover:text-[#FAFAFA]"
+              >
+                SIGN UP
               </Link>
             </div>
           </CardContent>

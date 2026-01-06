@@ -42,14 +42,18 @@ export default function GenresPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="mb-2 font-bold text-3xl">Browse by Genre</h1>
-        <p className="text-gray-600">Discover manga by your favorite genres</p>
+    <div className="container mx-auto max-w-[95vw] px-8 py-32">
+      <div className="mb-24">
+        <h1 className="mb-8 font-bold text-[clamp(2.5rem,8vw,6rem)] uppercase leading-none tracking-tighter">
+          GENRES
+        </h1>
+        <p className="text-2xl text-[#A1A1AA]">
+          DISCOVER MANGA BY YOUR FAVORITE GENRES
+        </p>
       </div>
 
       {/* Genre Grid */}
-      <div className="mb-12 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="mb-24 grid grid-cols-1 gap-px bg-[#3F3F46] md:grid-cols-2 lg:grid-cols-3">
         {genres?.map((genre) => (
           <button
             key={genre.id}
@@ -57,40 +61,33 @@ export default function GenresPage() {
             onClick={() =>
               setSelectedGenreId(selectedGenreId === genre.id ? null : genre.id)
             }
-            className={`group relative overflow-hidden rounded-lg transition-all ${
+            className={`group relative overflow-hidden border-2 bg-[#09090B] p-12 transition-all ${
               selectedGenreId === genre.id
-                ? "scale-105 ring-2 ring-blue-600"
-                : "hover:scale-105"
+                ? "border-[#DFE104] bg-[#DFE104] text-[#000000]"
+                : "border-[#3F3F46] hover:border-[#DFE104]"
             }`}
           >
-            <div
-              className="flex aspect-video items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600"
-              style={{
-                backgroundImage: `linear-gradient(135deg, ${getGenreColor(genre.name)})`,
-              }}
-            >
-              <div className="p-4 text-center text-white">
-                <h3 className="mb-1 font-bold text-lg">{genre.name}</h3>
-                {genre.description && (
-                  <p className="line-clamp-2 text-sm opacity-90">
-                    {genre.description}
-                  </p>
-                )}
-                <div className="mt-2">
-                  <Badge
-                    variant="default"
-                    className="border-white/40 bg-white/20 text-white"
-                  >
-                    {genre.manga_count || 0} manga
-                  </Badge>
-                </div>
-              </div>
+            <div className="text-center">
+              <h3 className="mb-4 font-bold text-4xl uppercase tracking-tighter">
+                {genre.name}
+              </h3>
+              {genre.description && (
+                <p className="mb-6 line-clamp-3 text-lg opacity-70">
+                  {genre.description}
+                </p>
+              )}
+              <Badge
+                variant="outline"
+                className="border-2 uppercase tracking-wider"
+              >
+                {genre.manga_count || 0} MANGA
+              </Badge>
             </div>
             {selectedGenreId === genre.id && (
-              <div className="absolute top-2 right-2">
-                <div className="rounded-full bg-blue-600 p-1 text-white">
+              <div className="absolute top-6 right-6">
+                <div className="border-2 border-[#000000] bg-[#000000] p-2 text-[#DFE104]">
                   <svg
-                    className="h-4 w-4"
+                    className="h-6 w-6"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     aria-label="Selected"
@@ -112,8 +109,8 @@ export default function GenresPage() {
       {/* Selected Genre Manga */}
       {selectedGenreId && (
         <div>
-          <h2 className="mb-6 font-bold text-2xl">
-            {genres?.find((g) => g.id === selectedGenreId)?.name} Manga
+          <h2 className="mb-12 border-[#3F3F46] border-b-4 pb-6 font-bold text-5xl uppercase tracking-tighter">
+            {genres?.find((g) => g.id === selectedGenreId)?.name} MANGA
           </h2>
 
           {mangaLoading ? (
@@ -189,21 +186,3 @@ export default function GenresPage() {
     </div>
   );
 }
-
-// Helper function to get genre-specific colors
-const getGenreColor = (genreName: string): string => {
-  const colors: Record<string, string> = {
-    Action: "#ef4444, #dc2626",
-    Romance: "#ec4899, #db2777",
-    Comedy: "#f59e0b, #d97706",
-    Drama: "#8b5cf6, #7c3aed",
-    Fantasy: "#06b6d4, #0891b2",
-    Horror: "#000000, #374151",
-    Mystery: "#6366f1, #4f46e5",
-    "Sci-Fi": "#10b981, #059669",
-    "Slice of Life": "#84cc16, #65a30d",
-    Sports: "#f97316, #ea580c",
-  };
-
-  return colors[genreName] || "#3b82f6, #2563eb";
-};

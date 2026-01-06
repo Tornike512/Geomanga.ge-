@@ -5,12 +5,13 @@ import {
 
 export default async function Home() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <section className="mb-16 text-center">
-        <h1 className="mb-4 font-bold text-5xl text-gray-900 md:text-6xl">
-          Welcome to Geomanga.ge
+    <div className="container mx-auto max-w-[95vw] px-8 py-20 md:py-32">
+      {/* Hero Section - Kinetic Typography */}
+      <section className="mb-32 text-center">
+        <h1 className="mb-8 font-bold text-[clamp(3rem,12vw,14rem)] uppercase leading-[0.85] tracking-tighter">
+          GEOMANGA
         </h1>
-        <p className="mx-auto max-w-2xl text-gray-600 text-xl">
+        <p className="mx-auto max-w-3xl text-2xl text-[#A1A1AA] leading-tight md:text-3xl">
           Discover thousands of manga series. Read, rate, and discuss your
           favorites.
         </p>

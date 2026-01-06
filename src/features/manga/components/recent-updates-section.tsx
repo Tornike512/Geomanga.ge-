@@ -7,12 +7,12 @@ export function RecentUpdatesSection() {
   const { data: recent, isLoading } = useRecentManga();
 
   return (
-    <section className="mb-12">
-      <div className="mb-6">
-        <h2 className="mb-2 font-bold text-3xl text-gray-900">
-          📚 Recently Updated
+    <section className="mb-32">
+      <div className="mb-16">
+        <h2 className="mb-6 font-bold text-[clamp(2rem,6vw,4rem)] uppercase tracking-tighter">
+          📚 RECENTLY UPDATED
         </h2>
-        <p className="text-gray-600">Latest chapter releases</p>
+        <p className="text-2xl text-[#A1A1AA]">LATEST CHAPTER RELEASES</p>
       </div>
       <MangaGrid manga={recent || []} isLoading={isLoading} />
     </section>

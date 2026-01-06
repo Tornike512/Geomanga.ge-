@@ -62,19 +62,19 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <div className="container mx-auto max-w-[95vw] px-8 py-32">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
         {/* Left Column - Profile Info */}
         <div className="lg:col-span-1">
-          <Card className="p-6 text-center">
+          <Card className="border-2 p-12 text-center">
             {/* Avatar */}
-            <div className="relative mb-4 inline-block">
+            <div className="relative mb-8 inline-block">
               <Image
                 src={user.avatar_url || "/default-avatar.png"}
                 alt={user.username}
-                width={128}
-                height={128}
-                className="h-32 w-32 rounded-full border-4 border-gray-200 object-cover"
+                width={200}
+                height={200}
+                className="h-[200px] w-[200px] rounded-none border-4 border-[#3F3F46] object-cover"
               />
               <label
                 htmlFor="avatar-upload"

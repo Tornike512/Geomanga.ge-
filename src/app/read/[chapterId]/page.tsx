@@ -77,23 +77,25 @@ export default function ReaderPage() {
   return (
     <div className="min-h-screen bg-black">
       {/* Header */}
-      <div className="fixed top-0 right-0 left-0 z-50 border-gray-800 border-b bg-black/80 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-4">
+      <div className="fixed top-0 right-0 left-0 z-50 border-[#3F3F46] border-b-2 bg-[#09090B]/95 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-6">
+          <div className="flex items-center gap-6">
             <Link href={`/manga/${chapter.manga.slug}`}>
-              <Button variant="ghost" className="text-white">
-                ← Back to Manga
+              <Button variant="outline" className="border-2">
+                ← BACK
               </Button>
             </Link>
             <div className="text-white">
-              <h1 className="font-bold">{chapter.manga.title}</h1>
-              <p className="text-gray-400 text-sm">
-                Chapter {chapter.chapter_number}: {chapter.title}
+              <h1 className="font-bold text-2xl uppercase tracking-tighter">
+                {chapter.manga.title}
+              </h1>
+              <p className="text-[#A1A1AA] text-lg">
+                CHAPTER {chapter.chapter_number}: {chapter.title}
               </p>
             </div>
           </div>
-          <div className="text-sm text-white">
-            Page {currentPageIndex + 1} / {chapter.pages.length}
+          <div className="rounded-none border-2 border-[#DFE104] bg-[#DFE104] px-6 py-3 font-bold text-2xl text-[#000000]">
+            {currentPageIndex + 1} / {chapter.pages.length}
           </div>
         </div>
       </div>
@@ -123,28 +125,29 @@ export default function ReaderPage() {
       </div>
 
       {/* Navigation Controls */}
-      <div className="fixed right-0 bottom-0 left-0 z-50 border-gray-800 border-t bg-black/80 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
+      <div className="fixed right-0 bottom-0 left-0 z-50 border-[#3F3F46] border-t-2 bg-[#09090B]/95 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-6">
           <Button
             onClick={goToPreviousPage}
             disabled={currentPageIndex === 0 && !chapter.previous_chapter_id}
-            className="text-white"
+            className="border-2 px-8"
+            size="lg"
           >
             {currentPageIndex === 0 && chapter.previous_chapter_id
-              ? "← Previous Chapter"
-              : "← Previous Page"}
+              ? "← PREVIOUS CHAPTER"
+              : "← PREVIOUS PAGE"}
           </Button>
 
           {/* Page Navigation */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <select
               value={currentPageIndex}
               onChange={(e) => handlePageChange(Number(e.target.value))}
-              className="rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-white"
+              className="h-14 rounded-none border-2 border-[#3F3F46] bg-[#09090B] px-6 font-bold text-white text-xl uppercase tracking-tight"
             >
               {chapter.pages.map((page, index) => (
                 <option key={page.id} value={index}>
-                  Page {index + 1}
+                  PAGE {index + 1}
                 </option>
               ))}
             </select>
@@ -156,12 +159,13 @@ export default function ReaderPage() {
               currentPageIndex === chapter.pages.length - 1 &&
               !chapter.next_chapter_id
             }
-            className="text-white"
+            className="border-2 px-8"
+            size="lg"
           >
             {currentPageIndex === chapter.pages.length - 1 &&
             chapter.next_chapter_id
-              ? "Next Chapter →"
-              : "Next Page →"}
+              ? "NEXT CHAPTER →"
+              : "NEXT PAGE →"}
           </Button>
         </div>
       </div>
