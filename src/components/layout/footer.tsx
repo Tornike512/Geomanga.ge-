@@ -1,3 +1,4 @@
+import { BookOpen } from "lucide-react";
 import Link from "next/link";
 
 export function Footer() {
@@ -6,8 +7,9 @@ export function Footer() {
       <div className="container mx-auto max-w-[95vw] px-8 py-20">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
           <div>
-            <h3 className="mb-6 font-bold text-2xl uppercase tracking-tighter">
-              📖 GEOMANGA
+            <h3 className="mb-6 flex items-center gap-2 font-bold text-2xl uppercase tracking-tighter">
+              <BookOpen className="h-6 w-6 text-[#DFE104]" />
+              GEOMANGA
             </h3>
             <p className="text-[#A1A1AA] text-lg leading-tight">
               Your ultimate destination for reading manga online. Discover new

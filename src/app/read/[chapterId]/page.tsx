@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -82,7 +83,8 @@ export default function ReaderPage() {
           <div className="flex items-center gap-6">
             <Link href={`/manga/${chapter.manga.slug}`}>
               <Button variant="outline" className="border-2">
-                ← BACK
+                <ArrowLeft className="mr-2 h-5 w-5" />
+                BACK
               </Button>
             </Link>
             <div className="text-white">
@@ -133,9 +135,10 @@ export default function ReaderPage() {
             className="border-2 px-8"
             size="lg"
           >
+            <ChevronLeft className="mr-2 h-6 w-6" />
             {currentPageIndex === 0 && chapter.previous_chapter_id
-              ? "← PREVIOUS CHAPTER"
-              : "← PREVIOUS PAGE"}
+              ? "PREVIOUS CHAPTER"
+              : "PREVIOUS PAGE"}
           </Button>
 
           {/* Page Navigation */}
@@ -164,8 +167,9 @@ export default function ReaderPage() {
           >
             {currentPageIndex === chapter.pages.length - 1 &&
             chapter.next_chapter_id
-              ? "NEXT CHAPTER →"
-              : "NEXT PAGE →"}
+              ? "NEXT CHAPTER"
+              : "NEXT PAGE"}
+            <ChevronRight className="ml-2 h-6 w-6" />
           </Button>
         </div>
       </div>

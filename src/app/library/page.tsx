@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -173,7 +174,10 @@ export default function LibraryPage() {
                     </div>
                   </div>
                   <div className="flex items-center">
-                    <Button variant="ghost">Continue Reading →</Button>
+                    <Button variant="ghost">
+                      Continue Reading
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
                   </div>
                 </Link>
               ))}
@@ -188,7 +192,8 @@ export default function LibraryPage() {
                 disabled={currentPage === 1}
                 variant="outline"
               >
-                ← Previous
+                <ChevronLeft className="mr-2 h-5 w-5" />
+                Previous
               </Button>
               <span className="text-gray-600">
                 Page {currentPage} of {Math.ceil(data.total / pageSize)}
@@ -198,7 +203,8 @@ export default function LibraryPage() {
                 disabled={currentPage >= Math.ceil(data.total / pageSize)}
                 variant="outline"
               >
-                Next →
+                Next
+                <ChevronRight className="ml-2 h-5 w-5" />
               </Button>
             </div>
           )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -168,9 +169,10 @@ export default function GenresPage() {
                   <Link href={`/browse?genre_id=${selectedGenreId}`}>
                     <button
                       type="button"
-                      className="font-medium text-blue-600 hover:underline"
+                      className="inline-flex items-center gap-2 font-medium text-blue-600 hover:underline"
                     >
-                      View all {mangaData.total} manga →
+                      View all {mangaData.total} manga
+                      <ArrowRight className="h-5 w-5" />
                     </button>
                   </Link>
                 </div>

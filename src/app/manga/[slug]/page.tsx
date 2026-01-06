@@ -1,5 +1,6 @@
 "use client";
 
+import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Marquee from "react-fast-marquee";
@@ -198,9 +199,12 @@ export default function MangaDetailPage({
               key={`marquee-stat-${i}-${manga.id}`}
               className="mx-12 flex items-center gap-6"
             >
-              <span className="font-bold text-6xl text-[#000000]">
-                {formatRating(manga.rating)}★
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-6xl text-[#000000]">
+                  {formatRating(manga.rating)}
+                </span>
+                <Star className="h-12 w-12 fill-[#000000] text-[#000000]" />
+              </div>
               <span className="text-2xl text-[#000000] uppercase tracking-wider">
                 RATING
               </span>

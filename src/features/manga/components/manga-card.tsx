@@ -1,5 +1,6 @@
 "use client";
 
+import { Eye, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/badge";
@@ -57,11 +58,11 @@ export function MangaCard({ manga }: MangaCardProps) {
           </h3>
           <div className="flex items-center justify-between border-[#3F3F46] border-t-2 pt-4 text-[#A1A1AA] group-hover:border-[#000000] group-hover:text-[#000000]">
             <div className="flex items-center gap-2 font-bold">
-              <span>⭐</span>
+              <Star className="h-5 w-5 fill-current" />
               <span className="text-lg">{formatRating(manga.rating)}</span>
             </div>
             <div className="flex items-center gap-2 text-sm uppercase tracking-wider">
-              <span>👁️</span>
+              <Eye className="h-5 w-5" />
               <span>{manga.total_views.toLocaleString()}</span>
             </div>
           </div>
