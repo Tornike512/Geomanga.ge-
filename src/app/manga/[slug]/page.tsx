@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import Marquee from "react-fast-marquee";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
-import { Card, CardContent } from "@/components/card";
+import { Card } from "@/components/card";
 import { Skeleton } from "@/components/skeleton";
 import { useCurrentUser } from "@/features/auth";
 import {
@@ -36,14 +36,14 @@ export default function MangaDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto max-w-[95vw] px-8 py-20">
-        <div className="grid gap-12 md:grid-cols-3">
-          <Skeleton className="aspect-[3/4] w-full rounded-none" />
-          <div className="space-y-8 md:col-span-2">
-            <Skeleton className="h-24 w-3/4 rounded-none" />
-            <Skeleton className="h-8 w-full rounded-none" />
-            <Skeleton className="h-8 w-full rounded-none" />
-            <Skeleton className="h-8 w-2/3 rounded-none" />
+      <div className="container mx-auto max-w-6xl px-6 py-24 md:px-8">
+        <div className="grid gap-8 md:grid-cols-3">
+          <Skeleton className="aspect-[3/4] w-full rounded-lg" />
+          <div className="space-y-6 md:col-span-2">
+            <Skeleton className="h-16 w-3/4 rounded-lg" />
+            <Skeleton className="h-6 w-full rounded-lg" />
+            <Skeleton className="h-6 w-full rounded-lg" />
+            <Skeleton className="h-6 w-2/3 rounded-lg" />
           </div>
         </div>
       </div>
@@ -52,11 +52,11 @@ export default function MangaDetailPage() {
 
   if (!manga) {
     return (
-      <div className="container mx-auto max-w-[95vw] px-8 py-32 text-center">
-        <h1 className="font-bold text-[clamp(3rem,10vw,8rem)] uppercase leading-none tracking-tighter">
-          MANGA NOT FOUND
+      <div className="container mx-auto max-w-6xl px-6 py-24 text-center md:px-8">
+        <h1 className="font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
+          Manga not found
         </h1>
-        <p className="mt-8 text-[#A1A1AA] text-xl">
+        <p className="mt-4 text-[var(--muted-foreground)] text-lg">
           The manga you're looking for doesn't exist.
         </p>
       </div>
@@ -66,12 +66,12 @@ export default function MangaDetailPage() {
   return (
     <div className="relative">
       {/* Hero Section with Cover and Title */}
-      <section className="border-[#3F3F46] border-b-2 py-20 md:py-32">
-        <div className="container mx-auto max-w-[95vw] px-8">
-          <div className="grid gap-12 md:grid-cols-3">
+      <section className="border-[var(--border)] border-b py-16 md:py-24">
+        <div className="container mx-auto max-w-6xl px-6 md:px-8">
+          <div className="grid gap-8 md:grid-cols-3">
             {/* Cover Image */}
             <div className="relative">
-              <div className="overflow-hidden rounded-none border-2 border-[#3F3F46]">
+              <div className="overflow-hidden rounded-xl border border-[var(--border)] shadow-[0_10px_15px_rgba(0,0,0,0.3)]">
                 <Image
                   src={getCoverUrl(manga.cover_image_url)}
                   alt={manga.title}
@@ -81,26 +81,19 @@ export default function MangaDetailPage() {
                   priority
                 />
               </div>
-              {/* Decorative Background Number */}
-              <div
-                className="-right-12 -top-12 -z-10 pointer-events-none absolute font-bold text-[#27272A] text-[12rem] leading-none"
-                aria-hidden="true"
-              >
-                {formatRating(manga.rating)}
-              </div>
             </div>
 
             {/* Title and Metadata */}
             <div className="md:col-span-2">
-              <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+              <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div className="flex-1">
-                  {/* Massive Title */}
-                  <h1 className="mb-6 font-bold text-[clamp(2.5rem,8vw,6rem)] uppercase leading-[0.9] tracking-tighter">
+                  {/* Title */}
+                  <h1 className="mb-4 font-semibold text-2xl tracking-tight sm:text-3xl md:text-4xl">
                     {manga.title}
                   </h1>
 
                   {/* Badges */}
-                  <div className="mb-6 flex flex-wrap items-center gap-3">
+                  <div className="mb-4 flex flex-wrap items-center gap-2">
                     <Badge variant="secondary">{manga.status}</Badge>
                     {manga.genres.map((genre) => (
                       <Badge key={genre.id}>{genre.name}</Badge>
@@ -118,71 +111,63 @@ export default function MangaDetailPage() {
                         : addBookmark.mutate({ manga_id: manga.id })
                     }
                   >
-                    {isBookmarked ? "❤️ BOOKMARKED" : "🤍 BOOKMARK"}
+                    {isBookmarked ? "❤️ Bookmarked" : "🤍 Bookmark"}
                   </Button>
                 )}
               </div>
 
-              {/* Stats Cards with Hover Effects */}
-              <div className="mb-12 grid gap-px bg-[#3F3F46] md:grid-cols-3">
-                <Card className="rounded-none border-0">
-                  <CardContent className="pt-8 text-center">
-                    <div className="mb-2 font-bold text-[#DFE104] text-[6rem] leading-none">
-                      {formatRating(manga.rating)}
-                    </div>
-                    <div className="text-[#A1A1AA] text-sm uppercase tracking-widest group-hover:text-[#000000]">
-                      RATING
-                    </div>
-                  </CardContent>
+              {/* Stats Cards with Glass Effect */}
+              <div className="mb-8 grid gap-3 md:grid-cols-3">
+                <Card className="p-6 text-center">
+                  <div className="mb-1 font-semibold text-3xl text-[var(--accent)]">
+                    {formatRating(manga.rating)}
+                  </div>
+                  <div className="text-[var(--muted-foreground)] text-xs uppercase tracking-wide">
+                    Rating
+                  </div>
                 </Card>
-                <Card className="rounded-none border-0">
-                  <CardContent className="pt-8 text-center">
-                    <div className="mb-2 font-bold text-[#DFE104] text-[6rem] leading-none">
-                      {formatNumber(manga.total_views)}
-                    </div>
-                    <div className="text-[#A1A1AA] text-sm uppercase tracking-widest group-hover:text-[#000000]">
-                      VIEWS
-                    </div>
-                  </CardContent>
+                <Card className="p-6 text-center">
+                  <div className="mb-1 font-semibold text-3xl text-[var(--accent)]">
+                    {formatNumber(manga.total_views)}
+                  </div>
+                  <div className="text-[var(--muted-foreground)] text-xs uppercase tracking-wide">
+                    Views
+                  </div>
                 </Card>
-                <Card className="rounded-none border-0">
-                  <CardContent className="pt-8 text-center">
-                    <div className="mb-2 font-bold text-[#DFE104] text-[6rem] leading-none">
-                      {chapters?.length || 0}
-                    </div>
-                    <div className="text-[#A1A1AA] text-sm uppercase tracking-widest group-hover:text-[#000000]">
-                      CHAPTERS
-                    </div>
-                  </CardContent>
+                <Card className="p-6 text-center">
+                  <div className="mb-1 font-semibold text-3xl text-[var(--accent)]">
+                    {chapters?.length || 0}
+                  </div>
+                  <div className="text-[var(--muted-foreground)] text-xs uppercase tracking-wide">
+                    Chapters
+                  </div>
                 </Card>
               </div>
 
               {/* Description */}
-              <div className="mb-8">
-                <h2 className="mb-4 font-bold text-2xl uppercase tracking-tight">
-                  DESCRIPTION
-                </h2>
-                <p className="max-w-3xl text-[#A1A1AA] text-xl leading-tight">
+              <div className="mb-6">
+                <h2 className="mb-3 font-medium text-base">Description</h2>
+                <p className="max-w-3xl text-[var(--muted-foreground)] text-sm leading-relaxed">
                   {manga.description || "No description available."}
                 </p>
               </div>
 
               {/* Author/Artist Grid */}
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-3 md:grid-cols-2">
                 {manga.author && (
-                  <div className="border-[#DFE104] border-l-4 pl-4">
-                    <div className="text-[#A1A1AA] text-sm uppercase tracking-widest">
-                      AUTHOR
+                  <div className="border-[var(--accent)]/50 border-l-2 pl-3">
+                    <div className="text-[var(--muted-foreground)] text-xs">
+                      Author
                     </div>
-                    <div className="font-bold text-xl">{manga.author}</div>
+                    <div className="font-medium text-sm">{manga.author}</div>
                   </div>
                 )}
                 {manga.artist && (
-                  <div className="border-[#DFE104] border-l-4 pl-4">
-                    <div className="text-[#A1A1AA] text-sm uppercase tracking-widest">
-                      ARTIST
+                  <div className="border-[var(--accent)]/50 border-l-2 pl-3">
+                    <div className="text-[var(--muted-foreground)] text-xs">
+                      Artist
                     </div>
-                    <div className="font-bold text-xl">{manga.artist}</div>
+                    <div className="font-medium text-sm">{manga.artist}</div>
                   </div>
                 )}
               </div>
@@ -191,80 +176,73 @@ export default function MangaDetailPage() {
         </div>
       </section>
 
-      {/* Stats Marquee - Kinetic Energy */}
-      <section className="border-[#3F3F46] border-b-2 bg-[#DFE104] py-8">
+      {/* Stats Marquee - Subtle amber accent */}
+      <section className="border-[var(--border)] border-b bg-[var(--accent)] py-4">
         <Marquee speed={80} gradient={false} className="overflow-hidden">
           {[...Array(8)].map((_, i) => (
             <div
               key={`marquee-stat-${i}-${manga.id}`}
-              className="mx-12 flex items-center gap-6"
+              className="mx-8 flex items-center gap-4"
             >
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-6xl text-[#000000]">
+              <div className="flex items-center gap-1">
+                <span className="font-semibold text-2xl text-[var(--accent-foreground)]">
                   {formatRating(manga.rating)}
                 </span>
-                <Star className="h-12 w-12 fill-[#000000] text-[#000000]" />
+                <Star className="h-6 w-6 fill-[var(--accent-foreground)] text-[var(--accent-foreground)]" />
               </div>
-              <span className="text-2xl text-[#000000] uppercase tracking-wider">
-                RATING
+              <span className="text-[var(--accent-foreground)]/80 text-sm">
+                Rating
               </span>
-              <span className="text-6xl text-[#000000]">•</span>
-              <span className="font-bold text-6xl text-[#000000]">
+              <span className="text-2xl text-[var(--accent-foreground)]/40">
+                •
+              </span>
+              <span className="font-semibold text-2xl text-[var(--accent-foreground)]">
                 {formatNumber(manga.total_views)}
               </span>
-              <span className="text-2xl text-[#000000] uppercase tracking-wider">
-                TOTAL VIEWS
+              <span className="text-[var(--accent-foreground)]/80 text-sm">
+                Total Views
               </span>
-              <span className="text-6xl text-[#000000]">•</span>
+              <span className="text-2xl text-[var(--accent-foreground)]/40">
+                •
+              </span>
             </div>
           ))}
         </Marquee>
       </section>
 
       {/* Chapters Section */}
-      <section className="border-[#3F3F46] border-b-2 py-20 md:py-32">
-        <div className="container mx-auto max-w-[95vw] px-8">
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto max-w-6xl px-6 md:px-8">
           {/* Section Title */}
-          <div className="mb-12 flex items-end justify-between">
-            <h2 className="font-bold text-[clamp(2rem,6vw,4rem)] uppercase leading-none tracking-tighter">
-              CHAPTERS
+          <div className="mb-8 flex items-end justify-between">
+            <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
+              Chapters
             </h2>
-            <div
-              className="font-bold text-[#27272A] text-[8rem] leading-none"
-              aria-hidden="true"
-            >
-              {chapters?.length || 0}
+            <div className="text-[var(--muted-foreground)] text-sm">
+              {chapters?.length || 0} total
             </div>
           </div>
 
-          {/* Chapter List - Brutalist Cards */}
-          <div className="grid gap-px bg-[#3F3F46]">
+          {/* Chapter List - Glass Cards */}
+          <div className="space-y-2">
             {chapters?.map((chapter, _index) => (
               <Link
                 key={chapter.id}
                 href={`/read/${chapter.id}`}
-                className="group relative block border-2 border-transparent bg-[#09090B] p-8 transition-all duration-300 hover:border-[#DFE104] hover:bg-[#DFE104]"
+                className="group block rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
               >
-                {/* Chapter Number (Decorative) */}
-                <div
-                  className="-right-4 -top-4 pointer-events-none absolute font-bold text-[#27272A] text-[6rem] leading-none opacity-50 group-hover:text-[#000000] group-hover:opacity-20"
-                  aria-hidden="true"
-                >
-                  {String(chapter.chapter_number).padStart(2, "0")}
-                </div>
-
-                <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                   <div className="flex-1">
-                    <div className="mb-2 font-bold text-3xl text-[#FAFAFA] uppercase tracking-tighter group-hover:text-[#000000]">
-                      CHAPTER {chapter.chapter_number}
+                    <div className="font-medium text-[var(--foreground)] text-base group-hover:text-[var(--accent)]">
+                      Chapter {chapter.chapter_number}
                     </div>
                     {chapter.title && (
-                      <div className="text-[#A1A1AA] text-xl group-hover:text-[#000000] group-hover:opacity-80">
+                      <div className="text-[var(--muted-foreground)] text-sm">
                         {chapter.title}
                       </div>
                     )}
                   </div>
-                  <div className="text-[#A1A1AA] text-sm uppercase tracking-widest group-hover:text-[#000000]">
+                  <div className="text-[var(--muted-foreground)] text-xs">
                     {formatDate(chapter.release_date)}
                   </div>
                 </div>

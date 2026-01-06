@@ -14,22 +14,24 @@ export function Badge({
   return (
     <span
       className={cn(
-        // Base styles - sharp corners, uppercase, minimal padding, border
-        "inline-flex items-center rounded-none border-2 px-3 py-1 font-bold text-xs uppercase tracking-wide transition-colors",
+        // Base styles - soft rounded, medium tracking, no uppercase (refined, not shouting)
+        "inline-flex items-center rounded-md px-3 py-1 font-medium text-xs tracking-wide transition-all duration-200",
         {
-          // Default - muted with border
-          "border-[#3F3F46] bg-[#27272A] text-[#A1A1AA]": variant === "default",
-          // Secondary - accent colored
-          "border-[#DFE104] bg-transparent text-[#DFE104]":
+          // Default - muted slate with subtle glow
+          "border border-[var(--border)] bg-[var(--muted)]/60 text-[var(--muted-foreground)] backdrop-blur-sm":
+            variant === "default",
+          // Secondary - amber accent with glow
+          "border border-[var(--accent)]/30 bg-[var(--accent-muted)] text-[var(--accent)] shadow-[0_0_20px_rgba(245,158,11,0.15)]":
             variant === "secondary",
-          // Success - green
-          "border-green-500 bg-transparent text-green-500":
+          // Success - green with subtle glow
+          "border border-green-500/30 bg-green-500/15 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.1)]":
             variant === "success",
-          // Warning - yellow/orange
-          "border-yellow-500 bg-transparent text-yellow-500":
+          // Warning - yellow/orange with glow
+          "border border-yellow-500/30 bg-yellow-500/15 text-yellow-400 shadow-[0_0_20px_rgba(234,179,8,0.1)]":
             variant === "warning",
-          // Danger - red
-          "border-red-500 bg-transparent text-red-500": variant === "danger",
+          // Danger - red with subtle glow
+          "border border-red-500/30 bg-red-500/15 text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.1)]":
+            variant === "danger",
         },
         className,
       )}

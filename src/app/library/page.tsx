@@ -45,44 +45,46 @@ export default function LibraryPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-[95vw] px-8 py-32">
+    <div className="container mx-auto max-w-6xl px-6 py-24 md:px-8 md:py-32 lg:px-12">
       {/* Header */}
-      <div className="mb-24">
-        <h1 className="mb-8 font-bold text-[clamp(2.5rem,8vw,6rem)] uppercase leading-none tracking-tighter">
-          MY LIBRARY
+      <div className="mb-12">
+        <h1 className="mb-4 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
+          My Library
         </h1>
-        <p className="text-2xl text-[#A1A1AA]">
-          YOUR BOOKMARKED MANGA AND READING HISTORY
+        <p className="text-[var(--muted-foreground)] text-lg">
+          Your bookmarked manga and reading history
         </p>
       </div>
 
-      {/* Tabs */}
-      <div className="mb-16 flex gap-0 border-[#3F3F46] border-b-4">
+      {/* Tabs - Glass effect tabs */}
+      <div className="mb-8 flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm">
         <button
           type="button"
           onClick={() => handleTabChange("bookmarks")}
-          className={`px-12 py-6 font-bold text-2xl uppercase tracking-wider transition-all ${
+          className={`flex-1 rounded-md px-6 py-3 font-medium text-sm transition-all duration-200 ${
             activeTab === "bookmarks"
-              ? "border-[#DFE104] border-b-4 bg-[#DFE104] text-[#000000]"
-              : "text-[#A1A1AA] hover:text-[#FAFAFA]"
+              ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
+              : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
           }`}
         >
-          BOOKMARKS
+          Bookmarks
           {bookmarksData && (
-            <span className="ml-3">({bookmarksData.total})</span>
+            <span className="ml-2 opacity-70">({bookmarksData.total})</span>
           )}
         </button>
         <button
           type="button"
           onClick={() => handleTabChange("history")}
-          className={`px-12 py-6 font-bold text-2xl uppercase tracking-wider transition-all ${
+          className={`flex-1 rounded-md px-6 py-3 font-medium text-sm transition-all duration-200 ${
             activeTab === "history"
-              ? "border-[#DFE104] border-b-4 bg-[#DFE104] text-[#000000]"
-              : "text-[#A1A1AA] hover:text-[#FAFAFA]"
+              ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
+              : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
           }`}
         >
-          READING HISTORY
-          {historyData && <span className="ml-3">({historyData.total})</span>}
+          Reading History
+          {historyData && (
+            <span className="ml-2 opacity-70">({historyData.total})</span>
+          )}
         </button>
       </div>
 
@@ -148,24 +150,24 @@ export default function LibraryPage() {
                 <Link
                   key={history.id}
                   href={`/read/${history.chapter.id}`}
-                  className="flex gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-blue-300 hover:shadow-md"
+                  className="flex gap-4 rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)]"
                 >
                   <Image
                     src={history.manga.cover_image_url || "/placeholder.png"}
                     alt={history.manga.title}
                     width={64}
                     height={96}
-                    className="h-24 w-16 rounded object-cover"
+                    className="h-24 w-16 rounded-lg object-cover"
                   />
                   <div className="flex-1">
-                    <h3 className="mb-1 font-bold text-lg">
+                    <h3 className="mb-1 font-medium text-base">
                       {history.manga.title}
                     </h3>
-                    <p className="mb-2 text-gray-600">
+                    <p className="mb-2 text-[var(--muted-foreground)] text-sm">
                       Chapter {history.chapter.chapter_number}:{" "}
                       {history.chapter.title}
                     </p>
-                    <div className="flex items-center gap-4 text-gray-500 text-sm">
+                    <div className="flex items-center gap-4 text-[var(--muted-foreground)] text-xs">
                       <span>
                         {new Date(history.last_read_at).toLocaleDateString()}
                       </span>
@@ -189,20 +191,23 @@ export default function LibraryPage() {
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 variant="outline"
+                size="sm"
               >
-                <ChevronLeft className="mr-2 h-5 w-5" />
+                <ChevronLeft className="mr-1 h-4 w-4" />
                 Previous
               </Button>
-              <span className="text-gray-600">
-                Page {currentPage} of {Math.ceil(data.total / pageSize)}
+              <span className="text-[var(--muted-foreground)] text-sm">
+                Page <span className="text-[var(--accent)]">{currentPage}</span>{" "}
+                of {Math.ceil(data.total / pageSize)}
               </span>
               <Button
                 onClick={() => setCurrentPage((p) => p + 1)}
                 disabled={currentPage >= Math.ceil(data.total / pageSize)}
                 variant="outline"
+                size="sm"
               >
                 Next
-                <ChevronRight className="ml-2 h-5 w-5" />
+                <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             </div>
           )}

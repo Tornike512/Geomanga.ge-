@@ -62,23 +62,23 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto max-w-[95vw] px-8 py-32">
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+    <div className="container mx-auto max-w-6xl px-6 py-24 md:px-8 md:py-32 lg:px-12">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Left Column - Profile Info */}
         <div className="lg:col-span-1">
-          <Card className="border-2 p-12 text-center">
+          <Card className="p-8 text-center">
             {/* Avatar */}
-            <div className="relative mb-8 inline-block">
+            <div className="relative mb-6 inline-block">
               <Image
                 src={user.avatar_url || "/default-avatar.png"}
                 alt={user.username}
-                width={200}
-                height={200}
-                className="h-[200px] w-[200px] rounded-none border-4 border-[#3F3F46] object-cover"
+                width={160}
+                height={160}
+                className="h-40 w-40 rounded-full border border-[var(--border)] object-cover transition-all duration-200 hover:border-[var(--border-hover)]"
               />
               <label
                 htmlFor="avatar-upload"
-                className="absolute right-0 bottom-0 cursor-pointer rounded-full bg-blue-600 p-2 text-white transition-colors hover:bg-blue-700"
+                className="absolute right-0 bottom-0 cursor-pointer rounded-full bg-[var(--accent)] p-2 text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-200 hover:brightness-110"
               >
                 <svg
                   className="h-4 w-4"
@@ -112,8 +112,10 @@ export default function ProfilePage() {
               />
             </div>
 
-            <h1 className="mb-1 font-bold text-2xl">{user.username}</h1>
-            <p className="mb-4 text-gray-600">{user.email}</p>
+            <h1 className="mb-1 font-semibold text-xl">{user.username}</h1>
+            <p className="mb-4 text-[var(--muted-foreground)] text-sm">
+              {user.email}
+            </p>
 
             {/* Role Badge */}
             <Badge
@@ -125,21 +127,23 @@ export default function ProfilePage() {
                     : "default"
               }
             >
-              {user.role.toUpperCase()}
+              {user.role}
             </Badge>
 
             {/* Stats */}
-            <div className="mt-6 grid grid-cols-1 gap-4 border-gray-200 border-t pt-6">
+            <div className="mt-6 grid grid-cols-1 gap-4 border-[var(--border)] border-t pt-6">
               <div>
-                <div className="font-bold text-2xl text-blue-600">
+                <div className="font-medium text-[var(--accent)] text-lg">
                   {user.role}
                 </div>
-                <div className="text-gray-600 text-sm">Role</div>
+                <div className="text-[var(--muted-foreground)] text-sm">
+                  Role
+                </div>
               </div>
             </div>
 
             {/* Member Since */}
-            <div className="mt-6 border-gray-200 border-t pt-6 text-gray-600 text-sm">
+            <div className="mt-6 border-[var(--border)] border-t pt-6 text-[var(--muted-foreground)] text-sm">
               Member since {new Date(user.created_at).toLocaleDateString()}
             </div>
           </Card>
@@ -149,7 +153,7 @@ export default function ProfilePage() {
         <div className="lg:col-span-2">
           <Card className="p-6">
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-bold text-xl">Profile Settings</h2>
+              <h2 className="font-semibold text-lg">Profile Settings</h2>
               {!isEditing && (
                 <Button onClick={() => setIsEditing(true)} variant="outline">
                   Edit Profile
@@ -229,18 +233,18 @@ export default function ProfilePage() {
             </form>
 
             {/* Change Password Section */}
-            <div className="mt-8 border-gray-200 border-t pt-8">
-              <h3 className="mb-4 font-bold text-lg">Security</h3>
+            <div className="mt-8 border-[var(--border)] border-t pt-8">
+              <h3 className="mb-4 font-medium text-base">Security</h3>
               <Button variant="outline">Change Password</Button>
             </div>
 
             {/* Danger Zone */}
             {user.role === UserRole.ADMIN && (
-              <div className="mt-8 border-gray-200 border-t pt-8">
-                <h3 className="mb-2 font-bold text-lg text-red-600">
+              <div className="mt-8 border-[var(--border)] border-t pt-8">
+                <h3 className="mb-2 font-medium text-base text-red-400">
                   Danger Zone
                 </h3>
-                <p className="mb-4 text-gray-600 text-sm">
+                <p className="mb-4 text-[var(--muted-foreground)] text-sm">
                   Irreversible actions that affect your account
                 </p>
                 <Button variant="destructive">Delete Account</Button>

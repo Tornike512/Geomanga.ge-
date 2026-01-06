@@ -7,10 +7,10 @@ export function Card({ className, children, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        // Base styles - sharp corners, 2px border, flat (no shadow)
-        "rounded-none border-2 border-[#3F3F46] bg-[#09090B] p-8 transition-all duration-300",
-        // Hover state - flood with accent color, invert all text
-        "group hover:border-[#DFE104] hover:bg-[#DFE104]",
+        // Glass effect card - semi-transparent with backdrop blur
+        "rounded-lg border border-[var(--border)] bg-[var(--card)] p-8 backdrop-blur-sm transition-all duration-300 ease-out",
+        // Hover state - brightened border, slightly more opaque, subtle scale
+        "hover:scale-[1.02] hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)]",
         className,
       )}
       {...props}
@@ -32,8 +32,7 @@ export function CardTitle({ className, children, ...props }: CardProps) {
   return (
     <h3
       className={cn(
-        "font-bold text-3xl uppercase leading-none tracking-tighter",
-        "text-[#FAFAFA] group-hover:text-[#000000]",
+        "font-semibold text-2xl text-[var(--foreground)] leading-tight tracking-tight",
         className,
       )}
       {...props}
@@ -45,10 +44,7 @@ export function CardTitle({ className, children, ...props }: CardProps) {
 
 export function CardContent({ className, children, ...props }: CardProps) {
   return (
-    <div
-      className={cn("text-[#FAFAFA] group-hover:text-[#000000]", className)}
-      {...props}
-    >
+    <div className={cn("text-[var(--foreground)]", className)} {...props}>
       {children}
     </div>
   );

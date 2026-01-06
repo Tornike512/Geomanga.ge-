@@ -43,18 +43,18 @@ export default function GenresPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-[95vw] px-8 py-32">
-      <div className="mb-24">
-        <h1 className="mb-8 font-bold text-[clamp(2.5rem,8vw,6rem)] uppercase leading-none tracking-tighter">
-          GENRES
+    <div className="container mx-auto max-w-6xl px-6 py-24 md:px-8 md:py-32 lg:px-12">
+      <div className="mb-12">
+        <h1 className="mb-4 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
+          Genres
         </h1>
-        <p className="text-2xl text-[#A1A1AA]">
-          DISCOVER MANGA BY YOUR FAVORITE GENRES
+        <p className="text-[var(--muted-foreground)] text-lg">
+          Discover manga by your favorite genres
         </p>
       </div>
 
       {/* Genre Grid */}
-      <div className="mb-24 grid grid-cols-1 gap-px bg-[#3F3F46] md:grid-cols-2 lg:grid-cols-3">
+      <div className="mb-16 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
         {genres?.map((genre) => (
           <button
             key={genre.id}
@@ -62,33 +62,32 @@ export default function GenresPage() {
             onClick={() =>
               setSelectedGenreId(selectedGenreId === genre.id ? null : genre.id)
             }
-            className={`group relative overflow-hidden border-2 bg-[#09090B] p-12 transition-all ${
+            className={`group relative overflow-hidden rounded-lg border p-8 text-left transition-all duration-200 ${
               selectedGenreId === genre.id
-                ? "border-[#DFE104] bg-[#DFE104] text-[#000000]"
-                : "border-[#3F3F46] hover:border-[#DFE104]"
+                ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_30px_rgba(245,158,11,0.2)]"
+                : "border-[var(--border)] bg-[var(--card)] backdrop-blur-sm hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)]"
             }`}
           >
-            <div className="text-center">
-              <h3 className="mb-4 font-bold text-4xl uppercase tracking-tighter">
+            <div>
+              <h3 className="mb-2 font-semibold text-xl tracking-tight">
                 {genre.name}
               </h3>
               {genre.description && (
-                <p className="mb-6 line-clamp-3 text-lg opacity-70">
+                <p className="mb-4 line-clamp-2 text-sm opacity-70">
                   {genre.description}
                 </p>
               )}
               <Badge
-                variant="secondary"
-                className="border-2 uppercase tracking-wider"
+                variant={selectedGenreId === genre.id ? "default" : "secondary"}
               >
-                {genre.manga_count || 0} MANGA
+                {genre.manga_count || 0} manga
               </Badge>
             </div>
             {selectedGenreId === genre.id && (
-              <div className="absolute top-6 right-6">
-                <div className="border-2 border-[#000000] bg-[#000000] p-2 text-[#DFE104]">
+              <div className="absolute top-4 right-4">
+                <div className="rounded-full bg-[var(--accent-foreground)] p-1.5 text-[var(--accent)]">
                   <svg
-                    className="h-6 w-6"
+                    className="h-4 w-4"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     aria-label="Selected"
@@ -110,16 +109,16 @@ export default function GenresPage() {
       {/* Selected Genre Manga */}
       {selectedGenreId && (
         <div>
-          <h2 className="mb-12 border-[#3F3F46] border-b-4 pb-6 font-bold text-5xl uppercase tracking-tighter">
-            {genres?.find((g) => g.id === selectedGenreId)?.name} MANGA
+          <h2 className="mb-8 border-[var(--border)] border-b pb-4 font-semibold text-2xl tracking-tight">
+            {genres?.find((g) => g.id === selectedGenreId)?.name} Manga
           </h2>
 
           {mangaLoading ? (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
               {mangaSkeletonKeys.map((key) => (
                 <div key={key} className="space-y-2">
-                  <Skeleton className="aspect-[2/3] w-full" />
-                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="aspect-[2/3] w-full rounded-lg" />
+                  <Skeleton className="h-4 w-3/4 rounded" />
                 </div>
               ))}
             </div>
@@ -132,7 +131,7 @@ export default function GenresPage() {
                     href={`/manga/${manga.slug}`}
                     className="group"
                   >
-                    <Card className="overflow-hidden transition-shadow hover:shadow-lg">
+                    <Card className="overflow-hidden transition-all duration-200 hover:scale-[1.02]">
                       <div className="relative aspect-[2/3]">
                         <Image
                           src={manga.cover_image_url || "/placeholder.png"}
@@ -142,16 +141,19 @@ export default function GenresPage() {
                           className="h-full w-full object-cover"
                         />
                         {manga.status === MangaStatus.ONGOING && (
-                          <Badge className="absolute top-2 left-2">
+                          <Badge
+                            className="absolute top-2 left-2"
+                            variant="success"
+                          >
                             Ongoing
                           </Badge>
                         )}
                       </div>
                       <div className="p-3">
-                        <h3 className="line-clamp-2 font-semibold transition-colors group-hover:text-blue-600">
+                        <h3 className="line-clamp-2 font-medium text-sm transition-colors duration-200 group-hover:text-[var(--accent)]">
                           {manga.title}
                         </h3>
-                        <div className="mt-2 flex items-center gap-2 text-gray-600 text-sm">
+                        <div className="mt-2 flex items-center gap-2 text-[var(--muted-foreground)] text-xs">
                           <span>⭐ {manga.rating?.toFixed(1) || "N/A"}</span>
                         </div>
                       </div>
@@ -165,17 +167,17 @@ export default function GenresPage() {
                   <Link href={`/browse?genre_id=${selectedGenreId}`}>
                     <button
                       type="button"
-                      className="inline-flex items-center gap-2 font-medium text-blue-600 hover:underline"
+                      className="inline-flex items-center gap-2 font-medium text-[var(--accent)] transition-colors duration-200 hover:text-[var(--foreground)]"
                     >
                       View all {mangaData.total} manga
-                      <ArrowRight className="h-5 w-5" />
+                      <ArrowRight className="h-4 w-4" />
                     </button>
                   </Link>
                 </div>
               )}
             </>
           ) : (
-            <div className="py-12 text-center text-gray-500">
+            <div className="py-12 text-center text-[var(--muted-foreground)]">
               No manga found in this genre
             </div>
           )}

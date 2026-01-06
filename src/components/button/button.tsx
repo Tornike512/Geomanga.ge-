@@ -25,29 +25,31 @@ export const Button = ({
       type={type}
       disabled={loading || props.disabled}
       className={cn(
-        // Base styles - uppercase, bold, sharp corners, transitions
-        "inline-flex items-center justify-center rounded-none font-bold uppercase tracking-tighter transition-all duration-300",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DFE104] focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090B]",
+        // Base styles - Minimalist Dark: smooth, refined, no uppercase
+        "inline-flex items-center justify-center font-medium tracking-normal transition-all duration-200 ease-out",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
         "disabled:pointer-events-none disabled:opacity-50",
-        "active:scale-95",
+        "active:scale-[0.98]", // Subtle press effect
         // Variant styles
         {
-          // Primary (Accent) - acid yellow with black text
-          "bg-[#DFE104] text-[#000000] hover:scale-105": variant === "default",
-          // Ghost - transparent with off-white text
-          "text-[#FAFAFA] hover:text-[#DFE104]": variant === "ghost",
-          // Outline - 2px border, fills on hover
-          "border-2 border-[#3F3F46] bg-transparent text-[#FAFAFA] hover:border-[#FAFAFA] hover:bg-[#FAFAFA] hover:text-[#000000]":
+          // Primary (Amber) - warm glow on hover
+          "rounded-lg bg-[var(--accent)] text-[var(--accent-foreground)] shadow-sm hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] hover:brightness-110":
+            variant === "default",
+          // Ghost - transparent, subtle hover
+          "rounded-lg text-[var(--foreground)] hover:bg-white/5":
+            variant === "ghost",
+          // Outline - glass effect border
+          "rounded-lg border border-[var(--border)] bg-transparent text-[var(--foreground)] hover:border-[var(--border-hover)] hover:bg-white/5":
             variant === "outline",
-          // Destructive - red with white text
-          "bg-red-600 text-[#FAFAFA] hover:scale-105 hover:bg-red-700":
+          // Destructive - red with amber focus
+          "rounded-lg bg-red-600 text-white shadow-sm hover:shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:brightness-110":
             variant === "destructive",
         },
         // Size styles
         {
-          "h-14 px-8 text-base": size === "default",
-          "h-10 px-4 text-sm": size === "sm",
-          "h-20 px-12 text-lg": size === "lg",
+          "h-11 px-6 py-3 text-base": size === "default",
+          "h-9 px-4 py-2 text-sm": size === "sm",
+          "h-12 px-8 py-4 text-lg": size === "lg",
         },
         className,
       )}
@@ -77,7 +79,7 @@ export const Button = ({
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             />
           </svg>
-          LOADING...
+          Loading...
         </>
       ) : (
         children

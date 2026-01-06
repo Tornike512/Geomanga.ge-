@@ -78,27 +78,27 @@ export default function ReaderPage() {
   return (
     <div className="min-h-screen bg-black">
       {/* Header */}
-      <div className="fixed top-0 right-0 left-0 z-50 border-[#3F3F46] border-b-2 bg-[#09090B]/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-6">
-          <div className="flex items-center gap-6">
+      <div className="fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-4">
             {chapter.manga && (
               <Link href={`/manga/${chapter.manga.slug}`}>
-                <Button variant="outline" className="border-2">
-                  <ArrowLeft className="mr-2 h-5 w-5" />
-                  BACK
+                <Button variant="outline" size="sm">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back
                 </Button>
               </Link>
             )}
             <div className="text-white">
-              <h1 className="font-bold text-2xl uppercase tracking-tighter">
+              <h1 className="font-medium text-base tracking-tight">
                 {chapter.manga?.title || "Unknown Manga"}
               </h1>
-              <p className="text-[#A1A1AA] text-lg">
-                CHAPTER {chapter.chapter_number}: {chapter.title}
+              <p className="text-[var(--muted-foreground)] text-sm">
+                Chapter {chapter.chapter_number}: {chapter.title}
               </p>
             </div>
           </div>
-          <div className="rounded-none border-2 border-[#DFE104] bg-[#DFE104] px-6 py-3 font-bold text-2xl text-[#000000]">
+          <div className="rounded-lg bg-[var(--accent)] px-4 py-2 font-medium text-[var(--accent-foreground)] text-sm shadow-[0_0_20px_rgba(245,158,11,0.3)]">
             {currentPageIndex + 1} / {chapter.pages.length}
           </div>
         </div>
@@ -129,30 +129,29 @@ export default function ReaderPage() {
       </div>
 
       {/* Navigation Controls */}
-      <div className="fixed right-0 bottom-0 left-0 z-50 border-[#3F3F46] border-t-2 bg-[#09090B]/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-6">
+      <div className="fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Button
             onClick={goToPreviousPage}
             disabled={currentPageIndex === 0 && !chapter.previous_chapter_id}
-            className="border-2 px-8"
-            size="lg"
+            size="sm"
           >
-            <ChevronLeft className="mr-2 h-6 w-6" />
+            <ChevronLeft className="mr-1 h-4 w-4" />
             {currentPageIndex === 0 && chapter.previous_chapter_id
-              ? "PREVIOUS CHAPTER"
-              : "PREVIOUS PAGE"}
+              ? "Previous Chapter"
+              : "Previous"}
           </Button>
 
           {/* Page Navigation */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <select
               value={currentPageIndex}
               onChange={(e) => handlePageChange(Number(e.target.value))}
-              className="h-14 rounded-none border-2 border-[#3F3F46] bg-[#09090B] px-6 font-bold text-white text-xl uppercase tracking-tight"
+              className="h-9 rounded-lg border border-[var(--border)] bg-[var(--card)] px-4 text-sm text-white backdrop-blur-sm transition-all duration-200 focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
             >
               {chapter.pages.map((page, index) => (
                 <option key={page.id} value={index}>
-                  PAGE {index + 1}
+                  Page {index + 1}
                 </option>
               ))}
             </select>
@@ -164,14 +163,13 @@ export default function ReaderPage() {
               currentPageIndex === chapter.pages.length - 1 &&
               !chapter.next_chapter_id
             }
-            className="border-2 px-8"
-            size="lg"
+            size="sm"
           >
             {currentPageIndex === chapter.pages.length - 1 &&
             chapter.next_chapter_id
-              ? "NEXT CHAPTER"
-              : "NEXT PAGE"}
-            <ChevronRight className="ml-2 h-6 w-6" />
+              ? "Next Chapter"
+              : "Next"}
+            <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
         </div>
       </div>

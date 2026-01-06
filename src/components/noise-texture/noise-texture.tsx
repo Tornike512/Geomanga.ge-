@@ -1,22 +1,23 @@
 /**
  * NoiseTexture Component
  *
- * Adds a subtle print/poster texture overlay to create the kinetic typography aesthetic.
+ * Adds a subtle atmospheric noise texture to create depth in the Minimalist Dark design.
  * Uses SVG feTurbulence filter for performance and visual quality.
+ * Very low opacity (0.015) to maintain the clean, sophisticated aesthetic.
  */
 export function NoiseTexture() {
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-50 opacity-[0.03] mix-blend-overlay"
+      className="pointer-events-none fixed inset-0 z-50 opacity-[0.015] mix-blend-overlay"
       aria-hidden="true"
     >
       <svg className="h-full w-full">
-        <title>Texture overlay</title>
+        <title>Atmospheric texture overlay</title>
         <filter id="noise">
           <feTurbulence
             type="fractalNoise"
-            baseFrequency="0.8"
-            numOctaves="4"
+            baseFrequency="0.65"
+            numOctaves="3"
             stitchTiles="stitch"
           />
         </filter>
