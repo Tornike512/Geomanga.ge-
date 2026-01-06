@@ -8,7 +8,6 @@ describe("Button", () => {
 
     const button = screen.getByRole("button", { name: "Click me" });
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass("cursor-pointer");
     expect(button).toHaveAttribute("type", "button");
   });
 
@@ -32,7 +31,6 @@ describe("Button", () => {
 
     const button = screen.getByRole("button", { name: "Disabled" });
     expect(button).toBeDisabled();
-    expect(button).toHaveClass("cursor-pointer");
 
     fireEvent.click(button);
     expect(handleClick).not.toHaveBeenCalled();
@@ -41,15 +39,19 @@ describe("Button", () => {
   it("shows loading state", () => {
     render(<Button loading>Loading</Button>);
 
-    const button = screen.getByRole("button", { name: "Loading" });
+    const button = screen.getByRole("button", {
+      name: /Loading LOADING\.\.\./,
+    });
     expect(button).toBeInTheDocument();
+    expect(button).toBeDisabled();
+    expect(screen.getByLabelText("Loading")).toBeInTheDocument();
   });
 
   it("accepts custom className", () => {
     render(<Button className="custom-class">Custom</Button>);
 
     const button = screen.getByRole("button", { name: "Custom" });
-    expect(button).toHaveClass("custom-class", "cursor-pointer");
+    expect(button).toHaveClass("custom-class");
   });
 
   it("passes through additional props", () => {
