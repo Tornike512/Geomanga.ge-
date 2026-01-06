@@ -1,3 +1,15 @@
+## 1.0.0 (2026-01-06)
+
+* fix: resolve TypeScript compilation errors ([b2983bc](https://github.com/Tornike512/Geomanga.ge-/commit/b2983bc))
+* fix: update manga detail page for Next.js 15 params handling ([740c553](https://github.com/Tornike512/Geomanga.ge-/commit/740c553))
+* test: fix button component tests ([7a8bd52](https://github.com/Tornike512/Geomanga.ge-/commit/7a8bd52))
+* feat: add manga and ratings features with API and hooks ([eb3faa9](https://github.com/Tornike512/Geomanga.ge-/commit/eb3faa9))
+* feat: complete frontend implementation with all pages and components ([581d4ff](https://github.com/Tornike512/Geomanga.ge-/commit/581d4ff))
+* feat: integrate Kinetic Typography design system across all pages ([1eee940](https://github.com/Tornike512/Geomanga.ge-/commit/1eee940))
+* feat: replace emoji icons with lucide-react and improve search bar styling ([b8c76ab](https://github.com/Tornike512/Geomanga.ge-/commit/b8c76ab))
+* feat: replace img with Image component for optimized loading and accessibility ([817c66d](https://github.com/Tornike512/Geomanga.ge-/commit/817c66d))
+* Initial commit ([27a0e54](https://github.com/Tornike512/Geomanga.ge-/commit/27a0e54))
+
 ## 0.0.1 (2025-06-18)
 
 * chore: :wrench: add husky ([d269613](https://github.com/davitJabushanuri/nextjs-starter/commit/d269613))
