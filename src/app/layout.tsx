@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
+import { Footer, Header } from "@/components/layout";
 import { AppProviders } from "@/providers";
 import { cn } from "@/utils/cn";
 
 export const metadata: Metadata = {
-  title: "Nextjs starter",
-  description: "A Next.js starter template",
+  title: "Geomanga.ge - Read Manga Online",
+  description:
+    "Your ultimate destination for reading manga online. Discover new series and follow your favorites.",
 };
 
 export default async function RootLayout({
@@ -15,13 +17,13 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("h-full")}>
-      <body
-        className={cn(
-          "h-full bg-background-100 font-roboto text-foreground-100",
-        )}
-      >
+      <body className={cn("min-h-screen bg-gray-50 font-roboto text-gray-900")}>
         <AppProviders>
-          <main className="grid h-full">{children}</main>
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
         </AppProviders>
       </body>
     </html>
