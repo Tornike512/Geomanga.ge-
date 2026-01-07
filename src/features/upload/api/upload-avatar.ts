@@ -24,7 +24,9 @@ export const uploadAvatar = async (file: File): Promise<{ url: string }> => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
+    const errorData = (await response.json().catch(() => ({}))) as {
+      message?: string;
+    };
     throw new Error(
       errorData.message || `Failed to upload avatar: ${response.statusText}`,
     );
