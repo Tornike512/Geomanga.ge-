@@ -77,6 +77,7 @@ export default function BrowsePage() {
           onClick={() =>
             setFilters({ ...filters, order_desc: !filters.order_desc, page: 1 })
           }
+          className="h-auto min-w-[140px] px-4 py-2.5"
         >
           {filters.order_desc ? "↓ Descending" : "↑ Ascending"}
         </Button>
