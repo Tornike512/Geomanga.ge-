@@ -77,7 +77,7 @@ export default function MangaDetailPage() {
                   alt={manga.title}
                   width={400}
                   height={600}
-                  className="w-full transition-transform duration-500 hover:scale-105"
+                  className="w-full"
                   priority
                 />
               </div>

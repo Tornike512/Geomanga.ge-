@@ -365,7 +365,7 @@ export default function UploadMangaPage() {
                           ? "default"
                           : "secondary"
                       }
-                      className="cursor-pointer transition-transform hover:scale-105"
+                      className="cursor-pointer"
                     >
                       {genre.name}
                     </Badge>
