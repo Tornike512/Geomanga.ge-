@@ -10,7 +10,9 @@ export const useRegister = () => {
   return useMutation({
     mutationFn: (userData: UserCreate) => register(userData),
     onSuccess: () => {
+      // Invalidate and refetch the user immediately
       queryClient.invalidateQueries({ queryKey: ["user", "me"] });
+      queryClient.refetchQueries({ queryKey: ["user", "me"] });
       router.push("/");
     },
   });
