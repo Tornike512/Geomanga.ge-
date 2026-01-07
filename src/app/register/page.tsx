@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { AvatarUpload } from "@/components/avatar-upload";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
@@ -16,6 +17,7 @@ export default function RegisterPage() {
     password: "",
     confirmPassword: "",
   });
+  const [avatarFile, setAvatarFile] = useState<File | undefined>();
   const [formError, setFormError] = useState("");
 
   const register = useRegister();
@@ -41,6 +43,7 @@ export default function RegisterPage() {
         username: formData.username,
         email: formData.email,
         password: formData.password,
+        avatar: avatarFile,
       },
       {
         onSuccess: () => {
@@ -70,6 +73,9 @@ export default function RegisterPage() {
 
         <Card className="p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Avatar Upload */}
+            <AvatarUpload onFileSelect={setAvatarFile} />
+
             {/* Username */}
             <div>
               <label

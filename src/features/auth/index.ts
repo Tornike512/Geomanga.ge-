@@ -1,4 +1,5 @@
 export { getCurrentUser, login, logout, register, updatePassword } from "./api";
+export type { RegisterData } from "./api/register";
 export {
   useCurrentUser,
   useLogin,
