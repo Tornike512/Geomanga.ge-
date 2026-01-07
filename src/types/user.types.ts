@@ -9,6 +9,7 @@ export interface User {
   readonly id: number;
   readonly username: string;
   readonly email: string;
+  readonly gender: "male" | "female";
   readonly avatar_url: string | undefined;
   readonly role: UserRole;
   readonly is_active: boolean;
@@ -19,6 +20,7 @@ export interface UserCreate {
   readonly username: string;
   readonly email: string;
   readonly password: string;
+  readonly gender: "male" | "female";
 }
 
 export interface UserUpdate {

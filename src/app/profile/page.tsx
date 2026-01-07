@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import { Avatar } from "@/components/avatar";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
@@ -69,12 +69,11 @@ export default function ProfilePage() {
           <Card className="p-8 text-center">
             {/* Avatar */}
             <div className="relative mb-6 inline-block">
-              <Image
-                src={user.avatar_url || "/default-avatar.png"}
+              <Avatar
+                src={user.avatar_url}
                 alt={user.username}
-                width={160}
-                height={160}
-                className="h-40 w-40 rounded-full border border-[var(--border)] object-cover transition-all duration-200 hover:border-[var(--border-hover)]"
+                size="xl"
+                className="border border-[var(--border)] transition-all duration-200 hover:border-[var(--border-hover)]"
               />
               <label
                 htmlFor="avatar-upload"

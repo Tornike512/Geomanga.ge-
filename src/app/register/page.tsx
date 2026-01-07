@@ -13,6 +13,7 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
+    gender: "" as "male" | "female" | "",
     password: "",
     confirmPassword: "",
   });
@@ -40,6 +41,7 @@ export default function RegisterPage() {
       {
         username: formData.username,
         email: formData.email,
+        gender: formData.gender as "male" | "female",
         password: formData.password,
       },
       {
@@ -105,6 +107,39 @@ export default function RegisterPage() {
                 placeholder="შეიყვანეთ თქვენი იმეილი"
                 required
               />
+            </div>
+
+            {/* Gender */}
+            <div>
+              <label className="mb-3 block text-[var(--muted-foreground)] text-sm">
+                სქესი <span className="text-red-400">*</span>
+              </label>
+              <div className="flex gap-6">
+                <label className="flex cursor-pointer items-center gap-2">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="male"
+                    checked={formData.gender === "male"}
+                    onChange={handleChange("gender")}
+                    required
+                    className="h-4 w-4 cursor-pointer border-[var(--border)] accent-[var(--accent)]"
+                  />
+                  <span className="text-sm">მამრობითი</span>
+                </label>
+                <label className="flex cursor-pointer items-center gap-2">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="female"
+                    checked={formData.gender === "female"}
+                    onChange={handleChange("gender")}
+                    required
+                    className="h-4 w-4 cursor-pointer border-[var(--border)] accent-[var(--accent)]"
+                  />
+                  <span className="text-sm">მდედრობითი</span>
+                </label>
+              </div>
             </div>
 
             {/* Password */}

@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Avatar } from "@/components/avatar";
 import { Button } from "@/components/button";
 import { useCurrentUser, useLogout } from "@/features/auth";
 import { SearchBar } from "@/features/manga/components";
-import { getAvatarUrl } from "@/utils/image-urls";
 
 export function Header() {
   const { data: user, isLoading } = useCurrentUser();
@@ -96,13 +96,7 @@ function UserMenu({
         href="/profile"
         className="flex items-center gap-3 transition-colors duration-200 hover:text-[var(--accent)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
       >
-        <Image
-          src={getAvatarUrl(user.avatar_url)}
-          alt={user.username}
-          width={36}
-          height={36}
-          className="h-9 w-9 rounded-full border border-[var(--border)] object-cover transition-all duration-200 hover:border-[var(--border-hover)]"
-        />
+        <Avatar src={user.avatar_url} alt={user.username} size="md" />
         <span className="hidden font-medium text-sm sm:inline">
           {user.username}
         </span>
