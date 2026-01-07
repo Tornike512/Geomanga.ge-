@@ -21,7 +21,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     expect(trigger).toBeInTheDocument();
     expect(trigger).toHaveTextContent("All status");
   });
@@ -36,7 +36,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     fireEvent.click(trigger);
 
     await waitFor(() => {
@@ -57,7 +57,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     fireEvent.click(trigger);
 
     await waitFor(() => {
@@ -81,7 +81,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     fireEvent.click(trigger);
 
     await waitFor(() => {
@@ -106,7 +106,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     expect(trigger).toHaveTextContent("Completed");
   });
 
@@ -120,7 +120,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     fireEvent.click(trigger);
 
     await waitFor(() => {
@@ -142,7 +142,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     expect(trigger).toBeDisabled();
   });
 
@@ -156,7 +156,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     trigger.focus();
 
     fireEvent.keyDown(trigger, { key: "ArrowDown" });
@@ -176,7 +176,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     fireEvent.click(trigger);
 
     await waitFor(() => {
@@ -201,7 +201,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     fireEvent.click(trigger);
 
     await waitFor(() => {
@@ -231,7 +231,7 @@ describe("Dropdown", () => {
       </div>,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     fireEvent.click(trigger);
 
     await waitFor(() => {
@@ -255,7 +255,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const container = screen.getByRole("combobox").parentElement;
+    const container = screen.getByRole("button").parentElement;
     expect(container).toHaveClass("custom-class");
   });
 
@@ -283,7 +283,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByRole("button");
     expect(trigger).toHaveAttribute("aria-expanded", "false");
 
     fireEvent.click(trigger);
