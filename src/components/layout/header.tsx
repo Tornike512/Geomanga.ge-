@@ -18,9 +18,14 @@ export function Header() {
             href="/"
             className="flex shrink-0 items-center gap-3 transition-opacity duration-200 hover:opacity-80 focus-visible:text-[var(--accent)] focus-visible:outline-none"
           >
-            <span className="font-semibold text-xl tracking-tight">
-              📖 Geomanga
-            </span>
+            <Image
+              src="/images/geomanga-logo.png"
+              alt="Geomanga"
+              width={120}
+              height={40}
+              className="h-20 w-auto"
+              priority
+            />
           </Link>
 
           <nav className="hidden shrink-0 items-center gap-6 lg:flex">

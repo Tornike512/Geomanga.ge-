@@ -1,19 +1,21 @@
-import { BookOpen } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export function Footer() {
   return (
     <footer className="border-[var(--border)] border-t bg-[var(--background)]">
-      <div className="container mx-auto max-w-6xl px-6 py-16 md:px-8 md:py-24 lg:px-12">
+      <div className="container mx-auto max-w-6xl px-6 py-2">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
           <div>
-            <h3 className="mb-4 flex items-center gap-2 font-semibold text-lg tracking-tight">
-              <BookOpen
-                className="h-5 w-5 text-[var(--accent)]"
-                strokeWidth={1.5}
+            <div className="mb-4">
+              <Image
+                src="/images/geomanga-logo.png"
+                alt="Geomanga"
+                width={240}
+                height={80}
+                className="h-16 w-auto"
               />
-              Geomanga
-            </h3>
+            </div>
             <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
               Your ultimate destination for reading manga online. Discover new
               series and follow your favorites.
@@ -117,7 +119,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-[var(--border)] border-t pt-8 text-center text-[var(--muted-foreground)] text-sm">
+        <div className="mt-12 flex w-full justify-center border-[var(--border)] border-t pt-2 text-center text-[var(--muted-foreground)] text-sm">
           <p>&copy; 2026 Geomanga.ge. All rights reserved.</p>
         </div>
       </div>
