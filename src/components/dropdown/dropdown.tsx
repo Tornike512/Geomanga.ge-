@@ -139,7 +139,6 @@ export const Dropdown = ({
       <button
         type="button"
         id={id}
-        role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-controls={listboxId}
@@ -224,6 +223,12 @@ export const Dropdown = ({
               key={option.value}
               aria-selected={isSelected}
               onClick={() => handleSelect(option.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleSelect(option.value);
+                }
+              }}
               onMouseEnter={() => setHighlightedIndex(index)}
               onMouseLeave={() => setHighlightedIndex(-1)}
               className={cn(

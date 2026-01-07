@@ -100,9 +100,8 @@ export function AvatarUpload({ onFileSelect, error }: AvatarUploadProps) {
         </span>
       </label>
 
-      <div
-        role="button"
-        tabIndex={0}
+      <button
+        type="button"
         className={`relative flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors ${
           isDragging
             ? "border-[var(--accent)] bg-[var(--accent)]/5"
@@ -114,12 +113,6 @@ export function AvatarUpload({ onFileSelect, error }: AvatarUploadProps) {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onClick={() => fileInputRef.current?.click()}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            fileInputRef.current?.click();
-          }
-        }}
       >
         <input
           ref={fileInputRef}
@@ -182,7 +175,7 @@ export function AvatarUpload({ onFileSelect, error }: AvatarUploadProps) {
             </div>
           </div>
         )}
-      </div>
+      </button>
 
       {displayError && (
         <p className="mt-2 text-red-400 text-sm">{displayError}</p>

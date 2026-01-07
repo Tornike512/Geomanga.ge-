@@ -32,11 +32,13 @@ export function setCookie(name: string, value: string, days = 7): void {
   // - SameSite=Strict: Prevents CSRF attacks
   // - HttpOnly: Cannot be set via JavaScript (server-only)
   const cookieString = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict;Secure`;
+  // biome-ignore lint/suspicious/noDocumentCookie: Client-side cookie management is required here
   document.cookie = cookieString;
 }
 
 export function deleteCookie(name: string): void {
   if (typeof window === "undefined") return;
 
+  // biome-ignore lint/suspicious/noDocumentCookie: Client-side cookie deletion is required here
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
 }
