@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
@@ -9,7 +8,6 @@ import { Input } from "@/components/input";
 import { useRegister } from "@/features/auth/hooks/use-register";
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -45,9 +43,6 @@ export default function RegisterPage() {
         password: formData.password,
       },
       {
-        onSuccess: () => {
-          router.push("/login?registered=true");
-        },
         onError: (error: Error) => {
           setFormError(error.message || "რეგისტრაცია ვერ მოხერხდა");
         },
@@ -110,10 +105,10 @@ export default function RegisterPage() {
             </div>
 
             {/* Gender */}
-            <div>
-              <label className="mb-3 block text-[var(--muted-foreground)] text-sm">
+            <fieldset>
+              <legend className="mb-3 block text-[var(--muted-foreground)] text-sm">
                 სქესი <span className="text-red-400">*</span>
-              </label>
+              </legend>
               <div className="flex gap-6">
                 <label className="flex cursor-pointer items-center gap-2">
                   <input
@@ -140,7 +135,7 @@ export default function RegisterPage() {
                   <span className="text-sm">მდედრობითი</span>
                 </label>
               </div>
-            </div>
+            </fieldset>
 
             {/* Password */}
             <div>
