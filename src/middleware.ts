@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
   // Check if the path requires authentication
   const isPublicPath = publicPaths.some((path) => pathname.startsWith(path));
 
-  // Get token from localStorage (client-side) or cookies (server-side)
+  // Get token from cookies
   const token = request.cookies.get("access_token")?.value;
 
   // Redirect to login if accessing protected route without token

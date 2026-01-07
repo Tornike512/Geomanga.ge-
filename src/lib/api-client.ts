@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <> */
 import { API_URL } from "@/config";
 import { ApiError, type ApiErrorResponse } from "@/types/api.types";
+import { deleteCookie, getCookie, setCookie } from "@/utils/cookies";
 import { logger } from "@/utils/logger";
 
 type RequestOptions = {
@@ -37,24 +38,26 @@ const REFRESH_TOKEN_KEY = "refresh_token";
 
 function getAccessToken(): string | undefined {
   if (typeof window === "undefined") return undefined;
-  return localStorage.getItem(TOKEN_STORAGE_KEY) ?? undefined;
+  return getCookie(TOKEN_STORAGE_KEY);
 }
 
 function getRefreshToken(): string | undefined {
   if (typeof window === "undefined") return undefined;
-  return localStorage.getItem(REFRESH_TOKEN_KEY) ?? undefined;
+  return getCookie(REFRESH_TOKEN_KEY);
 }
 
 export function setTokens(accessToken: string, refreshToken: string): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(TOKEN_STORAGE_KEY, accessToken);
-  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  // Set access token to expire in 1 day
+  setCookie(TOKEN_STORAGE_KEY, accessToken, 1);
+  // Set refresh token to expire in 7 days
+  setCookie(REFRESH_TOKEN_KEY, refreshToken, 7);
 }
 
 export function clearTokens(): void {
   if (typeof window === "undefined") return;
-  localStorage.removeItem(TOKEN_STORAGE_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
+  deleteCookie(TOKEN_STORAGE_KEY);
+  deleteCookie(REFRESH_TOKEN_KEY);
 }
 
 async function refreshAccessToken(): Promise<string | undefined> {
