@@ -80,7 +80,7 @@ export default function ReaderPage() {
     <div className="min-h-screen bg-black">
       {/* Header */}
       <div className="fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-[1920px] items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
             {chapter.manga && (
               <Link href={`/manga/${chapter.manga.slug}`}>
@@ -131,7 +131,7 @@ export default function ReaderPage() {
 
       {/* Navigation Controls */}
       <div className="fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-[1920px] items-center justify-between px-6 py-4">
           <Button
             onClick={goToPreviousPage}
             disabled={currentPageIndex === 0 && !chapter.previous_chapter_id}

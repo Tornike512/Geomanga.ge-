@@ -97,7 +97,7 @@ export default function UploadMangaPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-[95vw] px-8 py-32">
+    <div className="container mx-auto max-w-[1920px] px-6 py-32 md:px-8 lg:px-12">
       <div className="mb-24">
         <h1 className="mb-8 font-bold text-[clamp(2.5rem,8vw,6rem)] uppercase leading-none tracking-tighter">
           UPLOAD MANGA

@@ -36,7 +36,7 @@ export default function MangaDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto max-w-6xl px-6 py-24 md:px-8">
+      <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8">
         <div className="grid gap-8 md:grid-cols-3">
           <Skeleton className="aspect-[3/4] w-full rounded-lg" />
           <div className="space-y-6 md:col-span-2">
@@ -52,7 +52,7 @@ export default function MangaDetailPage() {
 
   if (!manga) {
     return (
-      <div className="container mx-auto max-w-6xl px-6 py-24 text-center md:px-8">
+      <div className="container mx-auto max-w-[1920px] px-6 py-24 text-center md:px-8">
         <h1 className="font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
           Manga not found
         </h1>
@@ -67,7 +67,7 @@ export default function MangaDetailPage() {
     <div className="relative">
       {/* Hero Section with Cover and Title */}
       <section className="border-[var(--border)] border-b py-16 md:py-24">
-        <div className="container mx-auto max-w-6xl px-6 md:px-8">
+        <div className="container mx-auto max-w-[1920px] px-6 md:px-8">
           <div className="grid gap-8 md:grid-cols-3">
             {/* Cover Image */}
             <div className="relative">
@@ -212,7 +212,7 @@ export default function MangaDetailPage() {
 
       {/* Chapters Section */}
       <section className="py-16 md:py-24">
-        <div className="container mx-auto max-w-6xl px-6 md:px-8">
+        <div className="container mx-auto max-w-[1920px] px-6 md:px-8">
           {/* Section Title */}
           <div className="mb-8 flex items-end justify-between">
             <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">

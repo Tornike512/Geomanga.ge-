@@ -35,7 +35,7 @@ export default function BrowsePage() {
   const { data, isLoading } = useMangaList(filters);
 
   return (
-    <div className="container mx-auto max-w-6xl px-6 py-24 md:px-8 md:py-32 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8 md:py-32 lg:px-12">
       {/* Page Title - Minimalist Dark */}
       <h1 className="mb-8 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
         Browse Manga

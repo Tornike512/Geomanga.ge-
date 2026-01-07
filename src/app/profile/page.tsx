@@ -62,7 +62,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto max-w-6xl px-6 py-24 md:px-8 md:py-32 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8 md:py-32 lg:px-12">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Left Column - Profile Info */}
         <div className="lg:col-span-1">

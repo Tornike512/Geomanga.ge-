@@ -50,7 +50,7 @@ export default async function RootLayout({
       <body className={cn("min-h-screen antialiased")}>
         <NoiseTexture />
         <AppProviders>
-          <div className="flex min-h-screen flex-col">
+          <div className="mx-auto flex min-h-screen w-full max-w-[1920px] flex-col">
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
