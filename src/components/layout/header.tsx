@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/button";
-import { useCurrentUser } from "@/features/auth";
+import { useCurrentUser, useLogout } from "@/features/auth";
 import { SearchBar } from "@/features/manga/components";
 import { getAvatarUrl } from "@/utils/image-urls";
 
@@ -84,6 +84,12 @@ function UserMenu({
 }: {
   user: { username: string; avatar_url?: string };
 }) {
+  const logout = useLogout();
+
+  const handleLogout = () => {
+    logout.mutate();
+  };
+
   return (
     <div className="flex items-center gap-3">
       <Link
@@ -101,6 +107,14 @@ function UserMenu({
           {user.username}
         </span>
       </Link>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={handleLogout}
+        disabled={logout.isPending}
+      >
+        {logout.isPending ? "Logging out..." : "Logout"}
+      </Button>
     </div>
   );
 }

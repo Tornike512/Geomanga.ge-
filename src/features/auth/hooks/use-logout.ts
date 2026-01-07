@@ -9,6 +9,9 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: logout,
     onSuccess: () => {
+      // Invalidate and remove user query immediately
+      queryClient.setQueryData(["user", "me"], null);
+      queryClient.removeQueries({ queryKey: ["user", "me"] });
       queryClient.clear();
       router.push("/login");
     },
