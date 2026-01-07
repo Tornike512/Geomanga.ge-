@@ -15,11 +15,11 @@ export default function GenresPage() {
   const { data: genres, isLoading: genresLoading } = useGenres();
   const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null);
   const genreSkeletonKeys = useMemo(
-    () => Array.from({ length: 12 }, () => crypto.randomUUID()),
+    () => Array.from({ length: 12 }, (_, i) => `genre-skeleton-${i}`),
     [],
   );
   const mangaSkeletonKeys = useMemo(
-    () => Array.from({ length: 12 }, () => crypto.randomUUID()),
+    () => Array.from({ length: 12 }, (_, i) => `manga-skeleton-${i}`),
     [],
   );
 

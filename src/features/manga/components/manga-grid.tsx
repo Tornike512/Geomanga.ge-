@@ -9,17 +9,24 @@ interface MangaGridProps {
   readonly isLoading?: boolean;
 }
 
-const skeletonKeys = Array.from({ length: 10 }, () => crypto.randomUUID());
+const SKELETON_COUNT = 10;
+const skeletonKeys = Array.from(
+  { length: SKELETON_COUNT },
+  (_, i) => `skeleton-${i}`,
+);
 
 export function MangaGrid({ manga, isLoading }: MangaGridProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 gap-px bg-[#3F3F46] sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {skeletonKeys.map((key) => (
-          <div key={key} className="space-y-4 bg-[#09090B] p-4">
-            <Skeleton className="aspect-[3/4] w-full rounded-none" />
-            <Skeleton className="h-4 w-3/4 rounded-none" />
-            <Skeleton className="h-3 w-1/2 rounded-none" />
+          <div
+            key={key}
+            className="space-y-3 rounded-lg border border-[var(--border)] bg-[var(--card)] p-3 backdrop-blur-sm"
+          >
+            <Skeleton className="aspect-[3/4] w-full rounded-lg" />
+            <Skeleton className="h-4 w-3/4 rounded" />
+            <Skeleton className="h-3 w-1/2 rounded" />
           </div>
         ))}
       </div>
@@ -28,16 +35,14 @@ export function MangaGrid({ manga, isLoading }: MangaGridProps) {
 
   if (!manga || manga.length === 0) {
     return (
-      <div className="border-2 border-[#3F3F46] py-24 text-center">
-        <p className="font-bold text-2xl text-[#A1A1AA] uppercase tracking-wider">
-          NO MANGA FOUND
-        </p>
+      <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] py-16 text-center backdrop-blur-sm">
+        <p className="text-[var(--muted-foreground)] text-lg">No manga found</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-2 gap-px bg-[#3F3F46] sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
       {manga.map((item) => (
         <MangaCard key={item.id} manga={item} />
       ))}

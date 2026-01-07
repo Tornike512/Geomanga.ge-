@@ -1,7 +1,17 @@
+import { randomUUID } from "node:crypto";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundaryProvider } from "@/providers/error-boundary-provider";
 import "@testing-library/jest-dom";
 import { type RenderOptions, render } from "@testing-library/react";
+
+// Polyfill crypto.randomUUID for jsdom environment
+if (typeof globalThis.crypto?.randomUUID !== "function") {
+  Object.defineProperty(globalThis.crypto, "randomUUID", {
+    value: randomUUID,
+    writable: true,
+    configurable: true,
+  });
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
