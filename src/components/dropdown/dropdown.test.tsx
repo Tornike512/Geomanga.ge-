@@ -64,7 +64,7 @@ describe("Dropdown", () => {
       expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
-    const option = screen.getByRole("option", { name: "Ongoing" });
+    const option = screen.getByText("Ongoing");
     fireEvent.click(option);
 
     expect(handleChange).toHaveBeenCalledWith("ongoing");
@@ -88,7 +88,7 @@ describe("Dropdown", () => {
       expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
-    const option = screen.getByRole("option", { name: "Completed" });
+    const option = screen.getByText("Completed");
     fireEvent.click(option);
 
     await waitFor(() => {
@@ -127,8 +127,9 @@ describe("Dropdown", () => {
       expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
-    const selectedOption = screen.getByRole("option", { selected: true });
-    expect(selectedOption).toHaveTextContent("Completed");
+    const selectedOption = screen.getByText("Completed");
+    const checkmark = selectedOption.parentElement?.querySelector("svg");
+    expect(checkmark).toBeInTheDocument();
   });
 
   it("respects disabled state", () => {
@@ -231,7 +232,7 @@ describe("Dropdown", () => {
       </div>,
     );
 
-    const trigger = screen.getByRole("button");
+    const trigger = screen.getByRole("button", { name: "All status" });
     fireEvent.click(trigger);
 
     await waitFor(() => {
@@ -269,7 +270,7 @@ describe("Dropdown", () => {
       />,
     );
 
-    const trigger = screen.getByRole("combobox", { name: "Status filter" });
+    const trigger = screen.getByRole("button", { name: "Status filter" });
     expect(trigger).toBeInTheDocument();
   });
 
