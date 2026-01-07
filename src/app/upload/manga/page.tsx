@@ -353,10 +353,11 @@ export default function UploadMangaPage() {
               <h3 className="mb-4 font-bold">Genres</h3>
               <div className="flex flex-wrap gap-2">
                 {genres?.map((genre) => (
-                  <button
+                  <Button
                     key={genre.id}
-                    type="button"
+                    variant="ghost"
                     onClick={() => handleGenreToggle(genre.id)}
+                    className="h-auto p-0"
                   >
                     <Badge
                       variant={
@@ -368,7 +369,7 @@ export default function UploadMangaPage() {
                     >
                       {genre.name}
                     </Badge>
-                  </button>
+                  </Button>
                 ))}
               </div>
             </Card>

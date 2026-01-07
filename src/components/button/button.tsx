@@ -26,7 +26,7 @@ export const Button = ({
       disabled={loading || props.disabled}
       className={cn(
         // Base styles - Minimalist Dark: smooth, refined, no uppercase
-        "inline-flex items-center justify-center font-medium tracking-normal transition-all duration-200 ease-out",
+        "inline-flex cursor-pointer items-center justify-center font-medium tracking-normal transition-all duration-200 ease-out",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
         "disabled:pointer-events-none disabled:opacity-50",
         "active:scale-[0.98]", // Subtle press effect

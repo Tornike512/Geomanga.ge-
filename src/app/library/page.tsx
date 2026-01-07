@@ -58,8 +58,8 @@ export default function LibraryPage() {
 
       {/* Tabs - Glass effect tabs */}
       <div className="mb-8 flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm">
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           onClick={() => handleTabChange("bookmarks")}
           className={`flex-1 rounded-md px-6 py-3 font-medium text-sm transition-all duration-200 ${
             activeTab === "bookmarks"
@@ -71,9 +71,9 @@ export default function LibraryPage() {
           {bookmarksData && (
             <span className="ml-2 opacity-70">({bookmarksData.total})</span>
           )}
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          variant="ghost"
           onClick={() => handleTabChange("history")}
           className={`flex-1 rounded-md px-6 py-3 font-medium text-sm transition-all duration-200 ${
             activeTab === "history"
@@ -85,7 +85,7 @@ export default function LibraryPage() {
           {historyData && (
             <span className="ml-2 opacity-70">({historyData.total})</span>
           )}
-        </button>
+        </Button>
       </div>
 
       {/* Content */}

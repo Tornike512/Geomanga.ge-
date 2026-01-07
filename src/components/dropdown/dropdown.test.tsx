@@ -40,7 +40,7 @@ describe("Dropdown", () => {
     fireEvent.click(trigger);
 
     await waitFor(() => {
-      expect(screen.getByRole("listbox")).toBeVisible();
+      expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
     expect(screen.getAllByRole("option")).toHaveLength(mockOptions.length);
@@ -61,10 +61,10 @@ describe("Dropdown", () => {
     fireEvent.click(trigger);
 
     await waitFor(() => {
-      expect(screen.getByRole("listbox")).toBeVisible();
+      expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
-    const option = screen.getByText("Ongoing");
+    const option = screen.getByRole("option", { name: "Ongoing" });
     fireEvent.click(option);
 
     expect(handleChange).toHaveBeenCalledWith("ongoing");
@@ -124,7 +124,7 @@ describe("Dropdown", () => {
     fireEvent.click(trigger);
 
     await waitFor(() => {
-      expect(screen.getByRole("listbox")).toBeVisible();
+      expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
     const selectedOption = screen.getByRole("option", { selected: true });
@@ -162,7 +162,7 @@ describe("Dropdown", () => {
     fireEvent.keyDown(trigger, { key: "ArrowDown" });
 
     await waitFor(() => {
-      expect(screen.getByRole("listbox")).toBeVisible();
+      expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
   });
 

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Badge } from "@/components/badge";
+import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { Skeleton } from "@/components/skeleton";
 import { useGenres } from "@/features/genres/hooks/use-genres";
@@ -56,13 +57,13 @@ export default function GenresPage() {
       {/* Genre Grid */}
       <div className="mb-16 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
         {genres?.map((genre) => (
-          <button
+          <Button
             key={genre.id}
-            type="button"
+            variant="ghost"
             onClick={() =>
               setSelectedGenreId(selectedGenreId === genre.id ? null : genre.id)
             }
-            className={`group relative overflow-hidden rounded-lg border p-8 text-left transition-all duration-200 ${
+            className={`group relative h-auto overflow-hidden rounded-lg border p-8 text-left transition-all duration-200 ${
               selectedGenreId === genre.id
                 ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_30px_rgba(245,158,11,0.2)]"
                 : "border-[var(--border)] bg-[var(--card)] backdrop-blur-sm hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)]"
@@ -102,7 +103,7 @@ export default function GenresPage() {
                 </div>
               </div>
             )}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -165,13 +166,13 @@ export default function GenresPage() {
               {mangaData.total > 12 && (
                 <div className="mt-8 text-center">
                   <Link href={`/browse?genre_id=${selectedGenreId}`}>
-                    <button
-                      type="button"
+                    <Button
+                      variant="ghost"
                       className="inline-flex items-center gap-2 font-medium text-[var(--accent)] transition-colors duration-200 hover:text-[var(--foreground)]"
                     >
                       View all {mangaData.total} manga
                       <ArrowRight className="h-4 w-4" />
-                    </button>
+                    </Button>
                   </Link>
                 </div>
               )}
