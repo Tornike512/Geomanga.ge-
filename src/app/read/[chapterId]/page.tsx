@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/button";
+import { Dropdown } from "@/components/dropdown";
 import { Skeleton } from "@/components/skeleton";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
 import { useTrackReading } from "@/features/reader/hooks/use-track-reading";
@@ -144,17 +145,16 @@ export default function ReaderPage() {
 
           {/* Page Navigation */}
           <div className="flex items-center gap-3">
-            <select
-              value={currentPageIndex}
-              onChange={(e) => handlePageChange(Number(e.target.value))}
-              className="h-9 rounded-lg border border-[var(--border)] bg-[var(--card)] px-4 text-sm text-white backdrop-blur-sm transition-all duration-200 focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-            >
-              {chapter.pages.map((page, index) => (
-                <option key={page.id} value={index}>
-                  Page {index + 1}
-                </option>
-              ))}
-            </select>
+            <Dropdown
+              options={chapter.pages.map((_page, index) => ({
+                value: String(index),
+                label: `Page ${index + 1}`,
+              }))}
+              value={String(currentPageIndex)}
+              onChange={(value) => handlePageChange(Number(value))}
+              aria-label="Select page"
+              className="min-w-[120px]"
+            />
           </div>
 
           <Button

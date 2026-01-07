@@ -13,6 +13,9 @@ if (typeof globalThis.crypto?.randomUUID !== "function") {
   });
 }
 
+// Mock scrollIntoView for jsdom environment
+Element.prototype.scrollIntoView = () => {};
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

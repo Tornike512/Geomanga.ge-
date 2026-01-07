@@ -2,9 +2,26 @@
 
 import { useState } from "react";
 import { Button } from "@/components/button";
+import { Dropdown } from "@/components/dropdown";
 import { useMangaList } from "@/features/manga";
 import { MangaGrid } from "@/features/manga/components";
 import type { MangaListParams, MangaStatus } from "@/types/manga.types";
+
+const STATUS_OPTIONS = [
+  { value: "", label: "All status" },
+  { value: "ongoing", label: "Ongoing" },
+  { value: "completed", label: "Completed" },
+  { value: "hiatus", label: "Hiatus" },
+  { value: "cancelled", label: "Cancelled" },
+] as const;
+
+const SORT_OPTIONS = [
+  { value: "rating", label: "Rating" },
+  { value: "views", label: "Views" },
+  { value: "title", label: "Title" },
+  { value: "created_at", label: "Created date" },
+  { value: "updated_at", label: "Updated date" },
+] as const;
 
 export default function BrowsePage() {
   const [filters, setFilters] = useState({
@@ -26,43 +43,33 @@ export default function BrowsePage() {
 
       {/* Filters - Glass effect */}
       <div className="mb-8 flex flex-wrap gap-3">
-        <select
+        <Dropdown
+          options={STATUS_OPTIONS}
           value={filters.status || ""}
-          onChange={(e) =>
+          onChange={(value) =>
             setFilters({
               ...filters,
-              status: e.target.value
-                ? (e.target.value as MangaStatus)
-                : undefined,
+              status: value ? (value as MangaStatus) : undefined,
               page: 1,
             })
           }
-          className="rounded-lg border border-[var(--border)] bg-[var(--card)] px-4 py-2.5 text-[var(--foreground)] text-sm backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-        >
-          <option value="">All status</option>
-          <option value="ongoing">Ongoing</option>
-          <option value="completed">Completed</option>
-          <option value="hiatus">Hiatus</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
+          aria-label="Filter by status"
+          className="min-w-[140px]"
+        />
 
-        <select
+        <Dropdown
+          options={SORT_OPTIONS}
           value={filters.sort_by}
-          onChange={(e) =>
+          onChange={(value) =>
             setFilters({
               ...filters,
-              sort_by: e.target.value as MangaListParams["sort_by"],
+              sort_by: value as MangaListParams["sort_by"],
               page: 1,
             })
           }
-          className="rounded-lg border border-[var(--border)] bg-[var(--card)] px-4 py-2.5 text-[var(--foreground)] text-sm backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-        >
-          <option value="rating">Rating</option>
-          <option value="views">Views</option>
-          <option value="title">Title</option>
-          <option value="created_at">Created date</option>
-          <option value="updated_at">Updated date</option>
-        </select>
+          aria-label="Sort by"
+          className="min-w-[140px]"
+        />
 
         <Button
           variant="outline"

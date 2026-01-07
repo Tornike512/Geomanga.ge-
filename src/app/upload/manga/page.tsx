@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
+import { Dropdown } from "@/components/dropdown";
 import { Input } from "@/components/input";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { useGenres } from "@/features/genres/hooks/use-genres";
@@ -302,22 +303,24 @@ export default function UploadMangaPage() {
                     >
                       Status *
                     </label>
-                    <select
+                    <Dropdown
                       id="status"
+                      options={[
+                        { value: "ONGOING", label: "Ongoing" },
+                        { value: "COMPLETED", label: "Completed" },
+                        { value: "HIATUS", label: "Hiatus" },
+                        { value: "CANCELLED", label: "Cancelled" },
+                      ]}
                       value={formData.status}
-                      onChange={(e) =>
+                      onChange={(value) =>
                         setFormData((prev) => ({
                           ...prev,
-                          status: e.target.value as MangaStatus,
+                          status: value as MangaStatus,
                         }))
                       }
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="ONGOING">Ongoing</option>
-                      <option value="COMPLETED">Completed</option>
-                      <option value="HIATUS">Hiatus</option>
-                      <option value="CANCELLED">Cancelled</option>
-                    </select>
+                      aria-label="Manga status"
+                      className="w-full"
+                    />
                   </div>
                   <div>
                     <label
