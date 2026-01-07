@@ -8,19 +8,19 @@ import { MangaGrid } from "@/features/manga/components";
 import type { MangaListParams, MangaStatus } from "@/types/manga.types";
 
 const STATUS_OPTIONS = [
-  { value: "", label: "All status" },
-  { value: "ongoing", label: "Ongoing" },
-  { value: "completed", label: "Completed" },
-  { value: "hiatus", label: "Hiatus" },
-  { value: "cancelled", label: "Cancelled" },
+  { value: "", label: "ყველა სტატუსი" },
+  { value: "ongoing", label: "მიმდინარე" },
+  { value: "completed", label: "დასრულებული" },
+  { value: "hiatus", label: "პაუზაზე" },
+  { value: "cancelled", label: "გაუქმებული" },
 ] as const;
 
 const SORT_OPTIONS = [
-  { value: "rating", label: "Rating" },
-  { value: "views", label: "Views" },
-  { value: "title", label: "Title" },
-  { value: "created_at", label: "Created date" },
-  { value: "updated_at", label: "Updated date" },
+  { value: "rating", label: "რეიტინგი" },
+  { value: "views", label: "ნახვები" },
+  { value: "title", label: "სათაური" },
+  { value: "created_at", label: "შექმნის თარიღი" },
+  { value: "updated_at", label: "განახლების თარიღი" },
 ] as const;
 
 export default function BrowsePage() {
@@ -38,7 +38,7 @@ export default function BrowsePage() {
     <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8 md:py-32 lg:px-12">
       {/* Page Title - Minimalist Dark */}
       <h1 className="mb-8 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
-        Browse Manga
+        მანგის ნავიგაცია
       </h1>
 
       {/* Filters - Glass effect */}
@@ -79,7 +79,7 @@ export default function BrowsePage() {
           }
           className="h-auto min-w-[140px] px-4 py-2.5"
         >
-          {filters.order_desc ? "↓ Descending" : "↑ Ascending"}
+          {filters.order_desc ? "↓ კლებადი" : "↑ ზრდადი"}
         </Button>
       </div>
 
@@ -95,7 +95,7 @@ export default function BrowsePage() {
             onClick={() => setFilters({ ...filters, page: filters.page - 1 })}
             disabled={filters.page === 1}
           >
-            Previous
+            წინა
           </Button>
           <span className="font-medium text-sm">
             <span className="text-[var(--accent)]">{filters.page}</span>
@@ -108,7 +108,7 @@ export default function BrowsePage() {
             onClick={() => setFilters({ ...filters, page: filters.page + 1 })}
             disabled={filters.page >= data.pages}
           >
-            Next
+            შემდეგი
           </Button>
         </div>
       )}

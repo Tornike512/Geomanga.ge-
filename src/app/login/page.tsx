@@ -26,7 +26,7 @@ export default function LoginPage() {
       <div className="mx-auto max-w-md">
         {/* Minimalist Dark Title */}
         <h1 className="mb-8 text-center font-semibold text-3xl tracking-tight sm:text-4xl">
-          Welcome back
+          კეთილდგებობით
         </h1>
 
         <Card>
@@ -37,7 +37,7 @@ export default function LoginPage() {
                   htmlFor="login"
                   className="mb-2 block text-[var(--muted-foreground)] text-sm"
                 >
-                  Email or username
+                  იმეილი ან მომხმარებლის სახელი
                 </label>
                 <Input
                   id="login"
@@ -46,7 +46,7 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, login: e.target.value })
                   }
-                  placeholder="Enter your email"
+                  placeholder="შეიყვანეთ თქვენი იმეილი"
                   required
                 />
               </div>
@@ -56,7 +56,7 @@ export default function LoginPage() {
                   htmlFor="password"
                   className="mb-2 block text-[var(--muted-foreground)] text-sm"
                 >
-                  Password
+                  პაროლი
                 </label>
                 <Input
                   id="password"
@@ -65,7 +65,7 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
-                  placeholder="Enter your password"
+                  placeholder="შეიყვანეთ თქვენი პაროლი"
                   required
                 />
               </div>
@@ -73,7 +73,7 @@ export default function LoginPage() {
               {login.isError && (
                 <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
                   <p className="text-red-400 text-sm">
-                    {login.error?.message || "Login failed"}
+                    {login.error?.message || "შესვლა ვერ მოხერხდა"}
                   </p>
                 </div>
               )}
@@ -84,17 +84,17 @@ export default function LoginPage() {
                 loading={login.isPending}
                 disabled={login.isPending}
               >
-                {login.isPending ? "Signing in..." : "Sign in"}
+                {login.isPending ? "შესვლა..." : "შესვლა"}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-[var(--muted-foreground)] text-sm">
-              Don't have an account?{" "}
+              არ გაქვთ ანგარიში?{" "}
               <Link
                 href="/register"
                 className="font-medium text-[var(--accent)] transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
               >
-                Sign up
+                დარეგისტრირეთ
               </Link>
             </div>
           </CardContent>

@@ -33,20 +33,20 @@ export function Header() {
               href="/browse"
               className="text-[var(--muted-foreground)] text-sm transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
             >
-              Browse
+              ნავიგაცია
             </Link>
             <Link
               href="/genres"
               className="text-[var(--muted-foreground)] text-sm transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
             >
-              Genres
+              ჟანრები
             </Link>
             {user && (
               <Link
                 href="/library"
                 className="text-[var(--muted-foreground)] text-sm transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
               >
-                Library
+                ბიბლიოთეკა
               </Link>
             )}
           </nav>
@@ -64,11 +64,11 @@ export function Header() {
               <div className="flex items-center gap-3">
                 <Link href="/login">
                   <Button variant="ghost" size="sm">
-                    Login
+                    შესვლა
                   </Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm">Sign Up</Button>
+                  <Button size="sm">რეგისტრაცია</Button>
                 </Link>
               </div>
             )}
@@ -113,7 +113,7 @@ function UserMenu({
         onClick={handleLogout}
         disabled={logout.isPending}
       >
-        {logout.isPending ? "Logging out..." : "Logout"}
+        {logout.isPending ? "გამოსვლა..." : "გასვლა"}
       </Button>
     </div>
   );

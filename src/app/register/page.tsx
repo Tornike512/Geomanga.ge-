@@ -26,13 +26,13 @@ export default function RegisterPage() {
 
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      setFormError("Passwords do not match");
+      setFormError("პაროლები არ ერთმანეთი");
       return;
     }
 
     // Validate password length
     if (formData.password.length < 8) {
-      setFormError("Password must be at least 8 characters");
+      setFormError("პაროლი უნდა იყოს მინიმუმ 8 სიმბოლო");
       return;
     }
 
@@ -47,7 +47,7 @@ export default function RegisterPage() {
           router.push("/login?registered=true");
         },
         onError: (error: Error) => {
-          setFormError(error.message || "Registration failed");
+          setFormError(error.message || "რეგისტრაცია ვერ მოხერხდა");
         },
       },
     );
@@ -65,7 +65,7 @@ export default function RegisterPage() {
       <div className="mx-auto max-w-md">
         {/* Minimalist Dark Title */}
         <h1 className="mb-8 text-center font-semibold text-3xl tracking-tight sm:text-4xl">
-          Create an account
+          შექმენით ანგარიში
         </h1>
 
         <Card className="p-8">
@@ -76,14 +76,14 @@ export default function RegisterPage() {
                 htmlFor="username"
                 className="mb-2 block text-[var(--muted-foreground)] text-sm"
               >
-                Username
+                მომხმარებლის სახელი
               </label>
               <Input
                 id="username"
                 type="text"
                 value={formData.username}
                 onChange={handleChange("username")}
-                placeholder="Enter your username"
+                placeholder="შეიყვანეთ მომხმარებლის სახელი"
                 required
                 minLength={3}
               />
@@ -95,14 +95,14 @@ export default function RegisterPage() {
                 htmlFor="email"
                 className="mb-2 block text-[var(--muted-foreground)] text-sm"
               >
-                Email
+                იმეილი
               </label>
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={handleChange("email")}
-                placeholder="Enter your email"
+                placeholder="შეიყვანეთ თქვენი იმეილი"
                 required
               />
             </div>
@@ -113,7 +113,7 @@ export default function RegisterPage() {
                 htmlFor="password"
                 className="mb-2 block text-[var(--muted-foreground)] text-sm"
               >
-                Password
+                პაროლი
               </label>
               <Input
                 id="password"
@@ -125,7 +125,7 @@ export default function RegisterPage() {
                 minLength={8}
               />
               <p className="mt-2 text-[var(--muted-foreground)] text-xs">
-                Must be at least 8 characters
+                უნდა იყოს მინიმუმ 8 სიმბოლო
               </p>
             </div>
 
@@ -135,7 +135,7 @@ export default function RegisterPage() {
                 htmlFor="confirmPassword"
                 className="mb-2 block text-[var(--muted-foreground)] text-sm"
               >
-                Confirm password
+                დაადასტურეთ პაროლი
               </label>
               <Input
                 id="confirmPassword"
@@ -162,36 +162,36 @@ export default function RegisterPage() {
               disabled={register.isPending}
               loading={register.isPending}
             >
-              {register.isPending ? "Creating account..." : "Sign up"}
+              {register.isPending ? "ანგარიშის შექმნა..." : "რეგისტრაცია"}
             </Button>
 
             {/* Login Link */}
             <div className="text-center text-[var(--muted-foreground)] text-sm">
-              Already have an account?{" "}
+              უკვე გაქვთ ანგარიში?{" "}
               <Link
                 href="/login"
                 className="font-medium text-[var(--accent)] transition-colors duration-200 hover:text-[var(--foreground)]"
               >
-                Sign in
+                შესვლა
               </Link>
             </div>
           </form>
 
           {/* Terms */}
           <div className="mt-6 border-[var(--border)] border-t pt-6 text-center text-[var(--muted-foreground)] text-xs">
-            By creating an account, you agree to our{" "}
+            ანგარიშის შექმნით, თქვენ თანახმდებით ჩვენს{" "}
             <a
               href="/terms"
               className="text-[var(--accent)] transition-colors duration-200 hover:text-[var(--foreground)]"
             >
-              Terms of Service
+              მომსახურების პირობებს
             </a>{" "}
-            and{" "}
+            და{" "}
             <a
               href="/privacy"
               className="text-[var(--accent)] transition-colors duration-200 hover:text-[var(--foreground)]"
             >
-              Privacy Policy
+              კონფიდენციალურობის პოლიტიკას
             </a>
           </div>
         </Card>

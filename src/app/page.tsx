@@ -20,8 +20,8 @@ export default async function Home() {
           />
         </div>
         <p className="mx-auto max-w-2xl text-[var(--muted-foreground)] text-lg leading-relaxed md:text-xl">
-          Discover thousands of manga series. Read, rate, and discuss your
-          favorites.
+          აღმოაჩინეთ ათასობით მანგის სერიები. წაიკითხეთ, შეაფასეთ და განიხილეთ
+          თქვენი რჩეულები.
         </p>
       </section>
 

@@ -15,10 +15,10 @@ export function RecentUpdatesSection() {
             className="h-7 w-7 text-[var(--accent)]"
             strokeWidth={1.5}
           />
-          Recently Updated
+          ბოლო განახლებული
         </h2>
         <p className="text-[var(--muted-foreground)] text-base">
-          Latest chapter releases
+          უახლესი თავების რელიზები
         </p>
       </div>
       <MangaGrid manga={recent || []} isLoading={isLoading} />

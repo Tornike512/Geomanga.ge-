@@ -55,7 +55,7 @@ export default function ProfilePage() {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
         <h1 className="mb-4 font-bold text-2xl">
-          Please log in to view your profile
+          გთხოვთ შეხვიდეთ სისტემაში პროფილის სანახავად
         </h1>
       </div>
     );
@@ -137,14 +137,14 @@ export default function ProfilePage() {
                   {user.role}
                 </div>
                 <div className="text-[var(--muted-foreground)] text-sm">
-                  Role
+                  როლი
                 </div>
               </div>
             </div>
 
             {/* Member Since */}
             <div className="mt-6 border-[var(--border)] border-t pt-6 text-[var(--muted-foreground)] text-sm">
-              Member since {new Date(user.created_at).toLocaleDateString()}
+              წევრი {new Date(user.created_at).toLocaleDateString()}-დან
             </div>
           </Card>
         </div>
@@ -153,10 +153,10 @@ export default function ProfilePage() {
         <div className="lg:col-span-2">
           <Card className="p-6">
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-semibold text-lg">Profile Settings</h2>
+              <h2 className="font-semibold text-lg">პროფილის პარამეტრები</h2>
               {!isEditing && (
                 <Button onClick={() => setIsEditing(true)} variant="outline">
-                  Edit Profile
+                  პროფილის რედაქტირება
                 </Button>
               )}
             </div>
@@ -168,7 +168,7 @@ export default function ProfilePage() {
                   htmlFor="username"
                   className="mb-1 block font-medium text-sm"
                 >
-                  Username
+                  მომხმარებლის სახელი
                 </label>
                 <Input
                   id="username"
@@ -191,7 +191,7 @@ export default function ProfilePage() {
                   htmlFor="email"
                   className="mb-1 block font-medium text-sm"
                 >
-                  Email
+                  იმეილი
                 </label>
                 <Input
                   id="email"
@@ -213,7 +213,7 @@ export default function ProfilePage() {
                     disabled={updateProfile.isPending}
                     loading={updateProfile.isPending}
                   >
-                    Save Changes
+                    ცვლილებების შენახვა
                   </Button>
                   <Button
                     type="button"
@@ -226,7 +226,7 @@ export default function ProfilePage() {
                       });
                     }}
                   >
-                    Cancel
+                    გაუქმება
                   </Button>
                 </div>
               )}
@@ -234,20 +234,21 @@ export default function ProfilePage() {
 
             {/* Change Password Section */}
             <div className="mt-8 border-[var(--border)] border-t pt-8">
-              <h3 className="mb-4 font-medium text-base">Security</h3>
-              <Button variant="outline">Change Password</Button>
+              <h3 className="mb-4 font-medium text-base">უსაფრთხოება</h3>
+              <Button variant="outline">პაროლის შეცვლა</Button>
             </div>
 
             {/* Danger Zone */}
             {user.role === UserRole.ADMIN && (
               <div className="mt-8 border-[var(--border)] border-t pt-8">
                 <h3 className="mb-2 font-medium text-base text-red-400">
-                  Danger Zone
+                  საშიში ზონა
                 </h3>
                 <p className="mb-4 text-[var(--muted-foreground)] text-sm">
-                  Irreversible actions that affect your account
+                  შეუქცევადი მოქმედებები, რომლებიც გავლენას ახდენენ თქვენს
+                  ანგარიშზე
                 </p>
-                <Button variant="destructive">Delete Account</Button>
+                <Button variant="destructive">ანგარიშის წაშლა</Button>
               </div>
             )}
           </Card>

@@ -12,10 +12,10 @@ export function TrendingSection() {
       <div className="mb-8">
         <h2 className="mb-3 flex items-center gap-3 font-semibold text-2xl tracking-tight sm:text-3xl">
           <Flame className="h-7 w-7 text-[var(--accent)]" strokeWidth={1.5} />
-          Trending Now
+          ტრენდული ახლა
         </h2>
         <p className="text-[var(--muted-foreground)] text-base">
-          Most popular manga this week
+          ყველაზე პოპულარული მანგა ამ კვირაში
         </p>
       </div>
       <MangaGrid manga={trending || []} isLoading={isLoading} />

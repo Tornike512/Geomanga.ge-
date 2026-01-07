@@ -36,7 +36,9 @@ export function MangaGrid({ manga, isLoading }: MangaGridProps) {
   if (!manga || manga.length === 0) {
     return (
       <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] py-16 text-center backdrop-blur-sm">
-        <p className="text-[var(--muted-foreground)] text-lg">No manga found</p>
+        <p className="text-[var(--muted-foreground)] text-lg">
+          მანგა არ მოიძებნა
+        </p>
       </div>
     );
   }

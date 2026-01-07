@@ -67,8 +67,8 @@ export default function ReaderPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center text-white">
-          <h1 className="mb-4 font-bold text-2xl">Chapter not found</h1>
-          <Button onClick={() => router.back()}>Go Back</Button>
+          <h1 className="mb-4 font-bold text-2xl">თავი ვერ მოიძებნა</h1>
+          <Button onClick={() => router.back()}>უკან</Button>
         </div>
       </div>
     );
@@ -86,16 +86,16 @@ export default function ReaderPage() {
               <Link href={`/manga/${chapter.manga.slug}`}>
                 <Button variant="outline" size="sm">
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back
+                  უკან
                 </Button>
               </Link>
             )}
             <div className="text-white">
               <h1 className="font-medium text-base tracking-tight">
-                {chapter.manga?.title || "Unknown Manga"}
+                {chapter.manga?.title || "უცნობი მანგა"}
               </h1>
               <p className="text-[var(--muted-foreground)] text-sm">
-                Chapter {chapter.chapter_number}: {chapter.title}
+                თავი {chapter.chapter_number}: {chapter.title}
               </p>
             </div>
           </div>
@@ -139,8 +139,8 @@ export default function ReaderPage() {
           >
             <ChevronLeft className="mr-1 h-4 w-4" />
             {currentPageIndex === 0 && chapter.previous_chapter_id
-              ? "Previous Chapter"
-              : "Previous"}
+              ? "წინა თავი"
+              : "წინა"}
           </Button>
 
           {/* Page Navigation */}
@@ -148,7 +148,7 @@ export default function ReaderPage() {
             <Dropdown
               options={chapter.pages.map((_page, index) => ({
                 value: String(index),
-                label: `Page ${index + 1}`,
+                label: `გვერდი ${index + 1}`,
               }))}
               value={String(currentPageIndex)}
               onChange={(value) => handlePageChange(Number(value))}
@@ -167,8 +167,8 @@ export default function ReaderPage() {
           >
             {currentPageIndex === chapter.pages.length - 1 &&
             chapter.next_chapter_id
-              ? "Next Chapter"
-              : "Next"}
+              ? "შემდეგი თავი"
+              : "შემდეგი"}
             <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
         </div>
@@ -176,7 +176,7 @@ export default function ReaderPage() {
 
       {/* Chapter List Sidebar (Optional) */}
       <div className="fixed top-24 right-4 hidden max-h-96 overflow-y-auto rounded-lg bg-gray-900 p-4 lg:block">
-        <h3 className="mb-2 font-bold text-white">Chapters</h3>
+        <h3 className="mb-2 font-bold text-white">თავები</h3>
         <div className="space-y-1">
           {chapter.previous_chapter_id && (
             <Link href={`/read/${chapter.previous_chapter_id}`}>
@@ -184,12 +184,12 @@ export default function ReaderPage() {
                 variant="ghost"
                 className="w-full text-left text-gray-400 text-sm"
               >
-                Previous Chapter
+                წინა თავი
               </Button>
             </Link>
           )}
           <div className="rounded-md bg-blue-600 px-3 py-2 font-medium text-sm text-white">
-            Chapter {chapter.chapter_number}
+            თავი {chapter.chapter_number}
           </div>
           {chapter.next_chapter_id && (
             <Link href={`/read/${chapter.next_chapter_id}`}>
@@ -197,7 +197,7 @@ export default function ReaderPage() {
                 variant="ghost"
                 className="w-full text-left text-gray-400 text-sm"
               >
-                Next Chapter
+                შემდეგი თავი
               </Button>
             </Link>
           )}

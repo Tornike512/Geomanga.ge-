@@ -49,10 +49,10 @@ export default function LibraryPage() {
       {/* Header */}
       <div className="mb-12">
         <h1 className="mb-4 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
-          My Library
+          ჩემი ბიბლიოთეკა
         </h1>
         <p className="text-[var(--muted-foreground)] text-lg">
-          Your bookmarked manga and reading history
+          თქვენი სანიშნებში დამატებული მანგა და კითხვის ისტორია
         </p>
       </div>
 
@@ -67,7 +67,7 @@ export default function LibraryPage() {
               : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
           }`}
         >
-          Bookmarks
+          სანიშნეები
           {bookmarksData && (
             <span className="ml-2 opacity-70">({bookmarksData.total})</span>
           )}
@@ -81,7 +81,7 @@ export default function LibraryPage() {
               : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
           }`}
         >
-          Reading History
+          კითხვის ისტორია
           {historyData && (
             <span className="ml-2 opacity-70">({historyData.total})</span>
           )}
@@ -101,8 +101,12 @@ export default function LibraryPage() {
         </div>
       ) : error ? (
         <div className="py-12 text-center">
-          <p className="mb-4 text-red-600">Failed to load your library</p>
-          <Button onClick={() => window.location.reload()}>Try Again</Button>
+          <p className="mb-4 text-red-600">
+            ბიბლიოთეკის ჩატვირთვა ვერ მოხერხდა
+          </p>
+          <Button onClick={() => window.location.reload()}>
+            სცადეთ ხელახლა
+          </Button>
         </div>
       ) : !data || data.items.length === 0 ? (
         <div className="py-12 text-center">
@@ -124,17 +128,17 @@ export default function LibraryPage() {
             </svg>
             <h3 className="mb-2 font-bold text-xl">
               {activeTab === "bookmarks"
-                ? "No bookmarks yet"
-                : "No reading history"}
+                ? "სანიშნეები ჯერ არ გაქვთ"
+                : "კითხვის ისტორია არ გაქვთ"}
             </h3>
             <p className="mb-4 text-gray-600">
               {activeTab === "bookmarks"
-                ? "Start bookmarking manga to see them here"
-                : "Start reading manga to see your history here"}
+                ? "დაიწყეთ მანგის სანიშნებში დამატება, რომ აქ იხილოთ"
+                : "დაიწყეთ მანგის კითხვა, რომ აქ იხილოთ თქვენი ისტორია"}
             </p>
           </div>
           <Link href="/browse">
-            <Button>Browse Manga</Button>
+            <Button>მანგის ნავიგაცია</Button>
           </Link>
         </div>
       ) : (
@@ -164,7 +168,7 @@ export default function LibraryPage() {
                       {history.manga.title}
                     </h3>
                     <p className="mb-2 text-[var(--muted-foreground)] text-sm">
-                      Chapter {history.chapter.chapter_number}:{" "}
+                      თავი {history.chapter.chapter_number}:{" "}
                       {history.chapter.title}
                     </p>
                     <div className="flex items-center gap-4 text-[var(--muted-foreground)] text-xs">
@@ -175,7 +179,7 @@ export default function LibraryPage() {
                   </div>
                   <div className="flex items-center">
                     <Button variant="ghost">
-                      Continue Reading
+                      კითხვის გაგრძელება
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </div>
@@ -194,11 +198,12 @@ export default function LibraryPage() {
                 size="sm"
               >
                 <ChevronLeft className="mr-1 h-4 w-4" />
-                Previous
+                წინა
               </Button>
               <span className="text-[var(--muted-foreground)] text-sm">
-                Page <span className="text-[var(--accent)]">{currentPage}</span>{" "}
-                of {Math.ceil(data.total / pageSize)}
+                გვერდი{" "}
+                <span className="text-[var(--accent)]">{currentPage}</span> /{" "}
+                {Math.ceil(data.total / pageSize)}
               </span>
               <Button
                 onClick={() => setCurrentPage((p) => p + 1)}
@@ -206,7 +211,7 @@ export default function LibraryPage() {
                 variant="outline"
                 size="sm"
               >
-                Next
+                შემდეგი
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             </div>

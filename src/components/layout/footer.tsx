@@ -17,14 +17,14 @@ export function Footer() {
               />
             </div>
             <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
-              Your ultimate destination for reading manga online. Discover new
-              series and follow your favorites.
+              თქვენი საბოლოო დანიშნულება მანგის ონლაინ წასაკითხად. აღმოაჩინეთ
+              ახალი სერიები და მიჰყევით თქვენს რჩეულებს.
             </p>
           </div>
 
           <div>
             <h4 className="mb-4 font-medium text-[var(--foreground)] text-sm">
-              Browse
+              ნავიგაცია
             </h4>
             <ul className="space-y-2 text-[var(--muted-foreground)] text-sm">
               <li>
@@ -32,7 +32,7 @@ export function Footer() {
                   href="/trending"
                   className="transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
                 >
-                  Trending
+                  ტრენდული
                 </Link>
               </li>
               <li>
@@ -40,7 +40,7 @@ export function Footer() {
                   href="/recent"
                   className="transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
                 >
-                  Recent Updates
+                  ბოლო განახლებები
                 </Link>
               </li>
               <li>
@@ -48,7 +48,7 @@ export function Footer() {
                   href="/genres"
                   className="transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
                 >
-                  All Genres
+                  ყველა ჟანრი
                 </Link>
               </li>
             </ul>
@@ -56,7 +56,7 @@ export function Footer() {
 
           <div>
             <h4 className="mb-4 font-medium text-[var(--foreground)] text-sm">
-              Community
+              საზოგადოება
             </h4>
             <ul className="space-y-2 text-[var(--muted-foreground)] text-sm">
               <li>
@@ -64,7 +64,7 @@ export function Footer() {
                   href="/about"
                   className="transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
                 >
-                  About Us
+                  ჩვენს შესახებ
                 </Link>
               </li>
               <li>
@@ -72,7 +72,7 @@ export function Footer() {
                   href="/contact"
                   className="transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
                 >
-                  Contact
+                  კონტაქტი
                 </Link>
               </li>
               <li>
@@ -80,7 +80,7 @@ export function Footer() {
                   href="/help"
                   className="transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
                 >
-                  Help Center
+                  დახმარების ცენტრი
                 </Link>
               </li>
             </ul>
@@ -88,7 +88,7 @@ export function Footer() {
 
           <div>
             <h4 className="mb-4 font-medium text-[var(--foreground)] text-sm">
-              Legal
+              იურიდიული
             </h4>
             <ul className="space-y-2 text-[var(--muted-foreground)] text-sm">
               <li>
@@ -96,7 +96,7 @@ export function Footer() {
                   href="/privacy"
                   className="transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
                 >
-                  Privacy Policy
+                  კონფიდენციალურობის პოლიტიკა
                 </Link>
               </li>
               <li>
@@ -104,7 +104,7 @@ export function Footer() {
                   href="/terms"
                   className="transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
                 >
-                  Terms of Service
+                  მომსახურების პირობები
                 </Link>
               </li>
               <li>
@@ -120,7 +120,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex w-full justify-center border-[var(--border)] border-t pt-2 text-center text-[var(--muted-foreground)] text-sm">
-          <p>&copy; 2026 Geomanga.ge. All rights reserved.</p>
+          <p>&copy; 2026 Geomanga.ge. ყველა უფლება დაცულია.</p>
         </div>
       </div>
     </footer>

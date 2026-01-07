@@ -47,10 +47,10 @@ export default function GenresPage() {
     <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8 md:py-32 lg:px-12">
       <div className="mb-12">
         <h1 className="mb-4 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
-          Genres
+          ჟანრები
         </h1>
         <p className="text-[var(--muted-foreground)] text-lg">
-          Discover manga by your favorite genres
+          აღმოაჩინეთ მანგა თქვენი რჩეული ჟანრების მიხედვით
         </p>
       </div>
 
@@ -81,7 +81,7 @@ export default function GenresPage() {
               <Badge
                 variant={selectedGenreId === genre.id ? "default" : "secondary"}
               >
-                {genre.manga_count || 0} manga
+                {genre.manga_count || 0} მანგა
               </Badge>
             </div>
             {selectedGenreId === genre.id && (
@@ -111,7 +111,7 @@ export default function GenresPage() {
       {selectedGenreId && (
         <div>
           <h2 className="mb-8 border-[var(--border)] border-b pb-4 font-semibold text-2xl tracking-tight">
-            {genres?.find((g) => g.id === selectedGenreId)?.name} Manga
+            {genres?.find((g) => g.id === selectedGenreId)?.name} მანგა
           </h2>
 
           {mangaLoading ? (
@@ -146,7 +146,7 @@ export default function GenresPage() {
                             className="absolute top-2 left-2"
                             variant="success"
                           >
-                            Ongoing
+                            მიმდინარე
                           </Badge>
                         )}
                       </div>
@@ -170,7 +170,7 @@ export default function GenresPage() {
                       variant="ghost"
                       className="inline-flex items-center gap-2 font-medium text-[var(--accent)] transition-colors duration-200 hover:text-[var(--foreground)]"
                     >
-                      View all {mangaData.total} manga
+                      იხილეთ ყველა {mangaData.total} მანგა
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
@@ -179,7 +179,7 @@ export default function GenresPage() {
             </>
           ) : (
             <div className="py-12 text-center text-[var(--muted-foreground)]">
-              No manga found in this genre
+              ამ ჟანრში მანგა არ მოიძებნა
             </div>
           )}
         </div>

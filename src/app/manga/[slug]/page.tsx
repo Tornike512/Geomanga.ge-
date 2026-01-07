@@ -54,10 +54,10 @@ export default function MangaDetailPage() {
     return (
       <div className="container mx-auto max-w-[1920px] px-6 py-24 text-center md:px-8">
         <h1 className="font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
-          Manga not found
+          მანგა ვერ მოიძებნა
         </h1>
         <p className="mt-4 text-[var(--muted-foreground)] text-lg">
-          The manga you're looking for doesn't exist.
+          მანგა, რომელსაც ეძებთ, არ არსებობს.
         </p>
       </div>
     );
@@ -111,7 +111,7 @@ export default function MangaDetailPage() {
                         : addBookmark.mutate({ manga_id: manga.id })
                     }
                   >
-                    {isBookmarked ? "❤️ Bookmarked" : "🤍 Bookmark"}
+                    {isBookmarked ? "❤️ სანიშნებშია" : "🤍 სანიშნებში"}
                   </Button>
                 )}
               </div>
@@ -123,7 +123,7 @@ export default function MangaDetailPage() {
                     {formatRating(manga.rating)}
                   </div>
                   <div className="text-[var(--muted-foreground)] text-xs uppercase tracking-wide">
-                    Rating
+                    რეიტინგი
                   </div>
                 </Card>
                 <Card className="p-6 text-center">
@@ -131,7 +131,7 @@ export default function MangaDetailPage() {
                     {formatNumber(manga.total_views)}
                   </div>
                   <div className="text-[var(--muted-foreground)] text-xs uppercase tracking-wide">
-                    Views
+                    ნახვები
                   </div>
                 </Card>
                 <Card className="p-6 text-center">
@@ -139,16 +139,16 @@ export default function MangaDetailPage() {
                     {chapters?.length || 0}
                   </div>
                   <div className="text-[var(--muted-foreground)] text-xs uppercase tracking-wide">
-                    Chapters
+                    თავები
                   </div>
                 </Card>
               </div>
 
               {/* Description */}
               <div className="mb-6">
-                <h2 className="mb-3 font-medium text-base">Description</h2>
+                <h2 className="mb-3 font-medium text-base">აღწერა</h2>
                 <p className="max-w-3xl text-[var(--muted-foreground)] text-sm leading-relaxed">
-                  {manga.description || "No description available."}
+                  {manga.description || "აღწერა არ არის ხელმისაწვდომი."}
                 </p>
               </div>
 
@@ -157,7 +157,7 @@ export default function MangaDetailPage() {
                 {manga.author && (
                   <div className="border-[var(--accent)]/50 border-l-2 pl-3">
                     <div className="text-[var(--muted-foreground)] text-xs">
-                      Author
+                      ავტორი
                     </div>
                     <div className="font-medium text-sm">{manga.author}</div>
                   </div>
@@ -165,7 +165,7 @@ export default function MangaDetailPage() {
                 {manga.artist && (
                   <div className="border-[var(--accent)]/50 border-l-2 pl-3">
                     <div className="text-[var(--muted-foreground)] text-xs">
-                      Artist
+                      მხატვარი
                     </div>
                     <div className="font-medium text-sm">{manga.artist}</div>
                   </div>
@@ -191,7 +191,7 @@ export default function MangaDetailPage() {
                 <Star className="h-6 w-6 fill-[var(--accent-foreground)] text-[var(--accent-foreground)]" />
               </div>
               <span className="text-[var(--accent-foreground)]/80 text-sm">
-                Rating
+                რეიტინგი
               </span>
               <span className="text-2xl text-[var(--accent-foreground)]/40">
                 •
@@ -200,7 +200,7 @@ export default function MangaDetailPage() {
                 {formatNumber(manga.total_views)}
               </span>
               <span className="text-[var(--accent-foreground)]/80 text-sm">
-                Total Views
+                სულ ნახვა
               </span>
               <span className="text-2xl text-[var(--accent-foreground)]/40">
                 •
@@ -216,10 +216,10 @@ export default function MangaDetailPage() {
           {/* Section Title */}
           <div className="mb-8 flex items-end justify-between">
             <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-              Chapters
+              თავები
             </h2>
             <div className="text-[var(--muted-foreground)] text-sm">
-              {chapters?.length || 0} total
+              სულ {chapters?.length || 0}
             </div>
           </div>
 
@@ -234,7 +234,7 @@ export default function MangaDetailPage() {
                 <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                   <div className="flex-1">
                     <div className="font-medium text-[var(--foreground)] text-base group-hover:text-[var(--accent)]">
-                      Chapter {chapter.chapter_number}
+                      თავი {chapter.chapter_number}
                     </div>
                     {chapter.title && (
                       <div className="text-[var(--muted-foreground)] text-sm">
