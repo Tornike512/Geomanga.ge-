@@ -43,7 +43,7 @@ describe("Dropdown", () => {
       expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
-    expect(screen.getAllByRole("option")).toHaveLength(mockOptions.length);
+    expect(screen.getAllByRole("listitem")).toHaveLength(mockOptions.length);
   });
 
   it("calls onChange when option is selected", async () => {
@@ -127,7 +127,8 @@ describe("Dropdown", () => {
       expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
-    const selectedOption = screen.getByText("Completed");
+    const options = screen.getAllByText("Completed");
+    const selectedOption = options[1]; // Second one is in the list, first is in the button
     const checkmark = selectedOption.parentElement?.querySelector("svg");
     expect(checkmark).toBeInTheDocument();
   });
