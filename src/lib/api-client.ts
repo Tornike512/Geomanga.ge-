@@ -48,6 +48,7 @@ function getRefreshToken(): string | undefined {
 
 export function setTokens(accessToken: string, refreshToken: string): void {
   if (typeof window === "undefined") return;
+
   // Set access token to expire in 1 day
   setCookie(TOKEN_STORAGE_KEY, accessToken, 1);
   // Set refresh token to expire in 7 days

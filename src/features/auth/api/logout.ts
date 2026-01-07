@@ -1,9 +1,13 @@
-import { clearTokens } from "@/lib/api-client";
+import { api, clearTokens } from "@/lib/api-client";
 
 export const logout = async (): Promise<void> => {
-  // Clear tokens from local storage
-  clearTokens();
+  // Call backend logout endpoint to clear HttpOnly cookies
+  try {
+    await api.post("/auth/logout", undefined, { requiresAuth: true });
+  } catch {
+    // Even if backend call fails, clear local cookies
+  }
 
-  // Optionally call backend logout endpoint if you add one later
-  // await api.post("/auth/logout", undefined, { requiresAuth: true });
+  // Clear any non-HttpOnly cookies set client-side
+  clearTokens();
 };

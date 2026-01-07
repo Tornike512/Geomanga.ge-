@@ -1,8 +1,7 @@
-import { api, setTokens } from "@/lib/api-client";
-import type { Token, UserCreate } from "@/types/user.types";
+import { api } from "@/lib/api-client";
+import type { User, UserCreate } from "@/types/user.types";
 
-export const register = async (userData: UserCreate): Promise<Token> => {
-  const response = await api.post<Token>("/auth/register", userData);
-  setTokens(response.access_token, response.refresh_token);
+export const register = async (userData: UserCreate): Promise<User> => {
+  const response = await api.post<User>("/auth/register", userData);
   return response;
 };
