@@ -59,7 +59,7 @@ export default function BrowsePage() {
 
         <Dropdown
           options={SORT_OPTIONS}
-          value={filters.sort_by}
+          value={filters.sort_by || "rating"}
           onChange={(value) =>
             setFilters({
               ...filters,
