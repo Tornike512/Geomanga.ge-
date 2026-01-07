@@ -7,6 +7,12 @@ export const getImageUrl = (path: string | undefined): string => {
   // If path is already a full URL, return it
   if (path.startsWith("http")) return path;
 
+  // If path already includes /uploads/, use base URL without /uploads
+  if (path.startsWith("/uploads/")) {
+    const baseUrl = staticUrl.replace(/\/uploads\/?$/, "");
+    return `${baseUrl}${path}`;
+  }
+
   // Remove leading slash if present
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
 

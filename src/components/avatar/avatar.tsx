@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useMemo } from "react";
 import { getAvatarUrl } from "@/utils/image-urls";
 
 interface AvatarProps {
@@ -19,17 +20,23 @@ export function Avatar({ src, alt, size = "md", className = "" }: AvatarProps) {
   const { width, height, className: sizeClass } = sizeMap[size];
   const avatarUrl = getAvatarUrl(src);
 
+  // Add cache-busting parameter only when src changes
+  const urlWithCacheBust = useMemo(() => {
+    return src ? `${avatarUrl}?t=${Date.now()}` : avatarUrl;
+  }, [src, avatarUrl]);
+
   return (
     <div
       className={`${sizeClass} ${className} relative shrink-0 overflow-hidden rounded-full bg-[var(--muted)]`}
     >
       <Image
-        src={avatarUrl}
+        src={urlWithCacheBust}
         alt={alt}
         width={width}
         height={height}
         className="h-full w-full object-cover"
         priority={false}
+        unoptimized
       />
     </div>
   );

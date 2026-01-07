@@ -6,8 +6,11 @@ export const useUploadAvatar = () => {
 
   return useMutation({
     mutationFn: (file: File) => uploadAvatar(file),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user", "me"] });
+    onSuccess: async () => {
+      // Invalidate and refetch the current user query
+      await queryClient.invalidateQueries({ queryKey: ["user", "me"] });
+      // Force refetch to ensure UI updates
+      await queryClient.refetchQueries({ queryKey: ["user", "me"] });
     },
   });
 };
