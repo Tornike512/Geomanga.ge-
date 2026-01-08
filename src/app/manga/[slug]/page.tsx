@@ -225,29 +225,37 @@ export default function MangaDetailPage() {
 
           {/* Chapter List - Glass Cards */}
           <div className="space-y-2">
-            {chapters?.map((chapter, _index) => (
-              <Link
-                key={chapter.id}
-                href={`/read/${chapter.id}`}
-                className="group block rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
-              >
-                <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                  <div className="flex-1">
-                    <div className="font-medium text-[var(--foreground)] text-base group-hover:text-[var(--accent)]">
-                      თავი {chapter.chapter_number}
-                    </div>
-                    {chapter.title && (
-                      <div className="text-[var(--muted-foreground)] text-sm">
-                        {chapter.title}
+            {chapters && Array.isArray(chapters) && chapters.length > 0 ? (
+              chapters.map((chapter, _index) => (
+                <Link
+                  key={chapter.id}
+                  href={`/read/${chapter.id}`}
+                  className="group block rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                >
+                  <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                    <div className="flex-1">
+                      <div className="font-medium text-[var(--foreground)] text-base group-hover:text-[var(--accent)]">
+                        თავი {chapter.chapter_number}
                       </div>
-                    )}
+                      {chapter.title && (
+                        <div className="text-[var(--muted-foreground)] text-sm">
+                          {chapter.title}
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-[var(--muted-foreground)] text-xs">
+                      {formatDate(chapter.release_date)}
+                    </div>
                   </div>
-                  <div className="text-[var(--muted-foreground)] text-xs">
-                    {formatDate(chapter.release_date)}
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))
+            ) : (
+              <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] py-12 text-center backdrop-blur-sm">
+                <p className="text-[var(--muted-foreground)] text-lg">
+                  თავები ჯერ არ არის დამატებული
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>
