@@ -1,7 +1,17 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Footer() {
+  const pathname = usePathname();
+
+  // Hide footer on reader pages
+  if (pathname?.startsWith("/read")) {
+    return null;
+  }
+
   return (
     <footer className="border-[var(--border)] border-t bg-[var(--background)]">
       <div className="container mx-auto max-w-[1920px] px-6 pt-6 pb-2">

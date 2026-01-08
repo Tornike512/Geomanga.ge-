@@ -2,13 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Avatar } from "@/components/avatar";
 import { Button } from "@/components/button";
 import { useCurrentUser, useLogout } from "@/features/auth";
 import { SearchBar } from "@/features/manga/components";
 
 export function Header() {
+  const pathname = usePathname();
   const { data: user, isLoading } = useCurrentUser();
+
+  // Hide header on reader pages
+  if (pathname?.startsWith("/read")) {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-[var(--border)] border-b bg-[var(--background)]/80 backdrop-blur-md">

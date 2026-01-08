@@ -30,7 +30,7 @@ export default function ReaderPage() {
         chapter_id: chapter.id,
       });
     }
-  }, [chapter?.id, chapter.manga_id, chapter, trackReading.mutate]);
+  }, [chapter?.id, chapter?.manga_id, trackReading, chapter]);
 
   if (isLoading) {
     return (
@@ -73,13 +73,18 @@ export default function ReaderPage() {
       <div className="fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1920px] items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
-            {chapter.manga && (
+            {chapter.manga ? (
               <Link href={`/manga/${chapter.manga.slug}`}>
                 <Button variant="outline" size="sm">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   უკან
                 </Button>
               </Link>
+            ) : (
+              <Button variant="outline" size="sm" onClick={() => router.back()}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                უკან
+              </Button>
             )}
             <div className="text-white">
               <h1 className="font-medium text-base tracking-tight">
