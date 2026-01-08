@@ -8,13 +8,19 @@ import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { Dropdown } from "@/components/dropdown";
 import { Input } from "@/components/input";
+import { API_URL } from "@/config";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { useGenres } from "@/features/genres/hooks/use-genres";
 import { useCreateManga } from "@/features/manga/hooks/use-create-manga";
+import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
 import type { MangaStatus } from "@/types/manga.types";
 import { UserRole } from "@/types/user.types";
-import { validateCoverImage } from "@/utils/file-validation";
+import {
+  formatFileSize,
+  validateCoverImage,
+  validatePageImages,
+} from "@/utils/file-validation";
 export default function UploadMangaPage() {
   const router = useRouter();
   const { data: user } = useCurrentUser();
@@ -34,6 +40,18 @@ export default function UploadMangaPage() {
     releaseYear: new Date().getFullYear(),
     genreIds: [] as number[],
   });
+  const [chapters, setChapters] = useState<
+    Array<{
+      id: string;
+      chapterNumber: string;
+      volumeNumber: string;
+      title: string;
+      files: File[];
+    }>
+  >([]);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [currentStep, setCurrentStep] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
 
   // Check if user has permission
   if (user && user.role !== UserRole.UPLOADER && user.role !== UserRole.ADMIN) {
@@ -76,11 +94,103 @@ export default function UploadMangaPage() {
     }));
   };
 
+  const handleAddChapter = () => {
+    setChapters((prev) => [
+      ...prev,
+      {
+        id: Math.random().toString(36).substr(2, 9),
+        chapterNumber: "",
+        volumeNumber: "",
+        title: "",
+        files: [],
+      },
+    ]);
+  };
+
+  const handleRemoveChapter = (id: string) => {
+    setChapters((prev) => prev.filter((c) => c.id !== id));
+  };
+
+  const handleChapterChange = (
+    id: string,
+    field: string,
+    value: string | File[],
+  ) => {
+    setChapters((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, [field]: value } : c)),
+    );
+  };
+
+  const handleChapterFilesChange = (
+    id: string,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const files = Array.from(e.target.files || []);
+
+    if (files.length === 0) return;
+
+    // Validate files
+    const validation = validatePageImages(files);
+    if (!validation.valid) {
+      alert(validation.error);
+      e.target.value = "";
+      return;
+    }
+
+    handleChapterChange(id, "files", files);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate required fields
+    if (!coverFile) {
+      alert("გთხოვთ ატვირთოთ ყდის სურათი");
+      return;
+    }
+
+    if (!formData.alternativeTitle) {
+      alert("გთხოვთ შეიყვანოთ ალტერნატიული სათაური");
+      return;
+    }
+
+    if (!formData.artist) {
+      alert("გთხოვთ შეიყვანოთ მხატვარი");
+      return;
+    }
+
+    if (chapters.length === 0) {
+      alert("გთხოვთ დაამატოთ მინიმუმ ერთი თავი");
+      return;
+    }
+
+    // Validate chapters
+    for (let i = 0; i < chapters.length; i++) {
+      const chapter = chapters[i];
+      if (!chapter.chapterNumber) {
+        alert(`გთხოვთ შეიყვანოთ თავის ნომერი თავისთვის ${i + 1}`);
+        return;
+      }
+      if (!chapter.volumeNumber) {
+        alert(`გთხოვთ შეიყვანოთ ტომის ნომერი თავისთვის ${i + 1}`);
+        return;
+      }
+      if (!chapter.title) {
+        alert(`გთხოვთ შეიყვანოთ თავის სათაური თავისთვის ${i + 1}`);
+        return;
+      }
+      if (chapter.files.length === 0) {
+        alert(`გთხოვთ ატვირთოთ გვერდები თავისთვის ${i + 1}`);
+        return;
+      }
+    }
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
     try {
-      // First create manga
+      // Step 1: Create manga (20%)
+      setCurrentStep("მანგის შექმნა...");
       const manga = await createManga.mutateAsync({
         title: formData.title,
         description: formData.description,
@@ -90,20 +200,79 @@ export default function UploadMangaPage() {
         genre_ids: formData.genreIds,
         cover_image_url: "",
       });
+      setUploadProgress(20);
 
-      // Then upload cover if provided
+      // Step 2: Upload cover if provided (40%)
       if (coverFile) {
+        setCurrentStep("ყდის სურათის ატვირთვა...");
         try {
           await uploadCover.mutateAsync({ file: coverFile, mangaId: manga.id });
+          setUploadProgress(40);
         } catch {
           alert("მანგა შეიქმნა, მაგრამ ყდის სურათის ატვირთვა ვერ მოხერხდა");
+          setUploadProgress(40);
         }
+      } else {
+        setUploadProgress(40);
       }
 
-      // Navigate to manga page
-      router.push(`/manga/${manga.slug}`);
+      // Step 3: Upload chapters if provided (40% - 100%)
+      if (chapters.length > 0) {
+        const progressPerChapter = 60 / chapters.length;
+
+        for (let i = 0; i < chapters.length; i++) {
+          const chapter = chapters[i];
+
+          if (!chapter.chapterNumber || chapter.files.length === 0) {
+            continue;
+          }
+
+          setCurrentStep(`თავის ${chapter.chapterNumber} ატვირთვა...`);
+
+          // Create chapter
+          const response = await fetch(
+            `${API_URL}/manga/${manga.id}/chapters`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({
+                chapter_number: Number(chapter.chapterNumber),
+                title: chapter.title || undefined,
+                volume: chapter.volumeNumber
+                  ? Number(chapter.volumeNumber)
+                  : undefined,
+              }),
+            },
+          );
+          const { id: chapterId } = (await response.json()) as { id: number };
+
+          // Upload pages for this chapter
+          await uploadChapterPagesWithProgress({
+            mangaId: manga.id,
+            chapterId,
+            files: chapter.files,
+            onProgress: (progress) => {
+              const baseProgress = 40 + i * progressPerChapter;
+              setUploadProgress(
+                baseProgress + (progress / 100) * progressPerChapter,
+              );
+            },
+          });
+        }
+
+        setUploadProgress(100);
+      }
+
+      setCurrentStep("დასრულდა!");
+      setTimeout(() => {
+        router.push(`/manga/${manga.slug}`);
+      }, 500);
     } catch {
       alert("მანგის შექმნა ვერ მოხერხდა");
+      setIsUploading(false);
+      setUploadProgress(0);
+      setCurrentStep("");
     }
   };
 
@@ -125,7 +294,7 @@ export default function UploadMangaPage() {
           <div className="lg:col-span-1">
             <Card className="overflow-hidden border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
               <h3 className="mb-6 font-semibold text-lg tracking-tight">
-                ყდის სურათი
+                ყდის სურათი *
               </h3>
               <div className="mb-6 aspect-[2/3] overflow-hidden rounded-sm bg-[var(--muted)] ring-1 ring-[var(--border)]">
                 {coverPreview ? (
@@ -220,7 +389,7 @@ export default function UploadMangaPage() {
                     htmlFor="alternativeTitle"
                     className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
                   >
-                    ალტერნატიული სათაური
+                    ალტერნატიული სათაური *
                   </label>
                   <Input
                     id="alternativeTitle"
@@ -232,6 +401,7 @@ export default function UploadMangaPage() {
                         alternativeTitle: e.target.value,
                       }))
                     }
+                    required
                     placeholder="ალტერნატიული ან იაპონური სათაური"
                     className="border-[var(--border)] bg-[var(--muted)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"
                   />
@@ -290,7 +460,7 @@ export default function UploadMangaPage() {
                       htmlFor="artist"
                       className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
                     >
-                      მხატვარი
+                      მხატვარი *
                     </label>
                     <Input
                       id="artist"
@@ -302,6 +472,7 @@ export default function UploadMangaPage() {
                           artist: e.target.value,
                         }))
                       }
+                      required
                       placeholder="მხატვრის სახელი"
                       className="border-[var(--border)] bg-[var(--muted)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"
                     />
@@ -392,22 +563,212 @@ export default function UploadMangaPage() {
               </div>
             </Card>
 
+            {/* Chapters */}
+            <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="font-semibold text-lg tracking-tight">
+                  თავები *
+                </h3>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAddChapter}
+                  disabled={isUploading}
+                >
+                  <svg
+                    className="mr-2 h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-label="დამატება"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  თავის დამატება
+                </Button>
+              </div>
+
+              {chapters.length === 0 ? (
+                <p className="py-8 text-center text-[var(--muted-foreground)] text-sm">
+                  მინიმუმ ერთი თავი უნდა დაამატოთ. დააჭირეთ "თავის დამატება"
+                  ღილაკს.
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {chapters.map((chapter, index) => (
+                    <div
+                      key={chapter.id}
+                      className="rounded-lg border border-[var(--border)] bg-[var(--muted)] p-4"
+                    >
+                      <div className="mb-3 flex items-center justify-between">
+                        <h4 className="font-medium text-sm">
+                          თავი {index + 1}
+                        </h4>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveChapter(chapter.id)}
+                          disabled={isUploading}
+                        >
+                          <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-label="წაშლა"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </Button>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                        <div>
+                          <label className="mb-1 block text-[var(--muted-foreground)] text-xs">
+                            თავის ნომერი *
+                          </label>
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={chapter.chapterNumber}
+                            onChange={(e) =>
+                              handleChapterChange(
+                                chapter.id,
+                                "chapterNumber",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="1"
+                            disabled={isUploading}
+                            className="border-[var(--border)] bg-[var(--background)]"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-[var(--muted-foreground)] text-xs">
+                            ტომის ნომერი *
+                          </label>
+                          <Input
+                            type="number"
+                            value={chapter.volumeNumber}
+                            onChange={(e) =>
+                              handleChapterChange(
+                                chapter.id,
+                                "volumeNumber",
+                                e.target.value,
+                              )
+                            }
+                            required
+                            placeholder="1"
+                            disabled={isUploading}
+                            className="border-[var(--border)] bg-[var(--background)]"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-[var(--muted-foreground)] text-xs">
+                            თავის სათაური *
+                          </label>
+                          <Input
+                            type="text"
+                            value={chapter.title}
+                            onChange={(e) =>
+                              handleChapterChange(
+                                chapter.id,
+                                "title",
+                                e.target.value,
+                              )
+                            }
+                            required
+                            placeholder="თავი 1: დასაწყისი"
+                            disabled={isUploading}
+                            className="border-[var(--border)] bg-[var(--background)]"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mt-3">
+                        <label className="mb-1 block text-[var(--muted-foreground)] text-xs">
+                          თავის გვერდები *
+                        </label>
+                        <label className="block cursor-pointer">
+                          <input
+                            type="file"
+                            multiple
+                            accept="image/jpeg,image/jpg,image/png,image/webp"
+                            onChange={(e) =>
+                              handleChapterFilesChange(chapter.id, e)
+                            }
+                            className="hidden"
+                            disabled={isUploading}
+                          />
+                          <div className="flex justify-center rounded border-2 border-[var(--border)] border-dashed bg-[var(--background)] p-3 text-center transition-colors hover:border-[var(--accent)]">
+                            {chapter.files.length === 0 ? (
+                              <p className="text-center text-[var(--muted-foreground)] text-xs">
+                                აირჩიეთ გვერდები
+                              </p>
+                            ) : (
+                              <p className="text-center text-xs">
+                                არჩეულია {chapter.files.length} ფაილი (
+                                {formatFileSize(
+                                  chapter.files.reduce(
+                                    (sum, f) => sum + f.size,
+                                    0,
+                                  ),
+                                )}
+                                )
+                              </p>
+                            )}
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
+
+            {/* Upload Progress */}
+            {isUploading && (
+              <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+                <div className="mb-2 flex items-center justify-between text-sm">
+                  <span>{currentStep}</span>
+                  <span>{Math.round(uploadProgress)}%</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-[var(--muted)]">
+                  <div
+                    className="h-full bg-[var(--accent)] transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </Card>
+            )}
+
             {/* Submit Button */}
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button
                 type="submit"
-                disabled={createManga.isPending || uploadCover.isPending}
-                loading={createManga.isPending || uploadCover.isPending}
+                disabled={isUploading}
+                loading={isUploading}
                 className="flex-1 bg-[var(--accent)] text-[var(--accent-foreground)] hover:bg-[var(--accent)]/90"
               >
-                {createManga.isPending || uploadCover.isPending
-                  ? "იტვირთება..."
-                  : "მანგის შექმნა"}
+                {isUploading ? "იტვირთება..." : "მანგის შექმნა"}
               </Button>
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => router.back()}
+                disabled={isUploading}
                 className="border-[var(--border)] hover:bg-[var(--muted)]"
               >
                 გაუქმება
