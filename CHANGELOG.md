@@ -1,3 +1,21 @@
+## 1.2.0 (2026-01-08)
+
+* fix: add React type import for improved type safety ([89e9b99](https://github.com/Tornike512/Geomanga.ge-/commit/89e9b99))
+* fix: add upload manga button to home page and translate upload manga page content to Georgian ([005750d](https://github.com/Tornike512/Geomanga.ge-/commit/005750d))
+* fix: change listbox from <ul> to <div> for improved accessibility and update role attributes ([98d94c7](https://github.com/Tornike512/Geomanga.ge-/commit/98d94c7))
+* fix: configure image handling and improve URL generation logic ([1b7bf8d](https://github.com/Tornike512/Geomanga.ge-/commit/1b7bf8d))
+* fix: enhance chapter list rendering and add empty state for no chapters ([51d20d9](https://github.com/Tornike512/Geomanga.ge-/commit/51d20d9))
+* fix: standardize manga status values and improve cover upload handling ([78cfc12](https://github.com/Tornike512/Geomanga.ge-/commit/78cfc12))
+* fix: update styling for upload manga page and improve accessibility ([87ab067](https://github.com/Tornike512/Geomanga.ge-/commit/87ab067))
+* fix: update test to check for 'option' role instead of 'listitem' in dropdown component ([b5cd1cf](https://github.com/Tornike512/Geomanga.ge-/commit/b5cd1cf))
+* style: adjust padding for consistent layout across multiple pages ([112aaf7](https://github.com/Tornike512/Geomanga.ge-/commit/112aaf7))
+* feat: add chapter management with upload functionality and progress tracking ([97814db](https://github.com/Tornike512/Geomanga.ge-/commit/97814db))
+* feat: add drag & drop functionality for chapter page uploads and improve cover image handling ([e940d75](https://github.com/Tornike512/Geomanga.ge-/commit/e940d75))
+* feat: implement chapter upload functionality with progress tracking and validation ([ba37015](https://github.com/Tornike512/Geomanga.ge-/commit/ba37015))
+* feat: integrate react-dropzone for bulk image uploads and enhance file validation ([6c972ac](https://github.com/Tornike512/Geomanga.ge-/commit/6c972ac))
+* feat: refactor chapter API calls and enhance chapter type definitions ([374df46](https://github.com/Tornike512/Geomanga.ge-/commit/374df46))
+* feat: update header and footer components to hide on reader pages ([1b8253b](https://github.com/Tornike512/Geomanga.ge-/commit/1b8253b))
+
 ## 1.1.0 (2026-01-07)
 
 * fix: add styling to the order toggle button in BrowsePage for better visibility ([0c4153a](https://github.com/Tornike512/Geomanga.ge-/commit/0c4153a))
