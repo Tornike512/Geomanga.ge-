@@ -17,6 +17,7 @@ import {
 } from "@/features/library";
 import { useMangaBySlug } from "@/features/manga";
 import { useChaptersByManga } from "@/features/reader";
+import { UserRole } from "@/types/user.types";
 import { formatDate, formatNumber, formatRating } from "@/utils/formatters";
 import { getCoverUrl } from "@/utils/image-urls";
 
@@ -101,19 +102,44 @@ export default function MangaDetailPage() {
                   </div>
                 </div>
 
-                {/* Bookmark Button */}
-                {user && (
-                  <Button
-                    variant={isBookmarked ? "default" : "outline"}
-                    onClick={() =>
-                      isBookmarked
-                        ? removeBookmark.mutate(manga.id)
-                        : addBookmark.mutate({ manga_id: manga.id })
-                    }
-                  >
-                    {isBookmarked ? "❤️ სანიშნებშია" : "🤍 სანიშნებში"}
-                  </Button>
-                )}
+                {/* Action Buttons */}
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  {user &&
+                    (user.role === UserRole.UPLOADER ||
+                      user.role === UserRole.ADMIN) && (
+                      <Link href={`/upload/chapter?mangaId=${manga.id}`}>
+                        <Button variant="outline">
+                          <svg
+                            className="mr-2 h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-label="დამატება"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 4v16m8-8H4"
+                            />
+                          </svg>
+                          თავის დამატება
+                        </Button>
+                      </Link>
+                    )}
+                  {user && (
+                    <Button
+                      variant={isBookmarked ? "default" : "outline"}
+                      onClick={() =>
+                        isBookmarked
+                          ? removeBookmark.mutate(manga.id)
+                          : addBookmark.mutate({ manga_id: manga.id })
+                      }
+                    >
+                      {isBookmarked ? "❤️ სანიშნებშია" : "🤍 სანიშნებში"}
+                    </Button>
+                  )}
+                </div>
               </div>
 
               {/* Stats Cards with Glass Effect */}

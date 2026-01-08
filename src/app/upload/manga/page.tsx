@@ -14,6 +14,7 @@ import { useCreateManga } from "@/features/manga/hooks/use-create-manga";
 import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
 import type { MangaStatus } from "@/types/manga.types";
 import { UserRole } from "@/types/user.types";
+import { validateCoverImage } from "@/utils/file-validation";
 export default function UploadMangaPage() {
   const router = useRouter();
   const { data: user } = useCurrentUser();
@@ -49,6 +50,14 @@ export default function UploadMangaPage() {
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Validate cover image
+      const validation = validateCoverImage(file);
+      if (!validation.valid) {
+        alert(validation.error);
+        e.target.value = "";
+        return;
+      }
+
       setCoverFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -86,14 +95,14 @@ export default function UploadMangaPage() {
       if (coverFile) {
         try {
           await uploadCover.mutateAsync({ file: coverFile, mangaId: manga.id });
-        } catch (_error) {
+        } catch {
           alert("მანგა შეიქმნა, მაგრამ ყდის სურათის ატვირთვა ვერ მოხერხდა");
         }
       }
 
       // Navigate to manga page
       router.push(`/manga/${manga.slug}`);
-    } catch (_error) {
+    } catch {
       alert("მანგის შექმნა ვერ მოხერხდა");
     }
   };

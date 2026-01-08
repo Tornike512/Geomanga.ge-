@@ -1,16 +1,29 @@
-const API_STATIC_URL =
-  process.env.NEXT_PUBLIC_STATIC_URL || "http://localhost:8000/uploads";
+import { API_URL } from "@/config";
 
-export const uploadChapterPages = async (
-  files: File[],
-): Promise<{ urls: string[] }> => {
+interface UploadChapterPagesParams {
+  readonly mangaId: number;
+  readonly chapterId: number;
+  readonly files: File[];
+}
+
+interface UploadChapterPagesResponse {
+  readonly urls: string[];
+  readonly filenames: string[];
+  readonly count: number;
+}
+
+export const uploadChapterPages = async ({
+  mangaId,
+  chapterId,
+  files,
+}: UploadChapterPagesParams): Promise<UploadChapterPagesResponse> => {
   const formData = new FormData();
   for (const file of files) {
     formData.append("files", file);
   }
 
   const response = await fetch(
-    `${API_STATIC_URL}/../api/v1/upload/chapter-pages`,
+    `${API_URL}/upload/pages?manga_id=${mangaId}&chapter_id=${chapterId}`,
     {
       method: "POST",
       body: formData,
@@ -19,8 +32,15 @@ export const uploadChapterPages = async (
   );
 
   if (!response.ok) {
-    throw new Error("Failed to upload chapter pages");
+    const error = await response.json().catch(() => ({
+      detail: "Failed to upload chapter pages",
+    }));
+    const errorDetail =
+      typeof error === "object" && error !== null && "detail" in error
+        ? String(error.detail)
+        : "Failed to upload chapter pages";
+    throw new Error(errorDetail);
   }
 
-  return response.json() as Promise<{ urls: string[] }>;
+  return response.json() as Promise<UploadChapterPagesResponse>;
 };
