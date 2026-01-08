@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import type React from "react";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Badge } from "@/components/badge";
