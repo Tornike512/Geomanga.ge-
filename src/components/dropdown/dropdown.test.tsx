@@ -43,7 +43,7 @@ describe("Dropdown", () => {
       expect(trigger).toHaveAttribute("aria-expanded", "true");
     });
 
-    expect(screen.getAllByRole("listitem")).toHaveLength(mockOptions.length);
+    expect(screen.getAllByRole("option")).toHaveLength(mockOptions.length);
   });
 
   it("calls onChange when option is selected", async () => {
