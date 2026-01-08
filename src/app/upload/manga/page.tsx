@@ -423,7 +423,7 @@ export default function UploadMangaPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8 lg:px-12">
       <div className="mb-16">
         <h1 className="mb-6 font-bold text-[clamp(2.5rem,6vw,4.5rem)] uppercase leading-none tracking-tighter">
           მანგის ატვირთვა
@@ -585,7 +585,7 @@ export default function UploadMangaPage() {
                     }
                     required
                     rows={6}
-                    className="w-full rounded-sm border border-[var(--border)] bg-[var(--muted)] px-4 py-3 text-[var(--foreground)] transition-colors focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+                    className="w-full rounded-sm border border-[var(--border)] bg-[var(--muted)] px-4 py-8 text-[var(--foreground)] transition-colors focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                     placeholder="შეიყვანეთ მანგის აღწერა..."
                   />
                 </div>
@@ -766,7 +766,7 @@ export default function UploadMangaPage() {
               )}
 
               {chapters.length === 0 ? (
-                <p className="mx-auto py-4 text-center text-[var(--muted-foreground)] text-sm">
+                <p className="mx-auto py-8 text-center text-[var(--muted-foreground)] text-sm">
                   თავები არ არის დამატებული
                 </p>
               ) : (

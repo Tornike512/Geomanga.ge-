@@ -71,7 +71,7 @@ export default function ReaderPage() {
     <div className="min-h-screen bg-black">
       {/* Header */}
       <div className="fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-[1920px] items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-[1920px] items-center justify-between px-6 py-8">
           <div className="flex items-center gap-4">
             {chapter.manga ? (
               <Link href={`/manga/${chapter.manga.slug}`}>
@@ -96,7 +96,7 @@ export default function ReaderPage() {
               </p>
             </div>
           </div>
-          <div className="rounded-lg bg-[var(--accent)] px-4 py-2 font-medium text-[var(--accent-foreground)] text-sm shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+          <div className="rounded-lg bg-[var(--accent)] px-4 py-8 font-medium text-[var(--accent-foreground)] text-sm shadow-[0_0_20px_rgba(245,158,11,0.3)]">
             {chapter.pages.length} გვერდი
           </div>
         </div>
@@ -123,7 +123,7 @@ export default function ReaderPage() {
 
       {/* Chapter Navigation */}
       <div className="fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-[1920px] items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-[1920px] items-center justify-between px-6 py-8">
           {chapter.previous_chapter_id ? (
             <Link href={`/read/${chapter.previous_chapter_id}`}>
               <Button size="sm">

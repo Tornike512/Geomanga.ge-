@@ -8,9 +8,9 @@ import {
 
 export default async function Home() {
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8 md:py-32 lg:px-12 lg:py-40">
+    <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8 md:py-8 lg:px-12 lg:py-8">
       {/* Hero Section - Minimalist Dark with atmospheric depth */}
-      <section className="mb-24 text-center md:mb-32">
+      <section className="mb-8 text-center">
         <div className="mb-6 flex justify-center">
           <Image
             src="/images/geomanga-logo.png"

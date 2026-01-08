@@ -45,7 +45,7 @@ export default function LibraryPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8 md:py-32 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8 md:py-8 lg:px-12">
       {/* Header */}
       <div className="mb-12">
         <h1 className="mb-4 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
@@ -61,7 +61,7 @@ export default function LibraryPage() {
         <Button
           variant="ghost"
           onClick={() => handleTabChange("bookmarks")}
-          className={`flex-1 rounded-md px-6 py-3 font-medium text-sm transition-all duration-200 ${
+          className={`flex-1 rounded-md px-6 py-8 font-medium text-sm transition-all duration-200 ${
             activeTab === "bookmarks"
               ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
               : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
@@ -75,7 +75,7 @@ export default function LibraryPage() {
         <Button
           variant="ghost"
           onClick={() => handleTabChange("history")}
-          className={`flex-1 rounded-md px-6 py-3 font-medium text-sm transition-all duration-200 ${
+          className={`flex-1 rounded-md px-6 py-8 font-medium text-sm transition-all duration-200 ${
             activeTab === "history"
               ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
               : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
@@ -100,7 +100,7 @@ export default function LibraryPage() {
           ))}
         </div>
       ) : error ? (
-        <div className="py-12 text-center">
+        <div className="py-8 text-center">
           <p className="mb-4 text-red-600">
             ბიბლიოთეკის ჩატვირთვა ვერ მოხერხდა
           </p>
@@ -109,7 +109,7 @@ export default function LibraryPage() {
           </Button>
         </div>
       ) : !data || data.items.length === 0 ? (
-        <div className="py-12 text-center">
+        <div className="py-8 text-center">
           <div className="mb-4 text-gray-400">
             <svg
               className="mx-auto mb-4 h-16 w-16"

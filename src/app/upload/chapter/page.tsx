@@ -120,7 +120,7 @@ function ChapterUploadContent() {
   const totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8 lg:px-12">
       <div className="mb-16">
         <h1 className="mb-6 font-bold text-[clamp(2.5rem,6vw,4.5rem)] uppercase leading-none tracking-tighter">
           თავის ატვირთვა
@@ -271,7 +271,7 @@ function ChapterUploadContent() {
                     {selectedFiles.map((file, index) => (
                       <div
                         key={`${file.name}-${index}`}
-                        className="flex items-center justify-between rounded bg-[var(--background)] px-3 py-2"
+                        className="flex items-center justify-between rounded bg-[var(--background)] px-3 py-8"
                       >
                         <div className="flex items-center gap-3">
                           <span className="font-mono text-[var(--muted-foreground)] text-xs">

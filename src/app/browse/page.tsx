@@ -35,7 +35,7 @@ export default function BrowsePage() {
   const { data, isLoading } = useMangaList(filters);
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8 md:py-32 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8 md:py-8 lg:px-12">
       {/* Page Title - Minimalist Dark */}
       <h1 className="mb-8 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
         მანგის ნავიგაცია
@@ -77,7 +77,7 @@ export default function BrowsePage() {
           onClick={() =>
             setFilters({ ...filters, order_desc: !filters.order_desc, page: 1 })
           }
-          className="h-auto min-w-[140px] px-4 py-2.5"
+          className="h-auto min-w-[140px] px-4 py-8.5"
         >
           {filters.order_desc ? "↓ კლებადი" : "↑ ზრდადი"}
         </Button>
