@@ -33,3 +33,8 @@ export interface ChapterUpdate {
   readonly title?: string;
   readonly volume?: number;
 }
+
+export interface ChapterListResponse {
+  readonly items: Chapter[];
+  readonly total: number;
+}

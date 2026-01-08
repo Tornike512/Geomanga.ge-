@@ -710,8 +710,8 @@ export default function UploadMangaPage() {
                     <Badge
                       variant={
                         formData.genreIds.includes(genre.id)
-                          ? "default"
-                          : "secondary"
+                          ? "secondary"
+                          : "default"
                       }
                       className="cursor-pointer transition-all hover:opacity-80"
                     >

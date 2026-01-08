@@ -1,8 +1,11 @@
 import { api } from "@/lib/api-client";
-import type { ChapterDetail } from "@/types/chapter.types";
+import type { Chapter, ChapterListResponse } from "@/types/chapter.types";
 
 export const getChaptersByManga = async (
   mangaId: number,
-): Promise<ChapterDetail[]> => {
-  return api.get<ChapterDetail[]>(`/manga/${mangaId}/chapters`);
+): Promise<Chapter[]> => {
+  const response = await api.get<ChapterListResponse>(
+    `/manga/${mangaId}/chapters`,
+  );
+  return response.items;
 };
