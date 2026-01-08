@@ -32,7 +32,7 @@ export const Dropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const listboxRef = useRef<HTMLUListElement>(null);
+  const listboxRef = useRef<HTMLDivElement>(null);
 
   const selectedOption = options.find((opt) => opt.value === value);
 
@@ -197,13 +197,14 @@ export const Dropdown = ({
       </button>
 
       {/* Dropdown Menu */}
-      <ul
+      <div
         ref={listboxRef}
         id={listboxId}
+        role="listbox"
         aria-label={ariaLabel}
         className={cn(
           // Base styles
-          "absolute z-50 mt-2 w-full overflow-hidden rounded-lg",
+          "absolute z-[9999] mt-2 w-full overflow-hidden rounded-lg",
           "border border-[var(--border)] bg-[var(--card-solid)] shadow-black/20 shadow-xl backdrop-blur-md",
           // Animation styles
           "origin-top transition-all duration-200 ease-out",
@@ -219,8 +220,10 @@ export const Dropdown = ({
           const isHighlighted = index === highlightedIndex;
 
           return (
-            <li
+            <div
               key={option.value}
+              role="option"
+              tabIndex={-1}
               aria-selected={isSelected}
               onClick={() => handleSelect(option.value)}
               onKeyDown={(e) => {
@@ -266,10 +269,10 @@ export const Dropdown = ({
                   />
                 </svg>
               )}
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
     </div>
   );
 };
