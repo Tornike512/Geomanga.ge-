@@ -1,8 +1,8 @@
 export enum UserRole {
-  USER = "user",
-  UPLOADER = "uploader",
-  MODERATOR = "moderator",
-  ADMIN = "admin",
+  USER = "USER",
+  UPLOADER = "UPLOADER",
+  MODERATOR = "MODERATOR",
+  ADMIN = "ADMIN",
 }
 
 export interface User {

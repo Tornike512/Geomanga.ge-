@@ -29,7 +29,7 @@ export default function UploadMangaPage() {
     description: "",
     author: "",
     artist: "",
-    status: "ONGOING" as MangaStatus,
+    status: "ongoing" as MangaStatus,
     releaseYear: new Date().getFullYear(),
     genreIds: [] as number[],
   });
@@ -70,30 +70,32 @@ export default function UploadMangaPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // First upload cover if provided
-    let coverImageUrl = "";
-    if (coverFile) {
-      try {
-        const uploadResult = await uploadCover.mutateAsync(coverFile);
-        coverImageUrl = uploadResult.url;
-      } catch (_error) {
-        alert("Failed to upload cover image");
-        return;
-      }
-    }
+    try {
+      // First create manga
+      const manga = await createManga.mutateAsync({
+        title: formData.title,
+        description: formData.description,
+        author: formData.author,
+        artist: formData.artist,
+        status: formData.status,
+        genre_ids: formData.genreIds,
+        cover_image_url: "",
+      });
 
-    // Then create manga
-    createManga.mutate(
-      {
-        ...formData,
-        cover_image_url: coverImageUrl,
-      },
-      {
-        onSuccess: (manga) => {
-          router.push(`/manga/${manga.slug}`);
-        },
-      },
-    );
+      // Then upload cover if provided
+      if (coverFile) {
+        try {
+          await uploadCover.mutateAsync({ file: coverFile, mangaId: manga.id });
+        } catch (_error) {
+          alert("Manga created but failed to upload cover image");
+        }
+      }
+
+      // Navigate to manga page
+      router.push(`/manga/${manga.slug}`);
+    } catch (_error) {
+      alert("Failed to create manga");
+    }
   };
 
   return (
@@ -306,10 +308,10 @@ export default function UploadMangaPage() {
                     <Dropdown
                       id="status"
                       options={[
-                        { value: "ONGOING", label: "Ongoing" },
-                        { value: "COMPLETED", label: "Completed" },
-                        { value: "HIATUS", label: "Hiatus" },
-                        { value: "CANCELLED", label: "Cancelled" },
+                        { value: "ongoing", label: "Ongoing" },
+                        { value: "completed", label: "Completed" },
+                        { value: "hiatus", label: "Hiatus" },
+                        { value: "cancelled", label: "Cancelled" },
                       ]}
                       value={formData.status}
                       onChange={(value) =>
