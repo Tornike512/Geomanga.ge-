@@ -3,13 +3,6 @@ interface ValidationResult {
   readonly error?: string;
 }
 
-const VALID_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
-
 export const MAX_COVER_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 export const MAX_PAGE_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -17,10 +10,10 @@ export const MAX_PAGE_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
  * Validates an image file for cover upload
  */
 export function validateCoverImage(file: File): ValidationResult {
-  if (!VALID_IMAGE_TYPES.includes(file.type)) {
+  if (!file.type.startsWith("image/")) {
     return {
       valid: false,
-      error: "არასწორი ფაილის ფორმატი. გამოიყენეთ JPG, PNG ან WebP",
+      error: "არასწორი ფაილის ფორმატი. გამოიყენეთ სურათის ფაილი",
     };
   }
 
@@ -38,10 +31,10 @@ export function validateCoverImage(file: File): ValidationResult {
  * Validates an image file for page upload
  */
 export function validatePageImage(file: File): ValidationResult {
-  if (!VALID_IMAGE_TYPES.includes(file.type)) {
+  if (!file.type.startsWith("image/")) {
     return {
       valid: false,
-      error: "არასწორი ფაილის ფორმატი. გამოიყენეთ JPG, PNG ან WebP",
+      error: "არასწორი ფაილის ფორმატი. გამოიყენეთ სურათის ფაილი",
     };
   }
 

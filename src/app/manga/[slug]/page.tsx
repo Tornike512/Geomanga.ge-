@@ -114,6 +114,7 @@ export default function MangaDetailPage() {
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
+                            role="img"
                             aria-label="დამატება"
                           >
                             <path

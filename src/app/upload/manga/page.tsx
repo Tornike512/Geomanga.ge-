@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
@@ -53,18 +54,6 @@ export default function UploadMangaPage() {
   const [currentStep, setCurrentStep] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
-  // Check if user has permission
-  if (user && user.role !== UserRole.UPLOADER && user.role !== UserRole.ADMIN) {
-    return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="mb-4 font-bold text-2xl">წვდომა აკრძალულია</h1>
-        <p className="text-[var(--muted-foreground)]">
-          ამ გვერდზე წვდომისთვის საჭიროა ატვირთვის უფლებები
-        </p>
-      </div>
-    );
-  }
-
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -95,13 +84,14 @@ export default function UploadMangaPage() {
   };
 
   const handleAddChapter = () => {
+    const nextChapterNum = chapters.length + 1;
     setChapters((prev) => [
       ...prev,
       {
         id: Math.random().toString(36).substr(2, 9),
-        chapterNumber: "",
-        volumeNumber: "",
-        title: "",
+        chapterNumber: nextChapterNum.toString(),
+        volumeNumber: "1",
+        title: `თავი ${nextChapterNum}`,
         files: [],
       },
     ]);
@@ -140,6 +130,44 @@ export default function UploadMangaPage() {
     handleChapterChange(id, "files", files);
   };
 
+  const onBulkDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles.length === 0) {
+        return;
+      }
+
+      // Validate files
+      const validation = validatePageImages(acceptedFiles);
+
+      if (!validation.valid) {
+        alert(validation.error);
+        return;
+      }
+
+      // Create one chapter with all files
+      const chapterNum = chapters.length + 1;
+      const newChapter = {
+        id: Math.random().toString(36).substr(2, 9),
+        chapterNumber: chapterNum.toString(),
+        volumeNumber: "1",
+        title: `თავი ${chapterNum}`,
+        files: acceptedFiles,
+      };
+
+      setChapters((prev) => [...prev, newChapter]);
+    },
+    [chapters.length],
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: onBulkDrop,
+    accept: {
+      "image/*": [],
+    },
+    multiple: true,
+    disabled: isUploading,
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -169,10 +197,6 @@ export default function UploadMangaPage() {
       const chapter = chapters[i];
       if (!chapter.chapterNumber) {
         alert(`გთხოვთ შეიყვანოთ თავის ნომერი თავისთვის ${i + 1}`);
-        return;
-      }
-      if (!chapter.volumeNumber) {
-        alert(`გთხოვთ შეიყვანოთ ტომის ნომერი თავისთვის ${i + 1}`);
         return;
       }
       if (!chapter.title) {
@@ -276,6 +300,18 @@ export default function UploadMangaPage() {
     }
   };
 
+  // Check if user has permission
+  if (user && user.role !== UserRole.UPLOADER && user.role !== UserRole.ADMIN) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h1 className="mb-4 font-bold text-2xl">წვდომა აკრძალულია</h1>
+        <p className="text-[var(--muted-foreground)]">
+          ამ გვერდზე წვდომისთვის საჭიროა ატვირთვის უფლებები
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8 lg:px-12">
       <div className="mb-16">
@@ -334,14 +370,15 @@ export default function UploadMangaPage() {
                   accept="image/*"
                   onChange={handleCoverChange}
                   className="hidden"
+                  id="cover-upload-input"
                 />
                 <Button
                   type="button"
                   variant="outline"
                   className="w-full cursor-pointer"
                   onClick={() => {
-                    const input = document.querySelector(
-                      'input[type="file"]',
+                    const input = document.getElementById(
+                      "cover-upload-input",
                     ) as HTMLInputElement;
                     input?.click();
                   }}
@@ -565,176 +602,205 @@ export default function UploadMangaPage() {
 
             {/* Chapters */}
             <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="font-semibold text-lg tracking-tight">
-                  თავები *
-                </h3>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleAddChapter}
-                  disabled={isUploading}
-                >
-                  <svg
-                    className="mr-2 h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-label="დამატება"
+              <h3 className="mb-4 font-semibold text-lg tracking-tight">
+                თავები *
+              </h3>
+
+              {/* Bulk Upload Section - Only show when no chapters exist */}
+              {chapters.length === 0 && (
+                <div className="mb-6">
+                  <div
+                    {...getRootProps()}
+                    className={`cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
+                      isDragActive
+                        ? "border-[var(--accent)] bg-[var(--accent)]/10"
+                        : "border-[var(--border)] bg-[var(--muted)] hover:border-[var(--accent)] hover:bg-[var(--muted)]/50"
+                    }`}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                  თავის დამატება
-                </Button>
-              </div>
+                    <input {...getInputProps()} />
+                    <svg
+                      className="mx-auto mb-3 h-12 w-12 text-[var(--muted-foreground)] opacity-40"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      role="img"
+                      aria-label="ატვირთვა"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
+                    </svg>
+                    <p className="mb-2 font-medium text-base">
+                      {isDragActive ? "ჩააგდეთ ფაილები აქ" : "თავის ატვირთვა"}
+                    </p>
+                    <p className="mx-auto text-[var(--muted-foreground)] text-sm">
+                      აირჩიეთ ან გადმოიტანეთ სურათები ერთი თავისთვის
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {chapters.length === 0 ? (
-                <p className="py-8 text-center text-[var(--muted-foreground)] text-sm">
-                  მინიმუმ ერთი თავი უნდა დაამატოთ. დააჭირეთ "თავის დამატება"
-                  ღილაკს.
+                <p className="mx-auto py-4 text-center text-[var(--muted-foreground)] text-sm">
+                  თავები არ არის დამატებული
                 </p>
               ) : (
-                <div className="space-y-4">
-                  {chapters.map((chapter, index) => (
-                    <div
-                      key={chapter.id}
-                      className="rounded-lg border border-[var(--border)] bg-[var(--muted)] p-4"
-                    >
-                      <div className="mb-3 flex items-center justify-between">
-                        <h4 className="font-medium text-sm">
-                          თავი {index + 1}
-                        </h4>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleRemoveChapter(chapter.id)}
-                          disabled={isUploading}
-                        >
-                          <svg
-                            className="h-4 w-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            aria-label="წაშლა"
+                <>
+                  <div className="space-y-4">
+                    {chapters.map((chapter, index) => (
+                      <div
+                        key={chapter.id}
+                        className="rounded-lg border border-[var(--border)] bg-[var(--muted)] p-4"
+                      >
+                        <div className="mb-3 flex items-center justify-between">
+                          <h4 className="font-medium text-sm">
+                            თავი {index + 1}
+                          </h4>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveChapter(chapter.id)}
+                            disabled={isUploading}
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </Button>
-                      </div>
+                            <svg
+                              className="h-4 w-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              role="img"
+                              aria-label="წაშლა"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </Button>
+                        </div>
 
-                      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-                        <div>
-                          <label className="mb-1 block text-[var(--muted-foreground)] text-xs">
-                            თავის ნომერი *
-                          </label>
-                          <Input
-                            type="number"
-                            step="0.1"
-                            value={chapter.chapterNumber}
-                            onChange={(e) =>
-                              handleChapterChange(
-                                chapter.id,
-                                "chapterNumber",
-                                e.target.value,
-                              )
-                            }
-                            placeholder="1"
-                            disabled={isUploading}
-                            className="border-[var(--border)] bg-[var(--background)]"
-                          />
-                        </div>
-                        <div>
-                          <label className="mb-1 block text-[var(--muted-foreground)] text-xs">
-                            ტომის ნომერი *
-                          </label>
-                          <Input
-                            type="number"
-                            value={chapter.volumeNumber}
-                            onChange={(e) =>
-                              handleChapterChange(
-                                chapter.id,
-                                "volumeNumber",
-                                e.target.value,
-                              )
-                            }
-                            required
-                            placeholder="1"
-                            disabled={isUploading}
-                            className="border-[var(--border)] bg-[var(--background)]"
-                          />
-                        </div>
-                        <div>
-                          <label className="mb-1 block text-[var(--muted-foreground)] text-xs">
-                            თავის სათაური *
-                          </label>
-                          <Input
-                            type="text"
-                            value={chapter.title}
-                            onChange={(e) =>
-                              handleChapterChange(
-                                chapter.id,
-                                "title",
-                                e.target.value,
-                              )
-                            }
-                            required
-                            placeholder="თავი 1: დასაწყისი"
-                            disabled={isUploading}
-                            className="border-[var(--border)] bg-[var(--background)]"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="mt-3">
-                        <label className="mb-1 block text-[var(--muted-foreground)] text-xs">
-                          თავის გვერდები *
-                        </label>
-                        <label className="block cursor-pointer">
-                          <input
-                            type="file"
-                            multiple
-                            accept="image/jpeg,image/jpg,image/png,image/webp"
-                            onChange={(e) =>
-                              handleChapterFilesChange(chapter.id, e)
-                            }
-                            className="hidden"
-                            disabled={isUploading}
-                          />
-                          <div className="flex justify-center rounded border-2 border-[var(--border)] border-dashed bg-[var(--background)] p-3 text-center transition-colors hover:border-[var(--accent)]">
-                            {chapter.files.length === 0 ? (
-                              <p className="text-center text-[var(--muted-foreground)] text-xs">
-                                აირჩიეთ გვერდები
-                              </p>
-                            ) : (
-                              <p className="text-center text-xs">
-                                არჩეულია {chapter.files.length} ფაილი (
-                                {formatFileSize(
-                                  chapter.files.reduce(
-                                    (sum, f) => sum + f.size,
-                                    0,
-                                  ),
-                                )}
+                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                          <div>
+                            <label
+                              htmlFor={`chapter-number-${chapter.id}`}
+                              className="mb-1 block text-[var(--muted-foreground)] text-xs"
+                            >
+                              თავის ნომერი *
+                            </label>
+                            <Input
+                              id={`chapter-number-${chapter.id}`}
+                              type="number"
+                              step="0.1"
+                              value={chapter.chapterNumber}
+                              onChange={(e) =>
+                                handleChapterChange(
+                                  chapter.id,
+                                  "chapterNumber",
+                                  e.target.value,
                                 )
-                              </p>
-                            )}
+                              }
+                              placeholder="1"
+                              disabled={isUploading}
+                              className="border-[var(--border)] bg-[var(--background)]"
+                            />
                           </div>
-                        </label>
+                          <div>
+                            <label
+                              htmlFor={`chapter-title-${chapter.id}`}
+                              className="mb-1 block text-[var(--muted-foreground)] text-xs"
+                            >
+                              თავის სათაური *
+                            </label>
+                            <Input
+                              id={`chapter-title-${chapter.id}`}
+                              type="text"
+                              value={chapter.title}
+                              onChange={(e) =>
+                                handleChapterChange(
+                                  chapter.id,
+                                  "title",
+                                  e.target.value,
+                                )
+                              }
+                              required
+                              placeholder="გვერდი 1: დასაწყისი"
+                              disabled={isUploading}
+                              className="border-[var(--border)] bg-[var(--background)]"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="mt-3">
+                          <label className="block cursor-pointer">
+                            <span className="mb-1 block text-[var(--muted-foreground)] text-xs">
+                              თავის გვერდები *
+                            </span>
+                            <input
+                              type="file"
+                              multiple
+                              accept="image/*"
+                              onChange={(e) =>
+                                handleChapterFilesChange(chapter.id, e)
+                              }
+                              className="hidden"
+                              disabled={isUploading}
+                            />
+                            <div className="flex justify-center rounded border-2 border-[var(--border)] border-dashed bg-[var(--background)] p-3 text-center transition-colors hover:border-[var(--accent)]">
+                              {chapter.files.length === 0 ? (
+                                <p className="text-center text-[var(--muted-foreground)] text-xs">
+                                  აირჩიეთ გვერდები
+                                </p>
+                              ) : (
+                                <p className="text-center text-xs">
+                                  არჩეულია {chapter.files.length} ფაილი (
+                                  {formatFileSize(
+                                    chapter.files.reduce(
+                                      (sum, f) => sum + f.size,
+                                      0,
+                                    ),
+                                  )}
+                                  )
+                                </p>
+                              )}
+                            </div>
+                          </label>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleAddChapter}
+                      disabled={isUploading}
+                      className="w-full border-[var(--border)] hover:bg-[var(--muted)]"
+                    >
+                      <svg
+                        className="mr-2 h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        role="img"
+                        aria-label="დამატება"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
+                      დაამატე თავი
+                    </Button>
+                  </div>
+                </>
               )}
             </Card>
 

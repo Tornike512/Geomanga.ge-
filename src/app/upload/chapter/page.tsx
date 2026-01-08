@@ -237,6 +237,7 @@ function ChapterUploadContent() {
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    role="img"
                     aria-label="ფაილების ატვირთვა"
                   >
                     <path
