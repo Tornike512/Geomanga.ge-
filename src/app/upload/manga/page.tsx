@@ -38,9 +38,9 @@ export default function UploadMangaPage() {
   if (user && user.role !== UserRole.UPLOADER && user.role !== UserRole.ADMIN) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="mb-4 font-bold text-2xl">Access Denied</h1>
+        <h1 className="mb-4 font-bold text-2xl">წვდომა აკრძალულია</h1>
         <p className="text-[var(--muted-foreground)]">
-          You need uploader permissions to access this page
+          ამ გვერდზე წვდომისთვის საჭიროა ატვირთვის უფლებები
         </p>
       </div>
     );
@@ -87,14 +87,14 @@ export default function UploadMangaPage() {
         try {
           await uploadCover.mutateAsync({ file: coverFile, mangaId: manga.id });
         } catch (_error) {
-          alert("Manga created but failed to upload cover image");
+          alert("მანგა შეიქმნა, მაგრამ ყდის სურათის ატვირთვა ვერ მოხერხდა");
         }
       }
 
       // Navigate to manga page
       router.push(`/manga/${manga.slug}`);
     } catch (_error) {
-      alert("Failed to create manga");
+      alert("მანგის შექმნა ვერ მოხერხდა");
     }
   };
 
@@ -102,11 +102,11 @@ export default function UploadMangaPage() {
     <div className="container mx-auto max-w-[1920px] px-6 py-24 md:px-8 lg:px-12">
       <div className="mb-16">
         <h1 className="mb-6 font-bold text-[clamp(2.5rem,6vw,4.5rem)] uppercase leading-none tracking-tighter">
-          Upload Manga
+          მანგის ატვირთვა
         </h1>
         <p className="max-w-2xl text-[var(--muted-foreground)] text-lg">
-          Add a new manga series to the platform. Fill in the details below and
-          upload a cover image.
+          დაამატეთ ახალი მანგის სერია პლატფორმაზე. შეავსეთ დეტალები და ატვირთეთ
+          ყდის სურათი.
         </p>
       </div>
 
@@ -116,7 +116,7 @@ export default function UploadMangaPage() {
           <div className="lg:col-span-1">
             <Card className="overflow-hidden border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
               <h3 className="mb-6 font-semibold text-lg tracking-tight">
-                Cover Image
+                ყდის სურათი
               </h3>
               <div className="mb-6 aspect-[2/3] overflow-hidden rounded-sm bg-[var(--muted)] ring-1 ring-[var(--border)]">
                 {coverPreview ? (
@@ -145,7 +145,7 @@ export default function UploadMangaPage() {
                           d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                         />
                       </svg>
-                      <p className="text-sm">No cover image</p>
+                      <p className="text-sm">ყდის სურათი არ არის</p>
                     </div>
                   </div>
                 )}
@@ -168,7 +168,7 @@ export default function UploadMangaPage() {
                     input?.click();
                   }}
                 >
-                  {coverPreview ? "Change Cover" : "Upload Cover"}
+                  {coverPreview ? "ყდის შეცვლა" : "ყდის ატვირთვა"}
                 </Button>
               </label>
             </Card>
@@ -178,7 +178,7 @@ export default function UploadMangaPage() {
           <div className="space-y-8 lg:col-span-2">
             <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
               <h3 className="mb-6 font-semibold text-lg tracking-tight">
-                Basic Information
+                ძირითადი ინფორმაცია
               </h3>
               <div className="space-y-6">
                 {/* Title */}
@@ -187,7 +187,7 @@ export default function UploadMangaPage() {
                     htmlFor="title"
                     className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
                   >
-                    Title *
+                    სათაური *
                   </label>
                   <Input
                     id="title"
@@ -200,7 +200,7 @@ export default function UploadMangaPage() {
                       }))
                     }
                     required
-                    placeholder="Enter manga title"
+                    placeholder="შეიყვანეთ მანგის სათაური"
                     className="border-[var(--border)] bg-[var(--muted)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"
                   />
                 </div>
@@ -211,7 +211,7 @@ export default function UploadMangaPage() {
                     htmlFor="alternativeTitle"
                     className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
                   >
-                    Alternative Title
+                    ალტერნატიული სათაური
                   </label>
                   <Input
                     id="alternativeTitle"
@@ -223,7 +223,7 @@ export default function UploadMangaPage() {
                         alternativeTitle: e.target.value,
                       }))
                     }
-                    placeholder="Alternative or Japanese title"
+                    placeholder="ალტერნატიული ან იაპონური სათაური"
                     className="border-[var(--border)] bg-[var(--muted)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"
                   />
                 </div>
@@ -234,7 +234,7 @@ export default function UploadMangaPage() {
                     htmlFor="description"
                     className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
                   >
-                    Description *
+                    აღწერა *
                   </label>
                   <textarea
                     id="description"
@@ -248,7 +248,7 @@ export default function UploadMangaPage() {
                     required
                     rows={6}
                     className="w-full rounded-sm border border-[var(--border)] bg-[var(--muted)] px-4 py-3 text-[var(--foreground)] transition-colors focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-                    placeholder="Enter manga description..."
+                    placeholder="შეიყვანეთ მანგის აღწერა..."
                   />
                 </div>
 
@@ -259,7 +259,7 @@ export default function UploadMangaPage() {
                       htmlFor="author"
                       className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
                     >
-                      Author *
+                      ავტორი *
                     </label>
                     <Input
                       id="author"
@@ -272,7 +272,7 @@ export default function UploadMangaPage() {
                         }))
                       }
                       required
-                      placeholder="Author name"
+                      placeholder="ავტორის სახელი"
                       className="border-[var(--border)] bg-[var(--muted)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"
                     />
                   </div>
@@ -281,7 +281,7 @@ export default function UploadMangaPage() {
                       htmlFor="artist"
                       className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
                     >
-                      Artist
+                      მხატვარი
                     </label>
                     <Input
                       id="artist"
@@ -293,7 +293,7 @@ export default function UploadMangaPage() {
                           artist: e.target.value,
                         }))
                       }
-                      placeholder="Artist name"
+                      placeholder="მხატვრის სახელი"
                       className="border-[var(--border)] bg-[var(--muted)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"
                     />
                   </div>
@@ -306,15 +306,15 @@ export default function UploadMangaPage() {
                       htmlFor="status"
                       className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
                     >
-                      Status *
+                      სტატუსი *
                     </label>
                     <Dropdown
                       id="status"
                       options={[
-                        { value: "ongoing", label: "Ongoing" },
-                        { value: "completed", label: "Completed" },
-                        { value: "hiatus", label: "Hiatus" },
-                        { value: "cancelled", label: "Cancelled" },
+                        { value: "ongoing", label: "გრძელდება" },
+                        { value: "completed", label: "დასრულებული" },
+                        { value: "hiatus", label: "პაუზაზე" },
+                        { value: "cancelled", label: "გაუქმებული" },
                       ]}
                       value={formData.status}
                       onChange={(value) =>
@@ -323,7 +323,7 @@ export default function UploadMangaPage() {
                           status: value as MangaStatus,
                         }))
                       }
-                      aria-label="Manga status"
+                      aria-label="მანგის სტატუსი"
                       className="w-full"
                     />
                   </div>
@@ -332,7 +332,7 @@ export default function UploadMangaPage() {
                       htmlFor="releaseYear"
                       className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
                     >
-                      Release Year *
+                      გამოშვების წელი *
                     </label>
                     <Input
                       id="releaseYear"
@@ -357,7 +357,7 @@ export default function UploadMangaPage() {
             {/* Genres */}
             <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
               <h3 className="mb-4 font-semibold text-lg tracking-tight">
-                Genres
+                ჟანრები
               </h3>
               <div className="flex flex-wrap gap-2">
                 {genres?.map((genre) => (
@@ -392,8 +392,8 @@ export default function UploadMangaPage() {
                 className="flex-1 bg-[var(--accent)] text-[var(--accent-foreground)] hover:bg-[var(--accent)]/90"
               >
                 {createManga.isPending || uploadCover.isPending
-                  ? "Uploading..."
-                  : "Create Manga"}
+                  ? "იტვირთება..."
+                  : "მანგის შექმნა"}
               </Button>
               <Button
                 type="button"
@@ -401,7 +401,7 @@ export default function UploadMangaPage() {
                 onClick={() => router.back()}
                 className="border-[var(--border)] hover:bg-[var(--muted)]"
               >
-                Cancel
+                გაუქმება
               </Button>
             </div>
           </div>
