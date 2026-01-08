@@ -2,21 +2,19 @@ export const getImageUrl = (path: string | undefined): string => {
   if (!path) return "/placeholder-manga.jpg";
 
   const staticUrl =
-    process.env.NEXT_PUBLIC_STATIC_URL || "http://localhost:8000/uploads";
+    process.env.NEXT_PUBLIC_STATIC_URL || "http://localhost:8000";
 
   // If path is already a full URL, return it
   if (path.startsWith("http")) return path;
 
-  // If path already includes /uploads/, use base URL without /uploads
-  if (path.startsWith("/uploads/")) {
-    const baseUrl = staticUrl.replace(/\/uploads\/?$/, "");
-    return `${baseUrl}${path}`;
+  // If path starts with /api/ or /uploads/, use base URL directly
+  if (path.startsWith("/api/") || path.startsWith("/uploads/")) {
+    return `${staticUrl}${path}`;
   }
 
-  // Remove leading slash if present
+  // Otherwise append to /uploads/
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-
-  return `${staticUrl}/${cleanPath}`;
+  return `${staticUrl}/uploads/${cleanPath}`;
 };
 
 export const getCoverUrl = (coverPath: string | undefined): string => {
