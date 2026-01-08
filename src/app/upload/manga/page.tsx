@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type React from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
@@ -23,6 +23,93 @@ import {
   validateCoverImage,
   validatePageImages,
 } from "@/utils/file-validation";
+
+// Component for chapter page uploads with drag & drop and thumbnails
+function ChapterPagesDropzone({
+  chapterId,
+  files,
+  onDrop,
+  disabled,
+}: {
+  chapterId: string;
+  files: File[];
+  onDrop: (id: string, files: File[]) => void;
+  disabled: boolean;
+}) {
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: (acceptedFiles) => onDrop(chapterId, acceptedFiles),
+    accept: { "image/*": [] },
+    multiple: true,
+    disabled,
+  });
+
+  // Generate preview URLs for files
+  const previews = useMemo(() => {
+    return files.map((file) => URL.createObjectURL(file));
+  }, [files]);
+
+  // Clean up object URLs when component unmounts or files change
+  useEffect(() => {
+    return () => {
+      for (const url of previews) {
+        URL.revokeObjectURL(url);
+      }
+    };
+  }, [previews]);
+
+  return (
+    <div className="space-y-2">
+      <div
+        {...getRootProps()}
+        className={`flex cursor-pointer justify-center rounded border-2 border-dashed p-3 text-center transition-colors ${
+          isDragActive
+            ? "border-[var(--accent)] bg-[var(--accent)]/10"
+            : "border-[var(--border)] bg-[var(--background)] hover:border-[var(--accent)]"
+        }`}
+      >
+        <input {...getInputProps()} />
+        {files.length === 0 ? (
+          <p className="text-center text-[var(--muted-foreground)] text-xs">
+            {isDragActive
+              ? "ჩააგდეთ ფაილები აქ"
+              : "გადმოიტანეთ ან აირჩიეთ გვერდები"}
+          </p>
+        ) : (
+          <p className="text-center text-xs">
+            არჩეულია {files.length} ფაილი (
+            {formatFileSize(files.reduce((sum, f) => sum + f.size, 0))}) —
+            დააწკაპუნეთ შესაცვლელად
+          </p>
+        )}
+      </div>
+
+      {/* Thumbnails grid */}
+      {files.length > 0 && (
+        <div className="grid grid-cols-6 gap-1.5 sm:grid-cols-8 md:grid-cols-10">
+          {previews.map((url, index) => (
+            <div
+              key={`${chapterId}-${files[index].name}-${files[index].size}`}
+              className="group relative aspect-[2/3] overflow-hidden rounded bg-[var(--muted)]"
+            >
+              {/* biome-ignore lint/performance/noImgElement: blob URLs not supported by next/image */}
+              <img
+                src={url}
+                alt={`გვერდი ${index + 1}`}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+                <span className="font-medium text-white text-xs">
+                  {index + 1}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function UploadMangaPage() {
   const router = useRouter();
   const { data: user } = useCurrentUser();
@@ -55,25 +142,48 @@ export default function UploadMangaPage() {
   const [currentStep, setCurrentStep] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
+  const processCoverFile = useCallback((file: File) => {
+    // Validate cover image
+    const validation = validateCoverImage(file);
+    if (!validation.valid) {
+      alert(validation.error);
+      return;
+    }
+
+    setCoverFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCoverPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  }, []);
+
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate cover image
-      const validation = validateCoverImage(file);
-      if (!validation.valid) {
-        alert(validation.error);
-        e.target.value = "";
-        return;
-      }
-
-      setCoverFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCoverPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      processCoverFile(file);
     }
   };
+
+  const onCoverDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        processCoverFile(acceptedFiles[0]);
+      }
+    },
+    [processCoverFile],
+  );
+
+  const {
+    getRootProps: getCoverRootProps,
+    getInputProps: getCoverInputProps,
+    isDragActive: isCoverDragActive,
+  } = useDropzone({
+    onDrop: onCoverDrop,
+    accept: { "image/*": [] },
+    multiple: false,
+    disabled: isUploading,
+  });
 
   const handleGenreToggle = (genreId: number) => {
     setFormData((prev) => ({
@@ -112,24 +222,23 @@ export default function UploadMangaPage() {
     );
   };
 
-  const handleChapterFilesChange = (
-    id: string,
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const files = Array.from(e.target.files || []);
+  const handleChapterPagesDrop = useCallback(
+    (id: string, acceptedFiles: File[]) => {
+      if (acceptedFiles.length === 0) return;
 
-    if (files.length === 0) return;
+      // Validate files
+      const validation = validatePageImages(acceptedFiles);
+      if (!validation.valid) {
+        alert(validation.error);
+        return;
+      }
 
-    // Validate files
-    const validation = validatePageImages(files);
-    if (!validation.valid) {
-      alert(validation.error);
-      e.target.value = "";
-      return;
-    }
-
-    handleChapterChange(id, "files", files);
-  };
+      setChapters((prev) =>
+        prev.map((c) => (c.id === id ? { ...c, files: acceptedFiles } : c)),
+      );
+    },
+    [],
+  );
 
   const onBulkDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -333,7 +442,15 @@ export default function UploadMangaPage() {
               <h3 className="mb-6 font-semibold text-lg tracking-tight">
                 ყდის სურათი *
               </h3>
-              <div className="mb-6 aspect-[2/3] overflow-hidden rounded-sm bg-[var(--muted)] ring-1 ring-[var(--border)]">
+              <div
+                {...getCoverRootProps()}
+                className={`mb-6 aspect-[2/3] cursor-pointer overflow-hidden rounded-sm ring-1 transition-colors ${
+                  isCoverDragActive
+                    ? "bg-[var(--accent)]/10 ring-[var(--accent)]"
+                    : "bg-[var(--muted)] ring-[var(--border)] hover:ring-[var(--accent)]"
+                }`}
+              >
+                <input {...getCoverInputProps()} />
                 {coverPreview ? (
                   <Image
                     src={coverPreview}
@@ -360,7 +477,11 @@ export default function UploadMangaPage() {
                           d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                         />
                       </svg>
-                      <p className="text-sm">ყდის სურათი არ არის</p>
+                      <p className="text-sm">
+                        {isCoverDragActive
+                          ? "ჩააგდეთ სურათი აქ"
+                          : "გადმოიტანეთ ან დააწკაპუნეთ"}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -634,7 +755,7 @@ export default function UploadMangaPage() {
                         d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                       />
                     </svg>
-                    <p className="mb-2 font-medium text-base">
+                    <p className="mx-auto mb-2 font-medium text-base">
                       {isDragActive ? "ჩააგდეთ ფაილები აქ" : "თავის ატვირთვა"}
                     </p>
                     <p className="mx-auto text-[var(--muted-foreground)] text-sm">
@@ -737,39 +858,15 @@ export default function UploadMangaPage() {
                         </div>
 
                         <div className="mt-3">
-                          <label className="block cursor-pointer">
-                            <span className="mb-1 block text-[var(--muted-foreground)] text-xs">
-                              თავის გვერდები *
-                            </span>
-                            <input
-                              type="file"
-                              multiple
-                              accept="image/*"
-                              onChange={(e) =>
-                                handleChapterFilesChange(chapter.id, e)
-                              }
-                              className="hidden"
-                              disabled={isUploading}
-                            />
-                            <div className="flex justify-center rounded border-2 border-[var(--border)] border-dashed bg-[var(--background)] p-3 text-center transition-colors hover:border-[var(--accent)]">
-                              {chapter.files.length === 0 ? (
-                                <p className="text-center text-[var(--muted-foreground)] text-xs">
-                                  აირჩიეთ გვერდები
-                                </p>
-                              ) : (
-                                <p className="text-center text-xs">
-                                  არჩეულია {chapter.files.length} ფაილი (
-                                  {formatFileSize(
-                                    chapter.files.reduce(
-                                      (sum, f) => sum + f.size,
-                                      0,
-                                    ),
-                                  )}
-                                  )
-                                </p>
-                              )}
-                            </div>
-                          </label>
+                          <span className="mb-1 block text-[var(--muted-foreground)] text-xs">
+                            თავის გვერდები *
+                          </span>
+                          <ChapterPagesDropzone
+                            chapterId={chapter.id}
+                            files={chapter.files}
+                            onDrop={handleChapterPagesDrop}
+                            disabled={isUploading}
+                          />
                         </div>
                       </div>
                     ))}
