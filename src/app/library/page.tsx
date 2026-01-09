@@ -11,7 +11,7 @@ import { useReadingHistory } from "@/features/library/hooks/use-reading-history"
 import { MangaGrid } from "@/features/manga/components/manga-grid";
 import type { ReadingHistoryWithDetails } from "@/types/history.types";
 
-type Tab = "bookmarks" | "history";
+type Tab = "bookmarks" | "history" | "dropped" | "toread" | "favorites";
 
 export default function LibraryPage() {
   const [activeTab, setActiveTab] = useState<Tab>("bookmarks");
@@ -34,10 +34,26 @@ export default function LibraryPage() {
     error: historyError,
   } = useReadingHistory({ page: currentPage, limit: pageSize });
 
+  // Currently only bookmarks and history have data hooks
+  // New tabs (dropped, toread, favorites) will show empty state for now
   const isLoading =
-    activeTab === "bookmarks" ? bookmarksLoading : historyLoading;
-  const error = activeTab === "bookmarks" ? bookmarksError : historyError;
-  const data = activeTab === "bookmarks" ? bookmarksData : historyData;
+    activeTab === "bookmarks"
+      ? bookmarksLoading
+      : activeTab === "history"
+        ? historyLoading
+        : false;
+  const error =
+    activeTab === "bookmarks"
+      ? bookmarksError
+      : activeTab === "history"
+        ? historyError
+        : null;
+  const data =
+    activeTab === "bookmarks"
+      ? bookmarksData
+      : activeTab === "history"
+        ? historyData
+        : null;
 
   const handleTabChange = (tab: Tab) => {
     setActiveTab(tab);
@@ -45,7 +61,7 @@ export default function LibraryPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8 md:py-8 lg:px-12">
+    <div className="container mx-auto box-border max-w-[1920px] overflow-hidden px-6 py-8 md:px-8 md:py-8 lg:px-12">
       {/* Header */}
       <div className="mb-12">
         <h1 className="mb-4 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
@@ -57,14 +73,14 @@ export default function LibraryPage() {
       </div>
 
       {/* Tabs - Glass effect tabs */}
-      <div className="mb-8 flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm">
+      <div className="mb-8 flex flex-col gap-1 rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm md:flex-row">
         <Button
           variant="ghost"
           onClick={() => handleTabChange("bookmarks")}
-          className={`flex-1 rounded-md px-6 py-8 font-medium text-sm transition-all duration-200 ${
+          className={`min-w-0 flex-1 rounded-md px-4 py-3 font-medium text-sm transition-all duration-200 sm:px-6 ${
             activeTab === "bookmarks"
-              ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
-              : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:bg-[var(--accent)] hover:brightness-100"
+              : "text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]"
           }`}
         >
           სანიშნეები
@@ -75,16 +91,49 @@ export default function LibraryPage() {
         <Button
           variant="ghost"
           onClick={() => handleTabChange("history")}
-          className={`flex-1 rounded-md px-6 py-8 font-medium text-sm transition-all duration-200 ${
+          className={`min-w-0 flex-1 rounded-md px-4 py-3 font-medium text-sm transition-all duration-200 sm:px-6 ${
             activeTab === "history"
-              ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
-              : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:bg-[var(--accent)] hover:brightness-100"
+              : "text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]"
           }`}
         >
           კითხვის ისტორია
           {historyData && (
             <span className="ml-2 opacity-70">({historyData.total})</span>
           )}
+        </Button>
+        <Button
+          variant="ghost"
+          onClick={() => handleTabChange("dropped")}
+          className={`min-w-0 flex-1 rounded-md px-4 py-3 font-medium text-sm transition-all duration-200 sm:px-6 ${
+            activeTab === "dropped"
+              ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:bg-[var(--accent)] hover:brightness-100"
+              : "text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]"
+          }`}
+        >
+          მიტოვებული
+        </Button>
+        <Button
+          variant="ghost"
+          onClick={() => handleTabChange("toread")}
+          className={`min-w-0 flex-1 rounded-md px-4 py-3 font-medium text-sm transition-all duration-200 sm:px-6 ${
+            activeTab === "toread"
+              ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:bg-[var(--accent)] hover:brightness-100"
+              : "text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]"
+          }`}
+        >
+          წასაკითხი
+        </Button>
+        <Button
+          variant="ghost"
+          onClick={() => handleTabChange("favorites")}
+          className={`min-w-0 flex-1 rounded-md px-4 py-3 font-medium text-sm transition-all duration-200 sm:px-6 ${
+            activeTab === "favorites"
+              ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:bg-[var(--accent)] hover:brightness-100"
+              : "text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]"
+          }`}
+        >
+          ფავორიტები
         </Button>
       </div>
 
@@ -129,12 +178,24 @@ export default function LibraryPage() {
             <h3 className="mb-2 font-bold text-xl">
               {activeTab === "bookmarks"
                 ? "სანიშნეები ჯერ არ გაქვთ"
-                : "კითხვის ისტორია არ გაქვთ"}
+                : activeTab === "history"
+                  ? "კითხვის ისტორია არ გაქვთ"
+                  : activeTab === "dropped"
+                    ? "მიტოვებული მანგა არ გაქვთ"
+                    : activeTab === "toread"
+                      ? "წასაკითხი მანგა არ გაქვთ"
+                      : "ფავორიტები ჯერ არ გაქვთ"}
             </h3>
             <p className="mb-4 text-gray-600">
               {activeTab === "bookmarks"
                 ? "დაიწყეთ მანგის სანიშნებში დამატება, რომ აქ იხილოთ"
-                : "დაიწყეთ მანგის კითხვა, რომ აქ იხილოთ თქვენი ისტორია"}
+                : activeTab === "history"
+                  ? "დაიწყეთ მანგის კითხვა, რომ აქ იხილოთ თქვენი ისტორია"
+                  : activeTab === "dropped"
+                    ? "მიტოვებული მანგა აქ გამოჩნდება"
+                    : activeTab === "toread"
+                      ? "წასაკითხი მანგა აქ გამოჩნდება"
+                      : "ფავორიტები აქ გამოჩნდება"}
             </p>
           </div>
           <Link href="/browse">
