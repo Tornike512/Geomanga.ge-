@@ -3,7 +3,7 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
@@ -15,6 +15,7 @@ import { MangaStatus } from "@/types/manga.types";
 export default function GenresPage() {
   const { data: genres, isLoading: genresLoading } = useGenres();
   const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null);
+  const mangaSectionRef = useRef<HTMLDivElement>(null);
   const genreSkeletonKeys = useMemo(
     () => Array.from({ length: 12 }, (_, i) => `genre-skeleton-${i}`),
     [],
@@ -30,6 +31,17 @@ export default function GenresPage() {
     limit: 12,
   });
 
+  useEffect(() => {
+    if (selectedGenreId && mangaSectionRef.current) {
+      setTimeout(() => {
+        mangaSectionRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
+  }, [selectedGenreId]);
+
   if (genresLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -44,7 +56,7 @@ export default function GenresPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8 md:py-8 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] px-3 py-3 md:px-8 md:py-8 lg:px-12">
       <div className="mb-12">
         <h1 className="mb-4 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
           ჟანრები
@@ -56,62 +68,68 @@ export default function GenresPage() {
 
       {/* Genre Grid */}
       <div className="mb-16 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-        {genres?.map((genre) => (
-          <Button
-            key={genre.id}
-            variant="ghost"
-            onClick={() =>
-              setSelectedGenreId(selectedGenreId === genre.id ? null : genre.id)
-            }
-            className={`group relative h-auto overflow-hidden rounded-lg border p-8 text-left transition-all duration-200 ${
-              selectedGenreId === genre.id
-                ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_30px_rgba(245,158,11,0.2)]"
-                : "border-[var(--border)] bg-[var(--card)] backdrop-blur-sm hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)]"
-            }`}
-          >
-            <div>
-              <h3 className="mb-2 font-semibold text-xl tracking-tight">
-                {genre.name}
-              </h3>
-              {genre.description && (
-                <p className="mb-4 line-clamp-2 text-sm opacity-70">
-                  {genre.description}
-                </p>
-              )}
-              <Badge
-                variant={selectedGenreId === genre.id ? "default" : "secondary"}
-              >
-                {genre.manga_count || 0} მანგა
-              </Badge>
-            </div>
-            {selectedGenreId === genre.id && (
-              <div className="absolute top-4 right-4">
-                <div className="rounded-full bg-[var(--accent-foreground)] p-1.5 text-[var(--accent)]">
-                  <svg
-                    className="h-4 w-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    aria-label="Selected"
-                    role="img"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
+        {genres?.map((genre) => {
+          const isSelected = selectedGenreId === genre.id;
+          return (
+            <Button
+              key={genre.id}
+              variant="ghost"
+              onClick={() => setSelectedGenreId(isSelected ? null : genre.id)}
+              className={`group relative h-auto overflow-hidden rounded-lg border p-3 text-center transition-all duration-200 md:p-8 ${
+                isSelected
+                  ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_30px_rgba(245,158,11,0.2)] hover:border-[var(--accent)] hover:bg-[var(--accent)]"
+                  : "border-[var(--border)] bg-[var(--card)] backdrop-blur-sm hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)]"
+              }`}
+            >
+              <div className="flex w-full flex-col items-center justify-center text-center">
+                <h3 className="mb-2 w-full text-center font-semibold text-xl tracking-tight">
+                  {genre.name_ka}
+                </h3>
+                {genre.description && (
+                  <p className="mb-4 line-clamp-2 w-full text-center text-sm opacity-70">
+                    {genre.description}
+                  </p>
+                )}
+                <Badge
+                  variant={isSelected ? "default" : "secondary"}
+                  className={
+                    isSelected
+                      ? "bg-white font-bold text-[var(--accent)] shadow-md"
+                      : ""
+                  }
+                >
+                  {genre.manga_count} მანგა
+                </Badge>
               </div>
-            )}
-          </Button>
-        ))}
+              {isSelected && (
+                <div className="absolute top-4 right-4">
+                  <div className="rounded-full bg-[var(--accent-foreground)] p-1.5 text-[var(--accent)]">
+                    <svg
+                      className="h-4 w-4"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      aria-label="Selected"
+                      role="img"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              )}
+            </Button>
+          );
+        })}
       </div>
 
       {/* Selected Genre Manga */}
       {selectedGenreId && (
-        <div>
+        <div ref={mangaSectionRef}>
           <h2 className="mb-8 border-[var(--border)] border-b pb-4 font-semibold text-2xl tracking-tight">
-            {genres?.find((g) => g.id === selectedGenreId)?.name} მანგა
+            {genres?.find((g) => g.id === selectedGenreId)?.name_ka} მანგა
           </h2>
 
           {mangaLoading ? (
@@ -143,7 +161,7 @@ export default function GenresPage() {
                         />
                         {manga.status === MangaStatus.ONGOING && (
                           <Badge
-                            className="absolute top-2 left-2"
+                            className="absolute top-1 left-1 max-w-[calc(100%-8px)] truncate px-1 py-0.5 text-[8px] md:top-2 md:left-2 md:max-w-none md:overflow-visible md:whitespace-normal md:px-2.5 md:py-0.5 md:text-xs"
                             variant="success"
                           >
                             მიმდინარე

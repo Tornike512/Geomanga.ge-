@@ -8,7 +8,7 @@ export function Card({ className, children, ...props }: CardProps) {
     <div
       className={cn(
         // Glass effect card - semi-transparent with backdrop blur
-        "rounded-lg border border-[var(--border)] bg-[var(--card)] p-8 backdrop-blur-sm transition-all duration-300 ease-out",
+        "rounded-lg border border-[var(--border)] bg-[var(--card)] p-3 backdrop-blur-sm transition-all duration-300 ease-out md:p-8",
         // Hover state - brightened border, slightly more opaque
         "hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)]",
         className,

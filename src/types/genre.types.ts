@@ -1,9 +1,10 @@
 export interface Genre {
   readonly id: number;
   readonly name: string;
+  readonly name_ka: string;
   readonly slug: string;
   readonly description: string | undefined;
-  readonly manga_count?: number;
+  readonly manga_count: number;
 }
 
 export interface GenreCreate {
