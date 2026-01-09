@@ -207,30 +207,47 @@ export default function BrowsePage() {
       )}
 
       {/* Filter Modal */}
+      {/* biome-ignore lint/a11y/useSemanticElements: Modal backdrop overlay requires div with role=button for proper click handling */}
       <div
+        role="button"
+        tabIndex={-1}
         className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ${
           isFilterModalOpen
             ? "visible bg-black/60 opacity-100"
             : "invisible opacity-0"
         }`}
         onClick={() => setIsFilterModalOpen(false)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+            setIsFilterModalOpen(false);
+          }
+        }}
       >
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="filter-modal-title"
           className={`relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--card-solid)] p-6 shadow-2xl transition-all duration-300 ${
             isFilterModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
           }`}
           onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
         >
           {/* Modal Header */}
           <div className="mb-6 flex items-center justify-between border-[var(--border)] border-b pb-4">
-            <h2 className="font-semibold text-xl">ფილტრები</h2>
-            <button
+            <h2 id="filter-modal-title" className="font-semibold text-xl">
+              ფილტრები
+            </h2>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => setIsFilterModalOpen(false)}
-              className="rounded-lg p-2 transition-colors hover:bg-[var(--muted)]"
+              className="rounded-lg p-2"
               aria-label="Close modal"
             >
               <X className="h-5 w-5" />
-            </button>
+            </Button>
           </div>
 
           {/* Age Rating Filter */}
@@ -302,17 +319,22 @@ export default function BrowsePage() {
             </h3>
             <div className="flex flex-wrap gap-2">
               {genres?.map((genre) => (
-                <button
+                <Button
                   key={genre.id}
+                  type="button"
+                  variant={
+                    filters.genres.includes(genre.id) ? "default" : "outline"
+                  }
+                  size="sm"
                   onClick={() => toggleGenre(genre.id)}
-                  className={`rounded-lg border px-3 py-1.5 text-sm transition-all duration-200 ${
+                  className={`rounded-lg px-3 py-1.5 text-sm ${
                     filters.genres.includes(genre.id)
-                      ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)]"
-                      : "border-[var(--border)] bg-transparent text-[var(--foreground)] hover:border-[var(--border-hover)] hover:bg-[var(--muted)]"
+                      ? ""
+                      : "hover:border-[var(--border-hover)]"
                   }`}
                 >
                   {genre.name_ka || genre.name}
-                </button>
+                </Button>
               ))}
             </div>
           </div>

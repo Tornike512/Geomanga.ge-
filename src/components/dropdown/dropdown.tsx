@@ -197,6 +197,7 @@ export const Dropdown = ({
       </button>
 
       {/* Dropdown Menu */}
+      {/* biome-ignore lint/a11y/useSemanticElements: Custom dropdown requires div with role=listbox for proper ARIA implementation */}
       <div
         ref={listboxRef}
         id={listboxId}
@@ -220,6 +221,7 @@ export const Dropdown = ({
           const isHighlighted = index === highlightedIndex;
 
           return (
+            // biome-ignore lint/a11y/useSemanticElements: Custom dropdown option requires div with role=option for ARIA compliance
             <div
               key={option.value}
               role="option"
