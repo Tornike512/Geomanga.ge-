@@ -1,3 +1,10 @@
+## 1.3.0 (2026-01-09)
+
+* feat: add new tabs for dropped, toread, and favorites in LibraryPage ([42b7965](https://github.com/Tornike512/Geomanga.ge-/commit/42b7965))
+* feat: enhance accessibility in modal and dropdown components with ARIA roles ([25d13e0](https://github.com/Tornike512/Geomanga.ge-/commit/25d13e0))
+* feat: enhance GenresPage with smooth scrolling and update genre types ([04a165e](https://github.com/Tornike512/Geomanga.ge-/commit/04a165e))
+* feat: implement genre filtering and enhance manga browsing experience ([dc311d6](https://github.com/Tornike512/Geomanga.ge-/commit/dc311d6))
+
 ## 1.2.0 (2026-01-08)
 
 * fix: add React type import for improved type safety ([89e9b99](https://github.com/Tornike512/Geomanga.ge-/commit/89e9b99))
