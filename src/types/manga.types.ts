@@ -8,6 +8,25 @@ export enum MangaStatus {
   CANCELLED = "cancelled",
 }
 
+export enum TranslationStatus {
+  TRANSLATING = "translating",
+  COMPLETED = "completed",
+}
+
+export enum ContentType {
+  MANGA = "manga",
+  MANHUA = "manhua",
+  MANHWA = "manhwa",
+  COMICS = "comics",
+  OEL_MANGA = "oel_manga",
+}
+
+export enum AgeRating {
+  FOR_EVERYONE = "for_everyone",
+  SIXTEEN_PLUS = "16+",
+  EIGHTEEN_PLUS = "18+",
+}
+
 export interface Manga {
   readonly id: number;
   readonly title: string;
@@ -15,12 +34,16 @@ export interface Manga {
   readonly description: string | undefined;
   readonly cover_image_url: string | undefined;
   readonly status: MangaStatus;
+  readonly translation_status: TranslationStatus;
+  readonly content_type: ContentType;
+  readonly age_rating: AgeRating;
   readonly author: string | undefined;
   readonly artist: string | undefined;
   readonly rating: number;
   readonly total_views: number;
   readonly created_at: string;
   readonly updated_at: string;
+  readonly genres?: Genre[];
 }
 
 export interface MangaDetail extends Manga {
@@ -42,6 +65,9 @@ export interface MangaCreate {
   readonly description?: string;
   readonly cover_image_url?: string;
   readonly status?: MangaStatus;
+  readonly translation_status?: TranslationStatus;
+  readonly content_type?: ContentType;
+  readonly age_rating?: AgeRating;
   readonly author?: string;
   readonly artist?: string;
   readonly genre_ids?: number[];
@@ -52,6 +78,9 @@ export interface MangaUpdate {
   readonly description?: string;
   readonly cover_image_url?: string;
   readonly status?: MangaStatus;
+  readonly translation_status?: TranslationStatus;
+  readonly content_type?: ContentType;
+  readonly age_rating?: AgeRating;
   readonly author?: string;
   readonly artist?: string;
   readonly genre_ids?: number[];
@@ -61,8 +90,12 @@ export interface MangaListParams {
   readonly page?: number;
   readonly limit?: number;
   readonly status?: MangaStatus;
+  readonly translation_status?: TranslationStatus;
+  readonly content_type?: ContentType;
+  readonly age_rating?: AgeRating;
   readonly genre?: number;
+  readonly genres?: number[];
   readonly sort_by?: "created_at" | "updated_at" | "rating" | "views" | "title";
   readonly order_desc?: boolean;
-  [key: string]: string | number | boolean | undefined;
+  [key: string]: string | number | number[] | boolean | undefined;
 }

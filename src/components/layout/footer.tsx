@@ -55,10 +55,10 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/genres"
+                  href="/browse"
                   className="transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
                 >
-                  ყველა ჟანრი
+                  ნავიგაცია
                 </Link>
               </li>
             </ul>

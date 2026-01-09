@@ -4,12 +4,21 @@ import { ApiError, type ApiErrorResponse } from "@/types/api.types";
 import { deleteCookie, getCookie, setCookie } from "@/utils/cookies";
 import { logger } from "@/utils/logger";
 
+type ParamValue =
+  | string
+  | number
+  | boolean
+  | number[]
+  | string[]
+  | undefined
+  | null;
+
 type RequestOptions = {
   method?: string;
   headers?: Record<string, string>;
   body?: any;
   cookie?: string;
-  params?: Record<string, string | number | boolean | undefined | null>;
+  params?: Record<string, ParamValue>;
   cache?: RequestCache;
   next?: NextFetchRequestConfig;
   requiresAuth?: boolean;
@@ -20,15 +29,23 @@ export function buildUrlWithParams(
   params?: RequestOptions["params"],
 ): string {
   if (!params) return url;
-  const filteredParams = Object.fromEntries(
-    Object.entries(params).filter(
-      ([, value]) => value !== undefined && value !== null,
-    ),
-  );
-  if (Object.keys(filteredParams).length === 0) return url;
-  const queryString = new URLSearchParams(
-    filteredParams as Record<string, string>,
-  ).toString();
+  const searchParams = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined || value === null) continue;
+
+    if (Array.isArray(value)) {
+      // Handle arrays by adding multiple params with the same key
+      for (const item of value) {
+        searchParams.append(key, String(item));
+      }
+    } else {
+      searchParams.append(key, String(value));
+    }
+  }
+
+  const queryString = searchParams.toString();
+  if (!queryString) return url;
   return `${url}?${queryString}`;
 }
 

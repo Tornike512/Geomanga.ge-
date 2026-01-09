@@ -42,12 +42,6 @@ export function Header() {
             >
               ნავიგაცია
             </Link>
-            <Link
-              href="/genres"
-              className="text-[var(--muted-foreground)] text-sm transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
-            >
-              ჟანრები
-            </Link>
             {user && (
               <Link
                 href="/library"

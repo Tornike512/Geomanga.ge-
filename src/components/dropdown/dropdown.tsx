@@ -168,7 +168,7 @@ export const Dropdown = ({
       >
         <span
           className={cn(
-            "truncate",
+            "whitespace-nowrap",
             !selectedOption && "text-[var(--muted-foreground)]",
           )}
         >
@@ -249,7 +249,7 @@ export const Dropdown = ({
                 isSelected && "font-medium",
               )}
             >
-              <span className="truncate">{option.label}</span>
+              <span className="whitespace-nowrap">{option.label}</span>
 
               {/* Checkmark for selected option */}
               {isSelected && (
