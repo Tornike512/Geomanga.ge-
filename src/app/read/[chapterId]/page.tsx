@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "@/components/button";
-import { Skeleton } from "@/components/skeleton";
+import { Spinner } from "@/components/spinner";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
 import { useTrackReading } from "@/features/reader/hooks/use-track-reading";
 
@@ -35,9 +35,7 @@ export default function ReaderPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black">
-        <div className="w-full max-w-4xl p-4">
-          <Skeleton className="h-screen w-full" />
-        </div>
+        <Spinner size="lg" />
       </div>
     );
   }

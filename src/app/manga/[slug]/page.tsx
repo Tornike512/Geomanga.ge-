@@ -8,7 +8,7 @@ import Marquee from "react-fast-marquee";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
-import { Skeleton } from "@/components/skeleton";
+import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth";
 import {
   useAddBookmark,
@@ -37,16 +37,8 @@ export default function MangaDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8">
-        <div className="grid gap-8 md:grid-cols-3">
-          <Skeleton className="aspect-[3/4] w-full rounded-lg" />
-          <div className="space-y-6 md:col-span-2">
-            <Skeleton className="h-16 w-3/4 rounded-lg" />
-            <Skeleton className="h-6 w-full rounded-lg" />
-            <Skeleton className="h-6 w-full rounded-lg" />
-            <Skeleton className="h-6 w-2/3 rounded-lg" />
-          </div>
-        </div>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Spinner size="lg" />
       </div>
     );
   }

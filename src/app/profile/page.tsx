@@ -6,7 +6,7 @@ import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
-import { Skeleton } from "@/components/skeleton";
+import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { useUpdateProfile } from "@/features/auth/hooks/use-update-profile";
 import { useUploadAvatar } from "@/features/upload/hooks/use-upload-avatar";
@@ -48,12 +48,8 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto max-w-4xl px-4 py-8">
-        <div className="space-y-4">
-          <Skeleton className="h-32 w-32 rounded-full" />
-          <Skeleton className="h-8 w-64" />
-          <Skeleton className="h-4 w-48" />
-        </div>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Spinner size="lg" />
       </div>
     );
   }

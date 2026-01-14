@@ -3,9 +3,9 @@
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/button";
-import { Skeleton } from "@/components/skeleton";
+import { Spinner } from "@/components/spinner";
 import { useBookmarks } from "@/features/library/hooks/use-bookmarks";
 import { useReadingHistory } from "@/features/library/hooks/use-reading-history";
 import { MangaGrid } from "@/features/manga/components/manga-grid";
@@ -15,10 +15,6 @@ type Tab = "bookmarks" | "history" | "dropped" | "toread" | "favorites";
 
 export default function LibraryPage() {
   const [activeTab, setActiveTab] = useState<Tab>("bookmarks");
-  const librarySkeletonKeys = useMemo(
-    () => Array.from({ length: 10 }, () => crypto.randomUUID()),
-    [],
-  );
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
 
@@ -139,14 +135,8 @@ export default function LibraryPage() {
 
       {/* Content */}
       {isLoading ? (
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {librarySkeletonKeys.map((key) => (
-            <div key={key} className="space-y-2">
-              <Skeleton className="aspect-[2/3] w-full" />
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-3 w-1/2" />
-            </div>
-          ))}
+        <div className="flex min-h-[400px] items-center justify-center">
+          <Spinner size="lg" />
         </div>
       ) : error ? (
         <div className="py-8 text-center">
