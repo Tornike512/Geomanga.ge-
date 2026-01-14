@@ -159,7 +159,7 @@ export default function LibraryPage() {
         </div>
       ) : !data || data.items.length === 0 ? (
         <div className="py-8 text-center">
-          <div className="mb-4 text-gray-400">
+          <div className="mb-4 flex flex-col items-center justify-center text-gray-400">
             <svg
               className="mx-auto mb-4 h-16 w-16"
               fill="none"
