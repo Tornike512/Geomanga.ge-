@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/button";
 import {
@@ -10,44 +9,16 @@ export default async function Home() {
   return (
     <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8 md:py-8 lg:px-12 lg:py-8">
       {/* Hero Section - Minimalist Dark with atmospheric depth */}
-      <section className="mb-8 text-center">
-        <div className="mb-6 flex justify-center">
-          <Image
-            src="/images/geomanga-logo.png"
-            alt="Geomanga"
-            width={480}
-            height={160}
-            className="h-40 w-auto md:h-48"
-            priority
-          />
-        </div>
-        <p className="mx-auto max-w-2xl text-[var(--muted-foreground)] text-lg leading-relaxed md:text-xl">
+      <section className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <p className="max-w-2xl text-[var(--muted-foreground)] text-lg leading-relaxed md:text-xl">
           აღმოაჩინეთ ათასობით მანგის სერიები. წაიკითხეთ, შეაფასეთ და განიხილეთ
           თქვენი რჩეულები.
         </p>
-        <div className="mt-8 flex justify-center">
-          <Link href="/upload/manga">
-            <Button size="lg">
-              <svg
-                className="mr-2 h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                role="img"
-                aria-label="ატვირთვა"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              მანგის ატვირთვა
-            </Button>
-          </Link>
-        </div>
+        <Link href="/upload/manga">
+          <Button size="lg" className="whitespace-nowrap">
+            მანგის ატვირთვა
+          </Button>
+        </Link>
       </section>
 
       <TrendingSection />
