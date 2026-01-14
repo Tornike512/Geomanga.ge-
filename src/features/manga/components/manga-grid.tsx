@@ -20,7 +20,7 @@ export function MangaGrid({ manga, isLoading }: MangaGridProps) {
 
   if (!manga || !Array.isArray(manga) || manga.length === 0) {
     return (
-      <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] py-16 text-center backdrop-blur-sm">
+      <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] backdrop-blur-sm">
         <p className="text-[var(--muted-foreground)] text-lg">
           მანგა არ მოიძებნა
         </p>

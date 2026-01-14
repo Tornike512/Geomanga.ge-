@@ -269,7 +269,7 @@ export default function MangaDetailPage() {
                 </Link>
               ))
             ) : (
-              <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] py-8 text-center backdrop-blur-sm">
+              <div className="flex min-h-[200px] items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] backdrop-blur-sm">
                 <p className="text-[var(--muted-foreground)] text-lg">
                   თავები ჯერ არ არის დამატებული
                 </p>
