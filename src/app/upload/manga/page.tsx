@@ -413,7 +413,7 @@ export default function UploadMangaPage() {
   // Check if user has permission
   if (user && user.role !== UserRole.UPLOADER && user.role !== UserRole.ADMIN) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
+      <div className="container mx-auto px-4 py-12 text-center">
         <h1 className="mb-4 font-bold text-2xl">წვდომა აკრძალულია</h1>
         <p className="text-[var(--muted-foreground)]">
           ამ გვერდზე წვდომისთვის საჭიროა ატვირთვის უფლებები
@@ -423,7 +423,7 @@ export default function UploadMangaPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] px-6 py-12 md:px-8 lg:px-12">
       <div className="mb-16">
         <h1 className="mb-6 font-bold text-[clamp(2.5rem,6vw,4.5rem)] uppercase leading-none tracking-tighter">
           მანგის ატვირთვა

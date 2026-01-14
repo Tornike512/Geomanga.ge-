@@ -45,7 +45,7 @@ export default function MangaDetailPage() {
 
   if (!manga) {
     return (
-      <div className="container mx-auto max-w-[1920px] px-6 py-8 text-center md:px-8">
+      <div className="container mx-auto max-w-[1920px] px-6 py-12 text-center md:px-8">
         <h1 className="font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
           მანგა ვერ მოიძებნა
         </h1>

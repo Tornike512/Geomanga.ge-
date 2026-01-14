@@ -56,7 +56,7 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
+      <div className="container mx-auto px-4 py-12 text-center">
         <h1 className="mb-4 font-bold text-2xl">
           გთხოვთ შეხვიდეთ სისტემაში პროფილის სანახავად
         </h1>
@@ -65,7 +65,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8 md:py-8 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] px-6 py-12 md:px-8 md:py-12 lg:px-12">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Left Column - Profile Info */}
         <div className="lg:col-span-1">

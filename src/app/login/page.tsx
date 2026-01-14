@@ -22,7 +22,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-8 md:px-8 md:py-8 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] px-6 py-12 md:px-8 md:py-12 lg:px-12">
       <div className="mx-auto max-w-md">
         {/* Minimalist Dark Title */}
         <h1 className="mb-8 text-center font-semibold text-3xl tracking-tight sm:text-4xl">

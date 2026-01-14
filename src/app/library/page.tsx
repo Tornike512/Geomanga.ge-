@@ -57,7 +57,7 @@ export default function LibraryPage() {
   };
 
   return (
-    <div className="container mx-auto box-border max-w-[1920px] overflow-hidden px-6 py-8 md:px-8 md:py-8 lg:px-12">
+    <div className="container mx-auto box-border max-w-[1920px] overflow-hidden px-6 py-12 md:px-8 md:py-12 lg:px-12">
       {/* Header */}
       <div className="mb-12">
         <h1 className="mb-4 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
