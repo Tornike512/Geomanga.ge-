@@ -19,7 +19,7 @@ const borderWidths = {
 
 export function Spinner({ size = "lg", className }: SpinnerProps) {
   return (
-    <div
+    <output
       className={cn("animate-spin rounded-full", sizeClasses[size], className)}
       style={{
         borderWidth: borderWidths[size],
@@ -27,10 +27,9 @@ export function Spinner({ size = "lg", className }: SpinnerProps) {
         borderColor: "#f59e0b",
         borderTopColor: "transparent",
       }}
-      role="status"
       aria-label="იტვირთება"
     >
       <span className="sr-only">იტვირთება...</span>
-    </div>
+    </output>
   );
 }
