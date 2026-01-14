@@ -1,3 +1,13 @@
+## 1.4.0 (2026-01-14)
+
+* fix: change Spinner component from div to output for better semantics ([33479cd](https://github.com/Tornike512/Geomanga.ge-/commit/33479cd))
+* fix: improve layout of empty state in LibraryPage component ([150e5f9](https://github.com/Tornike512/Geomanga.ge-/commit/150e5f9))
+* fix: improve layout of empty state in MangaGrid and MangaDetailPage components ([deab620](https://github.com/Tornike512/Geomanga.ge-/commit/deab620))
+* fix: refactor Hero Section layout and remove unused Image import ([870087f](https://github.com/Tornike512/Geomanga.ge-/commit/870087f))
+* fix: standardize padding in container elements across multiple pages ([143783d](https://github.com/Tornike512/Geomanga.ge-/commit/143783d))
+* feat: replace Skeleton components with Spinner for loading states across multiple pages ([a6f4869](https://github.com/Tornike512/Geomanga.ge-/commit/a6f4869))
+* chore: update file permissions for multiple files to executable ([459fb04](https://github.com/Tornike512/Geomanga.ge-/commit/459fb04))
+
 ## 1.3.0 (2026-01-09)
 
 * feat: add new tabs for dropped, toread, and favorites in LibraryPage ([42b7965](https://github.com/Tornike512/Geomanga.ge-/commit/42b7965))
