@@ -1,6 +1,14 @@
-export { getCurrentUser, login, logout, register, updatePassword } from "./api";
+export {
+  getCurrentUser,
+  googleAuth,
+  login,
+  logout,
+  register,
+  updatePassword,
+} from "./api";
 export {
   useCurrentUser,
+  useGoogleAuth,
   useLogin,
   useLogout,
   useRegister,

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/button";
 import { Card, CardContent } from "@/components/card";
+import { GoogleSignInButton } from "@/components/google-sign-in-button";
 import { Input } from "@/components/input";
 import { useLogin } from "@/features/auth";
 
@@ -31,6 +32,21 @@ export default function LoginPage() {
 
         <Card>
           <CardContent className="p-8">
+            {/* Google Sign-In Button */}
+            <GoogleSignInButton className="mb-6 w-full" />
+
+            {/* Divider */}
+            <div className="relative mb-6">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-[var(--border)] border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-[var(--card)] px-2 text-[var(--muted-foreground)]">
+                  ან
+                </span>
+              </div>
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label

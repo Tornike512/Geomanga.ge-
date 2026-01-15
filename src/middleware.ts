@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 // Paths that don't require authentication
-const publicPaths = ["/login", "/register", "/"];
+const publicPaths = ["/login", "/register", "/", "/auth/callback", "/api/auth"];
 
 // Paths that require specific roles
 const roleProtectedPaths: Record<string, string[]> = {

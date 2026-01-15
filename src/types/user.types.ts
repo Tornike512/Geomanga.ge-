@@ -5,6 +5,8 @@ export enum UserRole {
   ADMIN = "ADMIN",
 }
 
+export type AuthProvider = "local" | "google";
+
 export interface User {
   readonly id: number;
   readonly username: string;
@@ -14,6 +16,7 @@ export interface User {
   readonly role: UserRole;
   readonly is_active: boolean;
   readonly created_at: string;
+  readonly auth_provider: AuthProvider;
 }
 
 export interface UserCreate {
