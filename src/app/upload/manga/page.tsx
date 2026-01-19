@@ -287,11 +287,6 @@ export default function UploadMangaPage() {
       return;
     }
 
-    if (!formData.alternativeTitle) {
-      alert("გთხოვთ შეიყვანოთ ალტერნატიული სათაური");
-      return;
-    }
-
     if (!formData.artist) {
       alert("გთხოვთ შეიყვანოთ მხატვარი");
       return;
@@ -548,7 +543,10 @@ export default function UploadMangaPage() {
                     htmlFor="alternativeTitle"
                     className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
                   >
-                    ალტერნატიული სათაური *
+                    ალტერნატიული სათაური{" "}
+                    <span className="font-normal text-xs">
+                      (არასავალდებულო)
+                    </span>
                   </label>
                   <Input
                     id="alternativeTitle"
@@ -560,7 +558,6 @@ export default function UploadMangaPage() {
                         alternativeTitle: e.target.value,
                       }))
                     }
-                    required
                     placeholder="ალტერნატიული ან იაპონური სათაური"
                     className="border-[var(--border)] bg-[var(--muted)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"
                   />
