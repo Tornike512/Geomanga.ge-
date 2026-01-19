@@ -94,9 +94,9 @@ export default function ReaderPage() {
               </p>
             </div>
           </div>
-          <div className="rounded-lg bg-[var(--accent)] px-4 py-8 font-medium text-[var(--accent-foreground)] text-sm shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+          <Button className="rounded-lg bg-[var(--accent)] px-4 py-2 font-medium text-[var(--accent-foreground)] text-sm shadow-[0_0_20px_rgba(245,158,11,0.3)]">
             {chapter.pages.length} გვერდი
-          </div>
+          </Button>
         </div>
       </div>
 
