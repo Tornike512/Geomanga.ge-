@@ -10,6 +10,47 @@ import { Spinner } from "@/components/spinner";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
 import { useTrackReading } from "@/features/reader/hooks/use-track-reading";
 
+// // Custom hook for scroll-based visibility
+// function useScrollVisibility(hideDelay = 150, showDelay = 800) {
+//   const [isVisible, setIsVisible] = useState(true);
+//   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+//   const lastScrollY = useRef(0);
+
+//   const handleScroll = useCallback(() => {
+//     const currentScrollY = window.scrollY;
+
+//     // Clear existing timeout
+//     if (scrollTimeoutRef.current) {
+//       clearTimeout(scrollTimeoutRef.current);
+//     }
+
+//     // Hide after short delay when scrolling
+//     scrollTimeoutRef.current = setTimeout(() => {
+//       setIsVisible(false);
+
+//       // Show again after scroll stops
+//       scrollTimeoutRef.current = setTimeout(() => {
+//         setIsVisible(true);
+//       }, showDelay);
+//     }, hideDelay);
+
+//     lastScrollY.current = currentScrollY;
+//   }, [hideDelay, showDelay]);
+
+//   useEffect(() => {
+//     window.addEventListener("scroll", handleScroll, { passive: true });
+
+//     return () => {
+//       window.removeEventListener("scroll", handleScroll);
+//       if (scrollTimeoutRef.current) {
+//         clearTimeout(scrollTimeoutRef.current);
+//       }
+//     };
+//   }, [handleScroll]);
+
+//   return isVisible;
+// }
+
 export default function ReaderPage() {
   const params = useParams();
   const router = useRouter();
