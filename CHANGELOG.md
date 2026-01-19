@@ -1,3 +1,15 @@
+## 1.5.0 (2026-01-19)
+
+* fix: adjust image sizes for footer and header components ([61a14b9](https://github.com/Tornike512/Geomanga.ge-/commit/61a14b9))
+* fix: adjust layout and overflow properties in UploadMangaPage and Dropdown components ([7a2e8b7](https://github.com/Tornike512/Geomanga.ge-/commit/7a2e8b7))
+* fix: enhance accessibility of Google Sign-In button and handle missing environment variables ([8365019](https://github.com/Tornike512/Geomanga.ge-/commit/8365019))
+* fix: improve image preview generation in ChapterPagesDropzone and handle cleanup properly ([4615242](https://github.com/Tornike512/Geomanga.ge-/commit/4615242))
+* fix: make alternative title field optional and update label accordingly ([20cfec1](https://github.com/Tornike512/Geomanga.ge-/commit/20cfec1))
+* fix: replace div with Button component for chapter page count display ([00cf89a](https://github.com/Tornike512/Geomanga.ge-/commit/00cf89a))
+* fix: update dependencies for @auth/core and next-auth to latest versions ([471c3d2](https://github.com/Tornike512/Geomanga.ge-/commit/471c3d2))
+* fix: update genre display in UploadMangaPage and enhance dropdown cursor style ([13bb7a1](https://github.com/Tornike512/Geomanga.ge-/commit/13bb7a1))
+* feat: implement Google OAuth authentication flow with NextAuth.js ([219efae](https://github.com/Tornike512/Geomanga.ge-/commit/219efae))
+
 ## 1.4.0 (2026-01-14)
 
 * fix: change Spinner component from div to output for better semantics ([33479cd](https://github.com/Tornike512/Geomanga.ge-/commit/33479cd))
