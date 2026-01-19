@@ -508,7 +508,7 @@ export default function UploadMangaPage() {
 
           {/* Right Column - Form Fields */}
           <div className="space-y-8 lg:col-span-2">
-            <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+            <Card className="overflow-visible border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
               <h3 className="mb-6 font-semibold text-lg tracking-tight">
                 ძირითადი ინფორმაცია
               </h3>
@@ -637,7 +637,7 @@ export default function UploadMangaPage() {
 
                 {/* Status & Release Year */}
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
+                  <div className="relative z-10">
                     <label
                       htmlFor="status"
                       className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
