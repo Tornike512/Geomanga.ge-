@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type React from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
@@ -19,6 +19,7 @@ import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
 import type { MangaStatus } from "@/types/manga.types";
 import { UserRole } from "@/types/user.types";
 import {
+  createImagePreview,
   formatFileSize,
   validateCoverImage,
   validatePageImages,
@@ -43,19 +44,33 @@ function ChapterPagesDropzone({
     disabled,
   });
 
-  // Generate preview URLs for files
-  const previews = useMemo(() => {
-    return files.map((file) => URL.createObjectURL(file));
-  }, [files]);
+  // Use data URLs instead of blob URLs to avoid React Strict Mode issues
+  const [previews, setPreviews] = useState<string[]>([]);
 
-  // Clean up object URLs when component unmounts or files change
+  // Generate data URL previews when files change
   useEffect(() => {
-    return () => {
-      for (const url of previews) {
-        URL.revokeObjectURL(url);
+    let cancelled = false;
+
+    const generatePreviews = async () => {
+      if (files.length === 0) {
+        setPreviews([]);
+        return;
+      }
+
+      const urls = await Promise.all(
+        files.map((file) => createImagePreview(file)),
+      );
+      if (!cancelled) {
+        setPreviews(urls);
       }
     };
-  }, [previews]);
+
+    generatePreviews();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [files]);
 
   return (
     <div className="space-y-2">
@@ -84,14 +99,14 @@ function ChapterPagesDropzone({
       </div>
 
       {/* Thumbnails grid */}
-      {files.length > 0 && (
+      {files.length > 0 && previews.length === files.length && (
         <div className="grid grid-cols-6 gap-1.5 sm:grid-cols-8 md:grid-cols-10">
           {previews.map((url, index) => (
             <div
               key={`${chapterId}-${files[index].name}-${files[index].size}`}
               className="group relative aspect-[2/3] overflow-hidden rounded bg-[var(--muted)]"
             >
-              {/* biome-ignore lint/performance/noImgElement: blob URLs not supported by next/image */}
+              {/* biome-ignore lint/performance/noImgElement: data URLs work better with native img */}
               <img
                 src={url}
                 alt={`გვერდი ${index + 1}`}
