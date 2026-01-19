@@ -507,12 +507,12 @@ export default function UploadMangaPage() {
           </div>
 
           {/* Right Column - Form Fields */}
-          <div className="space-y-8 lg:col-span-2">
-            <Card className="overflow-visible border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+          <div className="space-y-8 overflow-visible lg:col-span-2">
+            <Card className="relative z-10 overflow-visible border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
               <h3 className="mb-6 font-semibold text-lg tracking-tight">
                 ძირითადი ინფორმაცია
               </h3>
-              <div className="space-y-6">
+              <div className="space-y-6 overflow-visible">
                 {/* Title */}
                 <div>
                   <label
@@ -636,8 +636,8 @@ export default function UploadMangaPage() {
                 </div>
 
                 {/* Status & Release Year */}
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div className="relative z-10">
+                <div className="grid grid-cols-1 gap-6 overflow-visible md:grid-cols-2">
+                  <div className="overflow-visible">
                     <label
                       htmlFor="status"
                       className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"

@@ -205,7 +205,7 @@ export const Dropdown = ({
         aria-label={ariaLabel}
         className={cn(
           // Base styles
-          "absolute z-[9999] mt-2 w-full overflow-hidden rounded-lg",
+          "absolute left-0 z-[9999] mt-2 w-full overflow-hidden rounded-lg",
           "border border-[var(--border)] bg-[var(--card-solid)] shadow-black/20 shadow-xl backdrop-blur-md",
           // Animation styles
           "origin-top transition-all duration-200 ease-out",
