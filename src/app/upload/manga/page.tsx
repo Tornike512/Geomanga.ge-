@@ -712,7 +712,7 @@ export default function UploadMangaPage() {
                       }
                       className="cursor-pointer transition-all hover:opacity-80"
                     >
-                      {genre.name}
+                      {genre.name_ka}
                     </Badge>
                   </Button>
                 ))}
