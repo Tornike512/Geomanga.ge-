@@ -1,11 +1,35 @@
 "use client";
 
-import { Globe, User } from "lucide-react";
+import { Globe, Languages, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/badge";
 import { Card } from "@/components/card";
 import type { MangaDexTransformedManga } from "@/types/mangadex.types";
+
+const LANGUAGE_FLAGS: Record<string, string> = {
+  en: "🇬🇧",
+  ja: "🇯🇵",
+  ko: "🇰🇷",
+  zh: "🇨🇳",
+  "zh-hk": "🇭🇰",
+  es: "🇪🇸",
+  "es-la": "🇲🇽",
+  fr: "🇫🇷",
+  de: "🇩🇪",
+  "pt-br": "🇧🇷",
+  pt: "🇵🇹",
+  ru: "🇷🇺",
+  it: "🇮🇹",
+  pl: "🇵🇱",
+  tr: "🇹🇷",
+  ar: "🇸🇦",
+  id: "🇮🇩",
+  vi: "🇻🇳",
+  th: "🇹🇭",
+  uk: "🇺🇦",
+  ka: "🇬🇪",
+};
 
 interface MangaDexCardProps {
   readonly manga: MangaDexTransformedManga;
@@ -99,6 +123,29 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
               ))}
             </div>
           )}
+          {/* Available Languages */}
+          {manga.available_languages &&
+            manga.available_languages.length > 0 && (
+              <div className="mb-3 flex items-center gap-1.5">
+                <Languages className="h-3 w-3 text-[var(--muted-foreground)]" />
+                <div className="flex flex-wrap gap-1">
+                  {manga.available_languages.slice(0, 6).map((lang) => (
+                    <span
+                      key={lang}
+                      className="text-sm"
+                      title={lang.toUpperCase()}
+                    >
+                      {LANGUAGE_FLAGS[lang] || lang.toUpperCase()}
+                    </span>
+                  ))}
+                  {manga.available_languages.length > 6 && (
+                    <span className="text-[var(--muted-foreground)] text-xs">
+                      +{manga.available_languages.length - 6}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
           <div className="mt-auto flex items-center justify-between border-[var(--border)] border-t pt-3 text-[var(--muted-foreground)]">
             {manga.author && (
               <div className="flex items-center gap-1.5 text-xs">

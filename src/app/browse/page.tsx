@@ -90,12 +90,33 @@ const MANGADEX_DEMOGRAPHIC_OPTIONS = [
   { value: "josei", label: "ჯოსეი" },
 ] as const;
 
-const MANGADEX_LANGUAGE_OPTIONS = [
-  { value: "", label: "ყველა ენა" },
-  { value: "ja", label: "იაპონური" },
-  { value: "ko", label: "კორეული" },
-  { value: "zh", label: "ჩინური" },
-  { value: "en", label: "ინგლისური" },
+const MANGADEX_ORIGINAL_LANGUAGE_OPTIONS = [
+  { value: "", label: "ყველა ორიგინალი ენა" },
+  { value: "ja", label: "🇯🇵 იაპონური" },
+  { value: "ko", label: "🇰🇷 კორეული" },
+  { value: "zh", label: "🇨🇳 ჩინური" },
+  { value: "en", label: "🇬🇧 ინგლისური" },
+] as const;
+
+const MANGADEX_TRANSLATED_LANGUAGE_OPTIONS = [
+  { value: "", label: "ყველა თარგმანი" },
+  { value: "en", label: "🇬🇧 ინგლისური" },
+  { value: "ja", label: "🇯🇵 იაპონური" },
+  { value: "ko", label: "🇰🇷 კორეული" },
+  { value: "zh", label: "🇨🇳 ჩინური" },
+  { value: "es", label: "🇪🇸 ესპანური" },
+  { value: "fr", label: "🇫🇷 ფრანგული" },
+  { value: "de", label: "🇩🇪 გერმანული" },
+  { value: "pt-br", label: "🇧🇷 პორტუგალიური (BR)" },
+  { value: "ru", label: "🇷🇺 რუსული" },
+  { value: "it", label: "🇮🇹 იტალიური" },
+  { value: "pl", label: "🇵🇱 პოლონური" },
+  { value: "tr", label: "🇹🇷 თურქული" },
+  { value: "ar", label: "🇸🇦 არაბული" },
+  { value: "id", label: "🇮🇩 ინდონეზიური" },
+  { value: "vi", label: "🇻🇳 ვიეტნამური" },
+  { value: "th", label: "🇹🇭 ტაილანდური" },
+  { value: "uk", label: "🇺🇦 უკრაინული" },
 ] as const;
 
 interface LocalFilterState {
@@ -121,6 +142,7 @@ interface MangaDexFilterState {
   orderDesc: boolean;
   includedTags: string[];
   originalLanguage: string;
+  availableTranslatedLanguage: string;
 }
 
 export default function BrowsePage() {
@@ -151,6 +173,7 @@ export default function BrowsePage() {
     orderDesc: true,
     includedTags: [],
     originalLanguage: "",
+    availableTranslatedLanguage: "",
   });
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -179,6 +202,8 @@ export default function BrowsePage() {
         ? mangadexFilters.includedTags
         : undefined,
     originalLanguage: mangadexFilters.originalLanguage || undefined,
+    availableTranslatedLanguage:
+      mangadexFilters.availableTranslatedLanguage || undefined,
   });
 
   // Filter by tag group for MangaDex
@@ -231,6 +256,7 @@ export default function BrowsePage() {
       orderDesc: true,
       includedTags: [],
       originalLanguage: "",
+      availableTranslatedLanguage: "",
     });
     setSearchInput("");
   };
@@ -255,6 +281,7 @@ export default function BrowsePage() {
     (mangadexFilters.contentRating ? 1 : 0) +
     (mangadexFilters.demographic ? 1 : 0) +
     (mangadexFilters.originalLanguage ? 1 : 0) +
+    (mangadexFilters.availableTranslatedLanguage ? 1 : 0) +
     mangadexFilters.includedTags.length;
 
   const activeFilterCount =
@@ -764,13 +791,33 @@ export default function BrowsePage() {
               />
             </div>
 
+            {/* Translated Language Filter */}
+            <div className="mb-6">
+              <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
+                თარგმანის ენა (მანგები, რომლებსაც აქვთ თარგმანი ამ ენაზე)
+              </h3>
+              <Dropdown
+                options={MANGADEX_TRANSLATED_LANGUAGE_OPTIONS}
+                value={mangadexFilters.availableTranslatedLanguage || ""}
+                onChange={(value) =>
+                  setMangadexFilters({
+                    ...mangadexFilters,
+                    availableTranslatedLanguage: value || "",
+                    page: 1,
+                  })
+                }
+                aria-label="Filter by translated language"
+                className="w-full"
+              />
+            </div>
+
             {/* Original Language Filter */}
             <div className="mb-6">
               <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
                 ორიგინალი ენა
               </h3>
               <Dropdown
-                options={MANGADEX_LANGUAGE_OPTIONS}
+                options={MANGADEX_ORIGINAL_LANGUAGE_OPTIONS}
                 value={mangadexFilters.originalLanguage || ""}
                 onChange={(value) =>
                   setMangadexFilters({

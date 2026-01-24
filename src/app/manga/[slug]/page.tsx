@@ -4,7 +4,7 @@ import { ExternalLink, Globe, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
@@ -27,17 +27,28 @@ import { UserRole } from "@/types/user.types";
 import { formatDate, formatNumber, formatRating } from "@/utils/formatters";
 import { getCoverUrl } from "@/utils/image-urls";
 
-const LANGUAGE_OPTIONS = [
-  { value: "en", label: "English" },
-  { value: "ja", label: "日本語" },
-  { value: "ko", label: "한국어" },
-  { value: "zh", label: "中文" },
-  { value: "es", label: "Español" },
-  { value: "fr", label: "Français" },
-  { value: "de", label: "Deutsch" },
-  { value: "pt-br", label: "Português (BR)" },
-  { value: "ru", label: "Русский" },
-];
+const ALL_LANGUAGE_OPTIONS: Record<string, string> = {
+  en: "English",
+  ja: "日本語",
+  ko: "한국어",
+  zh: "中文",
+  "zh-hk": "中文 (HK)",
+  es: "Español",
+  "es-la": "Español (LA)",
+  fr: "Français",
+  de: "Deutsch",
+  "pt-br": "Português (BR)",
+  pt: "Português",
+  ru: "Русский",
+  it: "Italiano",
+  pl: "Polski",
+  tr: "Türkçe",
+  ar: "العربية",
+  id: "Indonesia",
+  vi: "Tiếng Việt",
+  th: "ไทย",
+  uk: "Українська",
+};
 
 export default function MangaDetailPage() {
   const params = useParams();
@@ -57,6 +68,23 @@ export default function MangaDetailPage() {
     useMangaDexMangaById(mangaDexId || "");
   const { data: mangaDexChapters, isLoading: chaptersLoading } =
     useMangaDexChapters(mangaDexId || "", selectedLanguage);
+
+  // Set default language based on available languages
+  useEffect(() => {
+    if (
+      mangaDexManga?.available_languages &&
+      mangaDexManga.available_languages.length > 0
+    ) {
+      const availableLangs = mangaDexManga.available_languages;
+      // If English is available, use it; otherwise use the first available language
+      if (!availableLangs.includes(selectedLanguage)) {
+        const defaultLang = availableLangs.includes("en")
+          ? "en"
+          : availableLangs[0];
+        setSelectedLanguage(defaultLang);
+      }
+    }
+  }, [mangaDexManga?.available_languages, selectedLanguage]);
 
   const { data: user } = useCurrentUser();
   const { data: bookmarks } = useBookmarks();
@@ -338,19 +366,24 @@ export default function MangaDetailPage() {
             </div>
 
             {/* Language selector for MangaDex */}
-            {isMangaDex && (
-              <div className="flex items-center gap-2">
-                <span className="text-[var(--muted-foreground)] text-sm">
-                  ენა:
-                </span>
-                <Dropdown
-                  options={LANGUAGE_OPTIONS}
-                  value={selectedLanguage}
-                  onChange={(value) => setSelectedLanguage(value)}
-                  className="min-w-[140px]"
-                />
-              </div>
-            )}
+            {isMangaDex &&
+              mangaDexManga?.available_languages &&
+              mangaDexManga.available_languages.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-[var(--muted-foreground)] text-sm">
+                    ენა:
+                  </span>
+                  <Dropdown
+                    options={mangaDexManga.available_languages.map((lang) => ({
+                      value: lang,
+                      label: ALL_LANGUAGE_OPTIONS[lang] || lang.toUpperCase(),
+                    }))}
+                    value={selectedLanguage}
+                    onChange={(value) => setSelectedLanguage(value)}
+                    className="min-w-[140px]"
+                  />
+                </div>
+              )}
           </div>
 
           {/* Chapter List - Glass Cards */}

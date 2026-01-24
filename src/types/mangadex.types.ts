@@ -145,6 +145,7 @@ export interface MangaDexTransformedManga {
   readonly tags: { id: string; name: string }[];
   readonly original_language: string;
   readonly mangadex_id: string;
+  readonly available_languages: string[];
 }
 
 // Paginated response for browse page
@@ -216,4 +217,5 @@ export interface MangaDexBrowseParams {
   readonly orderDesc?: boolean;
   readonly includedTags?: string[];
   readonly originalLanguage?: string;
+  readonly availableTranslatedLanguage?: string;
 }

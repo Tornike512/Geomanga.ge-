@@ -135,6 +135,7 @@ export const transformMangaDexManga = (
     })),
     original_language: manga.attributes.originalLanguage,
     mangadex_id: manga.id,
+    available_languages: manga.attributes.availableTranslatedLanguages || [],
   };
 };
 
@@ -245,6 +246,14 @@ export const browseMangaDex = async (
   // Original language
   if (params.originalLanguage) {
     searchParams.append("originalLanguage[]", params.originalLanguage);
+  }
+
+  // Available translated language (filter manga that have chapters in this language)
+  if (params.availableTranslatedLanguage) {
+    searchParams.append(
+      "availableTranslatedLanguage[]",
+      params.availableTranslatedLanguage,
+    );
   }
 
   // Tags
