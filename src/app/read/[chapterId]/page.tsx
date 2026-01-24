@@ -339,7 +339,7 @@ export default function ReaderPage() {
           {mangaDexPages?.map((pageUrl, index) => (
             <div key={pageUrl} className="w-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={pageUrl}
                 alt={`გვერდი ${index + 1}`}
                 className="h-auto w-full"
