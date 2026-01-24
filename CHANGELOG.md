@@ -1,3 +1,14 @@
+## 1.6.0 (2026-01-24)
+
+* feat: add support for external chapter links in MangaDex integration ([3a6a454](https://github.com/Tornike512/Geomanga.ge-/commit/3a6a454))
+* feat: enhance MangaDex integration with chapter fetching and language selection ([41ff9c4](https://github.com/Tornike512/Geomanga.ge-/commit/41ff9c4))
+* feat: implement MangaDex browsing functionality with filters and pagination ([d1e02ff](https://github.com/Tornike512/Geomanga.ge-/commit/d1e02ff))
+* feat: integrate MangaDex API for fetching and displaying manga data ([a9a3db0](https://github.com/Tornike512/Geomanga.ge-/commit/a9a3db0))
+* feat: replace img tag with Image component for MangaDex pages ([23d7cc2](https://github.com/Tornike512/Geomanga.ge-/commit/23d7cc2))
+* feat: update TrendingSection to use useMangaList for fetching manga data ([2da68a3](https://github.com/Tornike512/Geomanga.ge-/commit/2da68a3))
+* Merge branch 'main' of github.com:Tornike512/Geomanga.ge- ([e00681f](https://github.com/Tornike512/Geomanga.ge-/commit/e00681f))
+* refactor: comment out unused scroll visibility hook in ReaderPage component ([3c6bd9b](https://github.com/Tornike512/Geomanga.ge-/commit/3c6bd9b))
+
 ## 1.5.0 (2026-01-19)
 
 * fix: adjust image sizes for footer and header components ([61a14b9](https://github.com/Tornike512/Geomanga.ge-/commit/61a14b9))
