@@ -208,24 +208,15 @@ export default function ReaderPage() {
         >
           <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-2">
             <div className="flex items-center gap-3">
-              {localChapter.manga ? (
-                <Link href={`/manga/${localChapter.manga.slug}`}>
-                  <Button variant="outline" size="sm" className="h-8 px-3">
-                    <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
-                    უკან
-                  </Button>
-                </Link>
-              ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-8 px-3"
-                  onClick={() => router.back()}
-                >
-                  <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
-                  უკან
-                </Button>
-              )}
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 px-3"
+                onClick={() => router.back()}
+              >
+                <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
+                უკან
+              </Button>
               <div className="text-white">
                 <h1 className="font-medium text-sm tracking-tight">
                   {localChapter.manga?.title || "უცნობი მანგა"}
