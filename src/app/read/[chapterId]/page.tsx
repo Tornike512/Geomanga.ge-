@@ -4,7 +4,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Spinner } from "@/components/spinner";
@@ -12,10 +12,76 @@ import { useMangaDexChapterPages } from "@/features/manga";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
 import { useTrackReading } from "@/features/reader/hooks/use-track-reading";
 
+// Custom hook for auto-hiding UI based on scroll and mouse movement
+function useAutoHideUI(hideDelay = 2000) {
+  const [isVisible, setIsVisible] = useState(true);
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastScrollY = useRef(0);
+
+  const showUI = useCallback(() => {
+    setIsVisible(true);
+    // Clear existing timeout
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+    }
+    // Set new timeout to hide
+    hideTimeoutRef.current = setTimeout(() => {
+      setIsVisible(false);
+    }, hideDelay);
+  }, [hideDelay]);
+
+  const hideUI = useCallback(() => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+    }
+    setIsVisible(false);
+  }, []);
+
+  useEffect(() => {
+    // Handle scroll - hide immediately when scrolling
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (Math.abs(currentScrollY - lastScrollY.current) > 5) {
+        hideUI();
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    // Handle mouse movement - show UI and start hide timer
+    const handleMouseMove = () => {
+      showUI();
+    };
+
+    // Handle touch for mobile
+    const handleTouchStart = () => {
+      showUI();
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+
+    // Initial show with auto-hide
+    showUI();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchstart", handleTouchStart);
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+    };
+  }, [showUI, hideUI]);
+
+  return isVisible;
+}
+
 export default function ReaderPage() {
   const params = useParams();
   const router = useRouter();
   const chapterId = params.chapterId as string;
+  const isUIVisible = useAutoHideUI(2000);
 
   // Check if this is a MangaDex chapter
   const isMangaDex = chapterId.startsWith("md-");
@@ -113,6 +179,11 @@ export default function ReaderPage() {
     );
   }
 
+  // Common UI visibility classes
+  const uiVisibilityClass = isUIVisible
+    ? "translate-y-0 opacity-100"
+    : "pointer-events-none opacity-0";
+
   // For local chapters
   if (!isMangaDex && localChapter) {
     if (!localChapter.pages || localChapter.pages.length === 0) {
@@ -132,13 +203,15 @@ export default function ReaderPage() {
     return (
       <div className="min-h-screen bg-black">
         {/* Header */}
-        <div className="fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/80 backdrop-blur-md">
-          <div className="mx-auto flex max-w-[1920px] items-center justify-between px-6 py-8">
-            <div className="flex items-center gap-4">
+        <div
+          className={`fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
+        >
+          <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-2">
+            <div className="flex items-center gap-3">
               {localChapter.manga ? (
                 <Link href={`/manga/${localChapter.manga.slug}`}>
-                  <Button variant="outline" size="sm">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+                  <Button variant="outline" size="sm" className="h-8 px-3">
+                    <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
                     უკან
                   </Button>
                 </Link>
@@ -146,30 +219,31 @@ export default function ReaderPage() {
                 <Button
                   variant="outline"
                   size="sm"
+                  className="h-8 px-3"
                   onClick={() => router.back()}
                 >
-                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
                   უკან
                 </Button>
               )}
               <div className="text-white">
-                <h1 className="font-medium text-base tracking-tight">
+                <h1 className="font-medium text-sm tracking-tight">
                   {localChapter.manga?.title || "უცნობი მანგა"}
                 </h1>
-                <p className="text-[var(--muted-foreground)] text-sm">
+                <p className="text-[var(--muted-foreground)] text-xs">
                   თავი {localChapter.chapter_number}
                   {localChapter.title ? `: ${localChapter.title}` : ""}
                 </p>
               </div>
             </div>
-            <Button className="rounded-lg bg-[var(--accent)] px-4 py-2 font-medium text-[var(--accent-foreground)] text-sm shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+            <div className="rounded-md bg-[var(--accent)] px-2.5 py-1 font-medium text-[var(--accent-foreground)] text-xs">
               {localChapter.pages.length} გვერდი
-            </Button>
+            </div>
           </div>
         </div>
 
         {/* Reader Content */}
-        <div className="pt-20 pb-24">
+        <div className="py-4">
           <div className="mx-auto max-w-4xl">
             {localChapter.pages.map((page) => (
               <div key={page.id} className="w-full">
@@ -188,37 +262,39 @@ export default function ReaderPage() {
         </div>
 
         {/* Chapter Navigation */}
-        <div className="fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/80 backdrop-blur-md">
-          <div className="mx-auto flex max-w-[1920px] items-center justify-between px-6 py-8">
+        <div
+          className={`fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
+        >
+          <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-2">
             {localChapter.previous_chapter_id ? (
               <Link href={`/read/${localChapter.previous_chapter_id}`}>
-                <Button size="sm">
-                  <ChevronLeft className="mr-1 h-4 w-4" />
-                  წინა თავი
+                <Button size="sm" className="h-8 px-3">
+                  <ChevronLeft className="mr-1 h-3.5 w-3.5" />
+                  წინა
                 </Button>
               </Link>
             ) : (
-              <Button size="sm" disabled>
-                <ChevronLeft className="mr-1 h-4 w-4" />
-                წინა თავი
+              <Button size="sm" className="h-8 px-3" disabled>
+                <ChevronLeft className="mr-1 h-3.5 w-3.5" />
+                წინა
               </Button>
             )}
 
-            <div className="text-[var(--muted-foreground)] text-sm">
+            <div className="text-[var(--muted-foreground)] text-xs">
               თავი {localChapter.chapter_number}
             </div>
 
             {localChapter.next_chapter_id ? (
               <Link href={`/read/${localChapter.next_chapter_id}`}>
-                <Button size="sm">
-                  შემდეგი თავი
-                  <ChevronRight className="ml-1 h-4 w-4" />
+                <Button size="sm" className="h-8 px-3">
+                  შემდეგი
+                  <ChevronRight className="ml-1 h-3.5 w-3.5" />
                 </Button>
               </Link>
             ) : (
-              <Button size="sm" disabled>
-                შემდეგი თავი
-                <ChevronRight className="ml-1 h-4 w-4" />
+              <Button size="sm" className="h-8 px-3" disabled>
+                შემდეგი
+                <ChevronRight className="ml-1 h-3.5 w-3.5" />
               </Button>
             )}
           </div>
@@ -231,21 +307,28 @@ export default function ReaderPage() {
   return (
     <div className="min-h-screen bg-black">
       {/* Header */}
-      <div className="fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-[1920px] items-center justify-between px-6 py-8">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm" onClick={() => router.back()}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
+      <div
+        className={`fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
+      >
+        <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-2">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 px-3"
+              onClick={() => router.back()}
+            >
+              <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
               უკან
             </Button>
             <div className="text-white">
               <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="gap-1">
+                <Badge variant="secondary" className="gap-1 py-0.5 text-xs">
                   <Globe className="h-3 w-3" />
                   MangaDex
                 </Badge>
               </div>
-              <p className="mt-1 text-[var(--muted-foreground)] text-sm">
+              <p className="mt-0.5 text-[var(--muted-foreground)] text-xs">
                 {mangaDexInfo.chapterNumber
                   ? `თავი ${mangaDexInfo.chapterNumber}`
                   : "MangaDex თავი"}
@@ -253,20 +336,19 @@ export default function ReaderPage() {
               </p>
             </div>
           </div>
-          <Button className="rounded-lg bg-[var(--accent)] px-4 py-2 font-medium text-[var(--accent-foreground)] text-sm shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+          <div className="rounded-md bg-[var(--accent)] px-2.5 py-1 font-medium text-[var(--accent-foreground)] text-xs">
             {mangaDexPages?.length || 0} გვერდი
-          </Button>
+          </div>
         </div>
       </div>
 
       {/* Reader Content */}
-      <div className="pt-20 pb-24">
+      <div className="py-4">
         <div className="mx-auto max-w-4xl">
           {mangaDexPages?.map((pageUrl, index) => (
             <div key={pageUrl} className="w-full">
-              {/* Using regular img tag for MangaDex images to avoid Next.js image optimization issues */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <Image
+              <img
                 src={pageUrl}
                 alt={`გვერდი ${index + 1}`}
                 className="h-auto w-full"
@@ -278,9 +360,11 @@ export default function ReaderPage() {
       </div>
 
       {/* Footer Navigation */}
-      <div className="fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-[1920px] items-center justify-center px-6 py-8">
-          <div className="text-[var(--muted-foreground)] text-sm">
+      <div
+        className={`fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
+      >
+        <div className="mx-auto flex max-w-[1920px] items-center justify-center px-4 py-2">
+          <div className="text-[var(--muted-foreground)] text-xs">
             {mangaDexPages?.length || 0} გვერდი • MangaDex
           </div>
         </div>
