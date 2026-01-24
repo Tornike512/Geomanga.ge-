@@ -185,6 +185,7 @@ export interface MangaDexTransformedChapter {
   readonly pages_count: number;
   readonly published_at: string;
   readonly scanlation_group: string | null;
+  readonly external_url: string | null;
 }
 
 export interface MangaDexChapterPages {

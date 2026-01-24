@@ -389,9 +389,6 @@ export const getMangaDexChapters = async (
     }
 
     for (const chapter of data.data) {
-      // Skip external chapters (no pages available)
-      if (chapter.attributes.externalUrl) continue;
-
       const scanlationGroup = chapter.relationships.find(
         (r) => r.type === "scanlation_group",
       );
@@ -406,6 +403,7 @@ export const getMangaDexChapters = async (
         scanlation_group:
           (scanlationGroup?.attributes as { name?: string } | undefined)
             ?.name || null,
+        external_url: chapter.attributes.externalUrl || null,
       });
     }
 

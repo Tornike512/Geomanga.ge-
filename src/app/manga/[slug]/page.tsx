@@ -1,6 +1,6 @@
 "use client";
 
-import { Globe, Star } from "lucide-react";
+import { ExternalLink, Globe, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -186,13 +186,13 @@ export default function MangaDetailPage() {
                         </Button>
                       </Link>
                     )}
-                  {!isMangaDex && user && (
+                  {!isMangaDex && user && localManga && (
                     <Button
                       variant={isBookmarked ? "default" : "outline"}
                       onClick={() =>
                         isBookmarked
-                          ? removeBookmark.mutate(localManga?.id)
-                          : addBookmark.mutate({ manga_id: localManga?.id })
+                          ? removeBookmark.mutate(localManga.id)
+                          : addBookmark.mutate({ manga_id: localManga.id })
                       }
                     >
                       {isBookmarked ? "❤️ სანიშნებშია" : "🤍 სანიშნებში"}
@@ -362,35 +362,72 @@ export default function MangaDetailPage() {
             ) : chapters && Array.isArray(chapters) && chapters.length > 0 ? (
               isMangaDex ? (
                 // MangaDex chapters
-                mangaDexChapters?.map((chapter) => (
-                  <Link
-                    key={chapter.id}
-                    href={`/read/md-${chapter.id}`}
-                    className="group block rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
-                  >
-                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                      <div className="flex-1">
-                        <div className="font-medium text-[var(--foreground)] text-base group-hover:text-[var(--accent)]">
-                          თავი {chapter.chapter_number}
+                mangaDexChapters?.map((chapter) =>
+                  chapter.external_url ? (
+                    // External chapter - opens in new tab
+                    <a
+                      key={chapter.id}
+                      href={chapter.external_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group block rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                    >
+                      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 font-medium text-[var(--foreground)] text-base group-hover:text-[var(--accent)]">
+                            თავი {chapter.chapter_number}
+                            <ExternalLink className="h-3 w-3 text-[var(--muted-foreground)]" />
+                          </div>
+                          {chapter.title && (
+                            <div className="text-[var(--muted-foreground)] text-sm">
+                              {chapter.title}
+                            </div>
+                          )}
+                          {chapter.scanlation_group && (
+                            <div className="text-[var(--muted-foreground)] text-xs">
+                              {chapter.scanlation_group}
+                            </div>
+                          )}
                         </div>
-                        {chapter.title && (
-                          <div className="text-[var(--muted-foreground)] text-sm">
-                            {chapter.title}
-                          </div>
-                        )}
-                        {chapter.scanlation_group && (
-                          <div className="text-[var(--muted-foreground)] text-xs">
-                            {chapter.scanlation_group}
-                          </div>
-                        )}
+                        <div className="flex items-center gap-4 text-[var(--muted-foreground)] text-xs">
+                          <Badge variant="secondary" className="text-xs">
+                            გარე ბმული
+                          </Badge>
+                          <span>{formatDate(chapter.published_at)}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-4 text-[var(--muted-foreground)] text-xs">
-                        <span>{chapter.pages_count} გვერდი</span>
-                        <span>{formatDate(chapter.published_at)}</span>
+                    </a>
+                  ) : (
+                    // Internal chapter - read on site
+                    <Link
+                      key={chapter.id}
+                      href={`/read/md-${chapter.id}`}
+                      className="group block rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                    >
+                      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                        <div className="flex-1">
+                          <div className="font-medium text-[var(--foreground)] text-base group-hover:text-[var(--accent)]">
+                            თავი {chapter.chapter_number}
+                          </div>
+                          {chapter.title && (
+                            <div className="text-[var(--muted-foreground)] text-sm">
+                              {chapter.title}
+                            </div>
+                          )}
+                          {chapter.scanlation_group && (
+                            <div className="text-[var(--muted-foreground)] text-xs">
+                              {chapter.scanlation_group}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-4 text-[var(--muted-foreground)] text-xs">
+                          <span>{chapter.pages_count} გვერდი</span>
+                          <span>{formatDate(chapter.published_at)}</span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))
+                    </Link>
+                  ),
+                )
               ) : (
                 // Local chapters
                 localChapters?.map((chapter) => (
