@@ -157,6 +157,45 @@ export interface MangaDexPaginatedResponse {
   readonly page: number;
 }
 
+// MangaDex Chapter types
+export interface MangaDexChapter {
+  readonly id: string;
+  readonly type: "chapter";
+  readonly attributes: {
+    readonly volume: string | null;
+    readonly chapter: string | null;
+    readonly title: string | null;
+    readonly translatedLanguage: string;
+    readonly externalUrl: string | null;
+    readonly publishAt: string;
+    readonly readableAt: string;
+    readonly createdAt: string;
+    readonly updatedAt: string;
+    readonly pages: number;
+    readonly version: number;
+  };
+  readonly relationships: MangaDexRelationship[];
+}
+
+export interface MangaDexTransformedChapter {
+  readonly id: string;
+  readonly chapter_number: string;
+  readonly title: string | null;
+  readonly language: string;
+  readonly pages_count: number;
+  readonly published_at: string;
+  readonly scanlation_group: string | null;
+}
+
+export interface MangaDexChapterPages {
+  readonly baseUrl: string;
+  readonly chapter: {
+    readonly hash: string;
+    readonly data: string[];
+    readonly dataSaver: string[];
+  };
+}
+
 // Browse filter params (simplified for UI)
 export interface MangaDexBrowseParams {
   readonly page?: number;

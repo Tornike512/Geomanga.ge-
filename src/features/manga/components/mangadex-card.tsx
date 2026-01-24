@@ -1,7 +1,8 @@
 "use client";
 
-import { ExternalLink, User } from "lucide-react";
+import { Globe, User } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "@/components/badge";
 import { Card } from "@/components/card";
 import type { MangaDexTransformedManga } from "@/types/mangadex.types";
@@ -44,15 +45,11 @@ const getStatusVariant = (
 
 export function MangaDexCard({ manga }: MangaDexCardProps) {
   const displayTags = manga.tags.slice(0, 3);
-  const mangaDexUrl = `https://mangadex.org/title/${manga.mangadex_id}`;
+  // Use md-{mangadex_id} slug format to identify MangaDex manga
+  const localUrl = `/manga/md-${manga.mangadex_id}`;
 
   return (
-    <a
-      href={mangaDexUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="block"
-    >
+    <Link href={localUrl} className="block">
       <Card className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] p-0 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:border-[var(--border-hover)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)]">
         <div className="relative aspect-[3/4] overflow-hidden bg-[var(--muted)]/40">
           {manga.cover_image_url ? (
@@ -80,7 +77,7 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
           </div>
           <div className="absolute top-2 left-2">
             <Badge variant="secondary" className="rounded-md text-xs">
-              <ExternalLink className="mr-1 h-3 w-3" />
+              <Globe className="mr-1 h-3 w-3" />
               MangaDex
             </Badge>
           </div>
@@ -113,6 +110,6 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
           </div>
         </div>
       </Card>
-    </a>
+    </Link>
   );
 }

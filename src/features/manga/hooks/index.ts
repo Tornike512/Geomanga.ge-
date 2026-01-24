@@ -5,8 +5,11 @@ export { useMangaDetail } from "./use-manga-detail";
 export { useMangaList } from "./use-manga-list";
 export {
   useMangaDexBrowse,
+  useMangaDexChapterPages,
+  useMangaDexChapters,
   useMangaDexLatest,
   useMangaDexManga,
+  useMangaDexMangaById,
   useMangaDexPopular,
   useMangaDexSearch,
   useMangaDexTags,

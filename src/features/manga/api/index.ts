@@ -5,8 +5,11 @@ export { getMangaDetail } from "./get-manga-detail";
 export { getMangaList } from "./get-manga-list";
 export {
   browseMangaDex,
+  getMangaDexChapterPages,
+  getMangaDexChapters,
   getMangaDexLatest,
   getMangaDexManga,
+  getMangaDexMangaById,
   getMangaDexPopular,
   getMangaDexTags,
   searchMangaDex,

@@ -5,8 +5,11 @@ import type {
 } from "@/types/mangadex.types";
 import {
   browseMangaDex,
+  getMangaDexChapterPages,
+  getMangaDexChapters,
   getMangaDexLatest,
   getMangaDexManga,
+  getMangaDexMangaById,
   getMangaDexPopular,
   getMangaDexTags,
   searchMangaDex,
@@ -58,5 +61,32 @@ export const useMangaDexTags = () => {
     queryKey: ["mangadex", "tags"],
     queryFn: getMangaDexTags,
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
+  });
+};
+
+export const useMangaDexMangaById = (mangaId: string) => {
+  return useQuery({
+    queryKey: ["mangadex", "manga", mangaId],
+    queryFn: () => getMangaDexMangaById(mangaId),
+    staleTime: 60 * 60 * 1000, // 1 hour
+    enabled: !!mangaId,
+  });
+};
+
+export const useMangaDexChapters = (mangaId: string, language = "en") => {
+  return useQuery({
+    queryKey: ["mangadex", "chapters", mangaId, language],
+    queryFn: () => getMangaDexChapters(mangaId, language),
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    enabled: !!mangaId,
+  });
+};
+
+export const useMangaDexChapterPages = (chapterId: string) => {
+  return useQuery({
+    queryKey: ["mangadex", "chapter-pages", chapterId],
+    queryFn: () => getMangaDexChapterPages(chapterId),
+    staleTime: 60 * 60 * 1000, // 1 hour
+    enabled: !!chapterId,
   });
 };

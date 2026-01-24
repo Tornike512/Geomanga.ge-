@@ -1,11 +1,14 @@
 import type {
   MangaDexAuthorAttributes,
   MangaDexBrowseParams,
+  MangaDexChapter,
+  MangaDexChapterPages,
   MangaDexCoverArtAttributes,
   MangaDexListParams,
   MangaDexManga,
   MangaDexPaginatedResponse,
   MangaDexResponse,
+  MangaDexTransformedChapter,
   MangaDexTransformedManga,
 } from "@/types/mangadex.types";
 
@@ -325,4 +328,129 @@ export const getMangaDexTags = async (): Promise<
     name: tag.attributes.name.en || Object.values(tag.attributes.name)[0],
     group: tag.attributes.group,
   }));
+};
+
+// Fetch a single manga by ID
+export const getMangaDexMangaById = async (
+  mangaId: string,
+): Promise<MangaDexTransformedManga> => {
+  const url = `https://api.mangadex.org/manga/${mangaId}?includes[]=cover_art&includes[]=author&includes[]=artist`;
+
+  const response = await fetch(url, {
+    headers: {
+      Accept: "application/json",
+    },
+    next: { revalidate: 3600 },
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `MangaDex API error: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const data = (await response.json()) as MangaDexResponse<MangaDexManga>;
+
+  if (data.result !== "ok") {
+    throw new Error("MangaDex API returned an error");
+  }
+
+  return transformMangaDexManga(data.data);
+};
+
+// Fetch chapters for a manga
+export const getMangaDexChapters = async (
+  mangaId: string,
+  language = "en",
+): Promise<MangaDexTransformedChapter[]> => {
+  const chapters: MangaDexTransformedChapter[] = [];
+  let offset = 0;
+  const limit = 100;
+  let hasMore = true;
+
+  while (hasMore) {
+    const url = `https://api.mangadex.org/manga/${mangaId}/feed?limit=${limit}&offset=${offset}&translatedLanguage[]=${language}&order[chapter]=asc&includes[]=scanlation_group`;
+
+    const response = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error(`MangaDex API error: ${response.status}`);
+    }
+
+    const data = (await response.json()) as MangaDexResponse<MangaDexChapter[]>;
+
+    if (data.result !== "ok") {
+      throw new Error("MangaDex API returned an error");
+    }
+
+    for (const chapter of data.data) {
+      // Skip external chapters (no pages available)
+      if (chapter.attributes.externalUrl) continue;
+
+      const scanlationGroup = chapter.relationships.find(
+        (r) => r.type === "scanlation_group",
+      );
+
+      chapters.push({
+        id: chapter.id,
+        chapter_number: chapter.attributes.chapter || "0",
+        title: chapter.attributes.title,
+        language: chapter.attributes.translatedLanguage,
+        pages_count: chapter.attributes.pages,
+        published_at: chapter.attributes.publishAt,
+        scanlation_group:
+          (scanlationGroup?.attributes as { name?: string } | undefined)
+            ?.name || null,
+      });
+    }
+
+    if (data.data.length < limit) {
+      hasMore = false;
+    } else {
+      offset += limit;
+    }
+
+    // Safety limit to prevent infinite loops
+    if (offset > 1000) {
+      hasMore = false;
+    }
+  }
+
+  return chapters;
+};
+
+// Fetch chapter pages
+export const getMangaDexChapterPages = async (
+  chapterId: string,
+): Promise<string[]> => {
+  const url = `https://api.mangadex.org/at-home/server/${chapterId}`;
+
+  const response = await fetch(url, {
+    headers: {
+      Accept: "application/json",
+    },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error(`MangaDex API error: ${response.status}`);
+  }
+
+  const data = (await response.json()) as MangaDexChapterPages & {
+    result: string;
+  };
+
+  if (data.result !== "ok") {
+    throw new Error("MangaDex API returned an error");
+  }
+
+  // Use data-saver quality for faster loading
+  return data.chapter.dataSaver.map(
+    (filename) => `${data.baseUrl}/data-saver/${data.chapter.hash}/${filename}`,
+  );
 };
