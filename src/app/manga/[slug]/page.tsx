@@ -4,12 +4,10 @@ import { ExternalLink, Globe, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
-import { Dropdown } from "@/components/dropdown";
 import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth";
 import {
@@ -27,33 +25,9 @@ import { UserRole } from "@/types/user.types";
 import { formatDate, formatNumber, formatRating } from "@/utils/formatters";
 import { getCoverUrl } from "@/utils/image-urls";
 
-const ALL_LANGUAGE_OPTIONS: Record<string, string> = {
-  en: "English",
-  ja: "日本語",
-  ko: "한국어",
-  zh: "中文",
-  "zh-hk": "中文 (HK)",
-  es: "Español",
-  "es-la": "Español (LA)",
-  fr: "Français",
-  de: "Deutsch",
-  "pt-br": "Português (BR)",
-  pt: "Português",
-  ru: "Русский",
-  it: "Italiano",
-  pl: "Polski",
-  tr: "Türkçe",
-  ar: "العربية",
-  id: "Indonesia",
-  vi: "Tiếng Việt",
-  th: "ไทย",
-  uk: "Українська",
-};
-
 export default function MangaDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
 
   // Check if this is a MangaDex manga (slug starts with "md-")
   const isMangaDex = slug.startsWith("md-");
@@ -63,28 +37,11 @@ export default function MangaDetailPage() {
   const { data: localManga, isLoading: localLoading } = useMangaBySlug(slug);
   const { data: localChapters } = useChaptersByManga(localManga?.id || 0);
 
-  // MangaDex manga data
+  // MangaDex manga data - English only
   const { data: mangaDexManga, isLoading: mangaDexLoading } =
     useMangaDexMangaById(mangaDexId || "");
   const { data: mangaDexChapters, isLoading: chaptersLoading } =
-    useMangaDexChapters(mangaDexId || "", selectedLanguage);
-
-  // Set default language based on available languages
-  useEffect(() => {
-    if (
-      mangaDexManga?.available_languages &&
-      mangaDexManga.available_languages.length > 0
-    ) {
-      const availableLangs = mangaDexManga.available_languages;
-      // If English is available, use it; otherwise use the first available language
-      if (!availableLangs.includes(selectedLanguage)) {
-        const defaultLang = availableLangs.includes("en")
-          ? "en"
-          : availableLangs[0];
-        setSelectedLanguage(defaultLang);
-      }
-    }
-  }, [mangaDexManga?.available_languages, selectedLanguage]);
+    useMangaDexChapters(mangaDexId || "", "en");
 
   const { data: user } = useCurrentUser();
   const { data: bookmarks } = useBookmarks();
@@ -258,7 +215,7 @@ export default function MangaDetailPage() {
                     {chapters?.length || 0}
                   </div>
                   <div className="text-[var(--muted-foreground)] text-xs uppercase tracking-wide">
-                    თავები {isMangaDex && `(${selectedLanguage.toUpperCase()})`}
+                    თავები
                   </div>
                 </Card>
               </div>
@@ -355,35 +312,13 @@ export default function MangaDetailPage() {
       <section className="py-8 md:py-8">
         <div className="container mx-auto max-w-[1920px] px-6 md:px-8">
           {/* Section Title */}
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-                თავები
-              </h2>
-              <div className="text-[var(--muted-foreground)] text-sm">
-                სულ {chapters?.length || 0}
-              </div>
+          <div className="mb-8">
+            <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
+              თავები
+            </h2>
+            <div className="text-[var(--muted-foreground)] text-sm">
+              სულ {chapters?.length || 0}
             </div>
-
-            {/* Language selector for MangaDex */}
-            {isMangaDex &&
-              mangaDexManga?.available_languages &&
-              mangaDexManga.available_languages.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <span className="text-[var(--muted-foreground)] text-sm">
-                    ენა:
-                  </span>
-                  <Dropdown
-                    options={mangaDexManga.available_languages.map((lang) => ({
-                      value: lang,
-                      label: ALL_LANGUAGE_OPTIONS[lang] || lang.toUpperCase(),
-                    }))}
-                    value={selectedLanguage}
-                    onChange={(value) => setSelectedLanguage(value)}
-                    className="min-w-[140px]"
-                  />
-                </div>
-              )}
           </div>
 
           {/* Chapter List - Glass Cards */}
@@ -491,7 +426,7 @@ export default function MangaDetailPage() {
               <div className="flex min-h-[200px] items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] backdrop-blur-sm">
                 <p className="text-[var(--muted-foreground)] text-lg">
                   {isMangaDex
-                    ? `თავები არ მოიძებნა (${selectedLanguage.toUpperCase()})`
+                    ? "ინგლისური თავები არ მოიძებნა"
                     : "თავები ჯერ არ არის დამატებული"}
                 </p>
               </div>

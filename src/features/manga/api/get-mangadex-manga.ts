@@ -40,6 +40,13 @@ const buildMangaDexUrl = (params: MangaDexListParams): string => {
     }
   }
 
+  // Available translated language filter
+  if (params.availableTranslatedLanguage) {
+    for (const lang of params.availableTranslatedLanguage) {
+      searchParams.append("availableTranslatedLanguage[]", lang);
+    }
+  }
+
   // Order by latest updated or follow count
   if (params.order) {
     for (const [key, value] of Object.entries(params.order)) {
@@ -181,6 +188,7 @@ export const getMangaDexPopular = async (): Promise<
   return getMangaDexManga({
     limit: 10,
     order: { followedCount: "desc" },
+    availableTranslatedLanguage: ["en"], // Only show manga with English translations
   });
 };
 
@@ -190,6 +198,7 @@ export const getMangaDexLatest = async (): Promise<
   return getMangaDexManga({
     limit: 10,
     order: { latestUploadedChapter: "desc" },
+    availableTranslatedLanguage: ["en"], // Only show manga with English translations
   });
 };
 

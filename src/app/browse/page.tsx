@@ -90,35 +90,6 @@ const MANGADEX_DEMOGRAPHIC_OPTIONS = [
   { value: "josei", label: "ჯოსეი" },
 ] as const;
 
-const MANGADEX_ORIGINAL_LANGUAGE_OPTIONS = [
-  { value: "", label: "ყველა ორიგინალი ენა" },
-  { value: "ja", label: "🇯🇵 იაპონური" },
-  { value: "ko", label: "🇰🇷 კორეული" },
-  { value: "zh", label: "🇨🇳 ჩინური" },
-  { value: "en", label: "🇬🇧 ინგლისური" },
-] as const;
-
-const MANGADEX_TRANSLATED_LANGUAGE_OPTIONS = [
-  { value: "", label: "ყველა თარგმანი" },
-  { value: "en", label: "🇬🇧 ინგლისური" },
-  { value: "ja", label: "🇯🇵 იაპონური" },
-  { value: "ko", label: "🇰🇷 კორეული" },
-  { value: "zh", label: "🇨🇳 ჩინური" },
-  { value: "es", label: "🇪🇸 ესპანური" },
-  { value: "fr", label: "🇫🇷 ფრანგული" },
-  { value: "de", label: "🇩🇪 გერმანული" },
-  { value: "pt-br", label: "🇧🇷 პორტუგალიური (BR)" },
-  { value: "ru", label: "🇷🇺 რუსული" },
-  { value: "it", label: "🇮🇹 იტალიური" },
-  { value: "pl", label: "🇵🇱 პოლონური" },
-  { value: "tr", label: "🇹🇷 თურქული" },
-  { value: "ar", label: "🇸🇦 არაბული" },
-  { value: "id", label: "🇮🇩 ინდონეზიური" },
-  { value: "vi", label: "🇻🇳 ვიეტნამური" },
-  { value: "th", label: "🇹🇭 ტაილანდური" },
-  { value: "uk", label: "🇺🇦 უკრაინული" },
-] as const;
-
 interface LocalFilterState {
   page: number;
   limit: number;
@@ -141,8 +112,6 @@ interface MangaDexFilterState {
   sortBy: MangaDexBrowseParams["sortBy"];
   orderDesc: boolean;
   includedTags: string[];
-  originalLanguage: string;
-  availableTranslatedLanguage: string;
 }
 
 export default function BrowsePage() {
@@ -161,7 +130,7 @@ export default function BrowsePage() {
     order_desc: true,
   });
 
-  // MangaDex filters
+  // MangaDex filters - English only
   const [mangadexFilters, setMangadexFilters] = useState<MangaDexFilterState>({
     page: 1,
     limit: 20,
@@ -172,8 +141,6 @@ export default function BrowsePage() {
     sortBy: "followedCount",
     orderDesc: true,
     includedTags: [],
-    originalLanguage: "",
-    availableTranslatedLanguage: "",
   });
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -201,9 +168,7 @@ export default function BrowsePage() {
       mangadexFilters.includedTags.length > 0
         ? mangadexFilters.includedTags
         : undefined,
-    originalLanguage: mangadexFilters.originalLanguage || undefined,
-    availableTranslatedLanguage:
-      mangadexFilters.availableTranslatedLanguage || undefined,
+    availableTranslatedLanguage: "en", // English only
   });
 
   // Filter by tag group for MangaDex
@@ -255,8 +220,6 @@ export default function BrowsePage() {
       sortBy: "followedCount",
       orderDesc: true,
       includedTags: [],
-      originalLanguage: "",
-      availableTranslatedLanguage: "",
     });
     setSearchInput("");
   };
@@ -280,8 +243,6 @@ export default function BrowsePage() {
     (mangadexFilters.status ? 1 : 0) +
     (mangadexFilters.contentRating ? 1 : 0) +
     (mangadexFilters.demographic ? 1 : 0) +
-    (mangadexFilters.originalLanguage ? 1 : 0) +
-    (mangadexFilters.availableTranslatedLanguage ? 1 : 0) +
     mangadexFilters.includedTags.length;
 
   const activeFilterCount =
@@ -787,46 +748,6 @@ export default function BrowsePage() {
                   })
                 }
                 aria-label="Filter by demographic"
-                className="w-full"
-              />
-            </div>
-
-            {/* Translated Language Filter */}
-            <div className="mb-6">
-              <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
-                თარგმანის ენა (მანგები, რომლებსაც აქვთ თარგმანი ამ ენაზე)
-              </h3>
-              <Dropdown
-                options={MANGADEX_TRANSLATED_LANGUAGE_OPTIONS}
-                value={mangadexFilters.availableTranslatedLanguage || ""}
-                onChange={(value) =>
-                  setMangadexFilters({
-                    ...mangadexFilters,
-                    availableTranslatedLanguage: value || "",
-                    page: 1,
-                  })
-                }
-                aria-label="Filter by translated language"
-                className="w-full"
-              />
-            </div>
-
-            {/* Original Language Filter */}
-            <div className="mb-6">
-              <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
-                ორიგინალი ენა
-              </h3>
-              <Dropdown
-                options={MANGADEX_ORIGINAL_LANGUAGE_OPTIONS}
-                value={mangadexFilters.originalLanguage || ""}
-                onChange={(value) =>
-                  setMangadexFilters({
-                    ...mangadexFilters,
-                    originalLanguage: value || "",
-                    page: 1,
-                  })
-                }
-                aria-label="Filter by original language"
                 className="w-full"
               />
             </div>
