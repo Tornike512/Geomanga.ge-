@@ -266,7 +266,7 @@ export default function ReaderPage() {
             <div key={pageUrl} className="w-full">
               {/* Using regular img tag for MangaDex images to avoid Next.js image optimization issues */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={pageUrl}
                 alt={`გვერდი ${index + 1}`}
                 className="h-auto w-full"
