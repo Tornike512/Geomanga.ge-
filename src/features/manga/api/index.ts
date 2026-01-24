@@ -4,9 +4,11 @@ export { getMangaBySlug } from "./get-manga-by-slug";
 export { getMangaDetail } from "./get-manga-detail";
 export { getMangaList } from "./get-manga-list";
 export {
+  browseMangaDex,
   getMangaDexLatest,
   getMangaDexManga,
   getMangaDexPopular,
+  getMangaDexTags,
   searchMangaDex,
   transformMangaDexManga,
 } from "./get-mangadex-manga";

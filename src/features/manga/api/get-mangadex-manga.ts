@@ -1,8 +1,10 @@
 import type {
   MangaDexAuthorAttributes,
+  MangaDexBrowseParams,
   MangaDexCoverArtAttributes,
   MangaDexListParams,
   MangaDexManga,
+  MangaDexPaginatedResponse,
   MangaDexResponse,
   MangaDexTransformedManga,
 } from "@/types/mangadex.types";
@@ -194,4 +196,133 @@ export const searchMangaDex = async (
     limit: 20,
     title,
   });
+};
+
+// Browse with pagination support
+export const browseMangaDex = async (
+  params: MangaDexBrowseParams = {},
+): Promise<MangaDexPaginatedResponse> => {
+  const page = params.page || 1;
+  const limit = params.limit || 20;
+  const offset = (page - 1) * limit;
+
+  const searchParams = new URLSearchParams();
+  searchParams.set("limit", limit.toString());
+  searchParams.set("offset", offset.toString());
+
+  // Add includes for relationships
+  searchParams.append("includes[]", "cover_art");
+  searchParams.append("includes[]", "author");
+  searchParams.append("includes[]", "artist");
+
+  // Title search
+  if (params.title) {
+    searchParams.set("title", params.title);
+  }
+
+  // Status filter
+  if (params.status) {
+    searchParams.append("status[]", params.status);
+  }
+
+  // Content rating
+  if (params.contentRating) {
+    searchParams.append("contentRating[]", params.contentRating);
+  } else {
+    // Default to safe and suggestive
+    searchParams.append("contentRating[]", "safe");
+    searchParams.append("contentRating[]", "suggestive");
+  }
+
+  // Demographic
+  if (params.demographic) {
+    searchParams.append("publicationDemographic[]", params.demographic);
+  }
+
+  // Original language
+  if (params.originalLanguage) {
+    searchParams.append("originalLanguage[]", params.originalLanguage);
+  }
+
+  // Tags
+  if (params.includedTags && params.includedTags.length > 0) {
+    for (const tag of params.includedTags) {
+      searchParams.append("includedTags[]", tag);
+    }
+  }
+
+  // Sorting
+  const sortField = params.sortBy || "followedCount";
+  const sortOrder = params.orderDesc === false ? "asc" : "desc";
+  searchParams.set(`order[${sortField}]`, sortOrder);
+
+  const url = `https://api.mangadex.org/manga?${searchParams.toString()}`;
+
+  const response = await fetch(url, {
+    headers: {
+      Accept: "application/json",
+    },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `MangaDex API error: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const data = (await response.json()) as MangaDexResponse<MangaDexManga[]>;
+
+  if (data.result !== "ok") {
+    throw new Error("MangaDex API returned an error");
+  }
+
+  const total = data.total || 0;
+  const pages = Math.ceil(total / limit);
+
+  return {
+    items: data.data.map(transformMangaDexManga),
+    total,
+    offset,
+    limit,
+    pages,
+    page,
+  };
+};
+
+// Fetch MangaDex tags for filtering
+export const getMangaDexTags = async (): Promise<
+  { id: string; name: string; group: string }[]
+> => {
+  const response = await fetch("https://api.mangadex.org/manga/tag", {
+    headers: {
+      Accept: "application/json",
+    },
+    next: { revalidate: 86400 }, // Cache for 24 hours
+  });
+
+  if (!response.ok) {
+    throw new Error(`MangaDex API error: ${response.status}`);
+  }
+
+  const data = (await response.json()) as MangaDexResponse<
+    {
+      id: string;
+      type: "tag";
+      attributes: {
+        name: Record<string, string>;
+        group: string;
+      };
+    }[]
+  >;
+
+  if (data.result !== "ok") {
+    throw new Error("MangaDex API returned an error");
+  }
+
+  return data.data.map((tag) => ({
+    id: tag.id,
+    name: tag.attributes.name.en || Object.values(tag.attributes.name)[0],
+    group: tag.attributes.group,
+  }));
 };

@@ -146,3 +146,34 @@ export interface MangaDexTransformedManga {
   readonly original_language: string;
   readonly mangadex_id: string;
 }
+
+// Paginated response for browse page
+export interface MangaDexPaginatedResponse {
+  readonly items: MangaDexTransformedManga[];
+  readonly total: number;
+  readonly offset: number;
+  readonly limit: number;
+  readonly pages: number;
+  readonly page: number;
+}
+
+// Browse filter params (simplified for UI)
+export interface MangaDexBrowseParams {
+  readonly page?: number;
+  readonly limit?: number;
+  readonly title?: string;
+  readonly status?: "ongoing" | "completed" | "hiatus" | "cancelled";
+  readonly contentRating?: "safe" | "suggestive" | "erotica" | "pornographic";
+  readonly demographic?: "shounen" | "shoujo" | "josei" | "seinen";
+  readonly sortBy?:
+    | "latestUploadedChapter"
+    | "followedCount"
+    | "relevance"
+    | "rating"
+    | "createdAt"
+    | "title"
+    | "year";
+  readonly orderDesc?: boolean;
+  readonly includedTags?: string[];
+  readonly originalLanguage?: string;
+}

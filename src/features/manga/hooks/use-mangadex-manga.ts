@@ -1,9 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import type { MangaDexListParams } from "@/types/mangadex.types";
+import type {
+  MangaDexBrowseParams,
+  MangaDexListParams,
+} from "@/types/mangadex.types";
 import {
+  browseMangaDex,
   getMangaDexLatest,
   getMangaDexManga,
   getMangaDexPopular,
+  getMangaDexTags,
   searchMangaDex,
 } from "../api/get-mangadex-manga";
 
@@ -37,5 +42,21 @@ export const useMangaDexSearch = (title: string) => {
     queryFn: () => searchMangaDex(title),
     staleTime: 5 * 60 * 1000, // 5 minutes
     enabled: title.length >= 2, // Only search when at least 2 characters
+  });
+};
+
+export const useMangaDexBrowse = (params: MangaDexBrowseParams = {}) => {
+  return useQuery({
+    queryKey: ["mangadex", "browse", params],
+    queryFn: () => browseMangaDex(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
+
+export const useMangaDexTags = () => {
+  return useQuery({
+    queryKey: ["mangadex", "tags"],
+    queryFn: getMangaDexTags,
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
 };
