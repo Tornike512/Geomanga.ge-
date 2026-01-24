@@ -1,24 +1,31 @@
 "use client";
 
-import { Flame } from "lucide-react";
-import { useTrendingManga } from "../hooks";
+import { Languages } from "lucide-react";
+import { useMangaList } from "../hooks";
 import { MangaGrid } from "./manga-grid";
 
 export function TrendingSection() {
-  const { data: trending, isLoading } = useTrendingManga();
+  const { data, isLoading } = useMangaList({
+    limit: 10,
+    sort_by: "updated_at",
+    order_desc: true,
+  });
 
   return (
     <section className="mb-16 border-[var(--border)] border-b pb-16">
       <div className="mb-8">
         <h2 className="mb-3 flex items-center gap-3 font-semibold text-2xl tracking-tight sm:text-3xl">
-          <Flame className="h-7 w-7 text-[var(--accent)]" strokeWidth={1.5} />
-          ტრენდული ახლა
+          <Languages
+            className="h-7 w-7 text-[var(--accent)]"
+            strokeWidth={1.5}
+          />
+          ქართულად თარგმნილი
         </h2>
         <p className="text-[var(--muted-foreground)] text-base">
-          ყველაზე პოპულარული მანგა ამ კვირაში
+          ჩვენს საიტზე ატვირთული მანგა ქართულ ენაზე
         </p>
       </div>
-      <MangaGrid manga={trending || []} isLoading={isLoading} />
+      <MangaGrid manga={data?.items || []} isLoading={isLoading} />
     </section>
   );
 }
