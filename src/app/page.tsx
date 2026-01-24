@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/button";
 import {
+  MangaDexSection,
   RecentUpdatesSection,
   TrendingSection,
 } from "@/features/manga/components";
@@ -22,6 +23,7 @@ export default async function Home() {
       </section>
 
       <TrendingSection />
+      <MangaDexSection />
       <RecentUpdatesSection />
     </div>
   );

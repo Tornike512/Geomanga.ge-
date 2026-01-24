@@ -3,6 +3,13 @@ export { deleteManga } from "./delete-manga";
 export { getMangaBySlug } from "./get-manga-by-slug";
 export { getMangaDetail } from "./get-manga-detail";
 export { getMangaList } from "./get-manga-list";
+export {
+  getMangaDexLatest,
+  getMangaDexManga,
+  getMangaDexPopular,
+  searchMangaDex,
+  transformMangaDexManga,
+} from "./get-mangadex-manga";
 export { getRecentManga } from "./get-recent-manga";
 export { getTrendingManga } from "./get-trending-manga";
 export { searchManga } from "./search-manga";

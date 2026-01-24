@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(xargs:*)",
+      "WebFetch(domain:api.mangadex.org)",
+      "Bash(pnpm run build:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npx biome format:*)"
+    ]
+  }
+}
