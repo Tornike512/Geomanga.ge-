@@ -1,3 +1,12 @@
+## 1.7.0 (2026-01-24)
+
+* feat: enhance language support in MangaDex integration and UI ([1440011](https://github.com/Tornike512/Geomanga.ge-/commit/1440011))
+* feat: implement auto-hiding UI for ReaderPage and enhance layout responsiveness ([7c01548](https://github.com/Tornike512/Geomanga.ge-/commit/7c01548))
+* feat: replace img tag with Image component for improved performance in ReaderPage ([d2d6499](https://github.com/Tornike512/Geomanga.ge-/commit/d2d6499))
+* feat: simplify back navigation button in ReaderPage ([60a4c12](https://github.com/Tornike512/Geomanga.ge-/commit/60a4c12))
+* feat: streamline MangaDex integration by removing language filters and enforcing English-only ([2eac9d3](https://github.com/Tornike512/Geomanga.ge-/commit/2eac9d3))
+* feat: update version to 1.6.0 and enhance CHANGELOG with recent features ([6d9147c](https://github.com/Tornike512/Geomanga.ge-/commit/6d9147c))
+
 ## 1.6.0 (2026-01-24)
 
 * feat: add support for external chapter links in MangaDex integration ([3a6a454](https://github.com/Tornike512/Geomanga.ge-/commit/3a6a454))
