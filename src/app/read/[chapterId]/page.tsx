@@ -118,12 +118,13 @@ export default function ReaderPage() {
         chapter_id: localChapter.id,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     localChapter?.id,
     localChapter?.manga_id,
-    trackReading,
-    localChapter,
     isMangaDex,
+    localChapter,
+    trackReading.mutate,
   ]);
 
   // Parse chapter info from session storage for MangaDex

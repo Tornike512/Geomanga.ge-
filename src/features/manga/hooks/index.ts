@@ -1,5 +1,6 @@
 export { useCreateManga } from "./use-create-manga";
 export { useDeleteManga } from "./use-delete-manga";
+export { useFetchMangaDex } from "./use-fetch-mangadex";
 export { useMangaBySlug } from "./use-manga-by-slug";
 export { useMangaDetail } from "./use-manga-detail";
 export { useMangaList } from "./use-manga-list";
