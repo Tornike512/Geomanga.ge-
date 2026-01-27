@@ -27,6 +27,10 @@ interface TransformedManga {
   author: string | null;
 }
 
+interface MangaDexResponse {
+  readonly data: MangaDexManga[];
+}
+
 const fetchMangaDex = async (limit = 10): Promise<TransformedManga[]> => {
   const params = new URLSearchParams({
     limit: limit.toString(),
@@ -42,7 +46,7 @@ const fetchMangaDex = async (limit = 10): Promise<TransformedManga[]> => {
     throw new Error("Failed to fetch from MangaDex");
   }
 
-  const data = await response.json();
+  const data = (await response.json()) as MangaDexResponse;
 
   return data.data.map((manga: MangaDexManga): TransformedManga => {
     const title =
