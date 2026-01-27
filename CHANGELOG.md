@@ -1,3 +1,8 @@
+## 1.8.0 (2026-01-27)
+
+* fix: add type definition for MangaDexResponse in use-fetch-mangadex hook ([3b26241](https://github.com/Tornike512/Geomanga.ge-/commit/3b26241))
+* feat: implement MangaDex integration with fetching and displaying manga list ([8e4f99a](https://github.com/Tornike512/Geomanga.ge-/commit/8e4f99a))
+
 ## 1.7.0 (2026-01-24)
 
 * feat: enhance language support in MangaDex integration and UI ([1440011](https://github.com/Tornike512/Geomanga.ge-/commit/1440011))
