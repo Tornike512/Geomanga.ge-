@@ -6,9 +6,10 @@ export const useCreateChapterComment = (chapterId: number) => {
 
   return useMutation({
     mutationFn: (content: string) => createChapterComment(chapterId, content),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ["comments", "chapter", chapterId],
+        refetchType: "all",
       });
     },
   });

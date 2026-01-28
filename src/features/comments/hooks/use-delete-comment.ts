@@ -6,8 +6,11 @@ export const useDeleteComment = () => {
 
   return useMutation({
     mutationFn: (commentId: number) => deleteComment(commentId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["comments"],
+        refetchType: "all",
+      });
     },
   });
 };

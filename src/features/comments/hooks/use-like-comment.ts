@@ -6,8 +6,11 @@ export const useToggleLikeComment = () => {
 
   return useMutation({
     mutationFn: (commentId: number) => toggleLikeComment(commentId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["comments"],
+        refetchType: "all",
+      });
     },
   });
 };

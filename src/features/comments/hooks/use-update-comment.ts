@@ -12,8 +12,11 @@ export const useUpdateComment = () => {
       commentId: number;
       content: string;
     }) => updateComment(commentId, content),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["comments"],
+        refetchType: "all",
+      });
     },
   });
 };

@@ -12,9 +12,10 @@ export const useReplyToComment = () => {
       commentId: number;
       content: string;
     }) => replyToComment(commentId, content),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ["comments"],
+        refetchType: "all",
       });
     },
   });

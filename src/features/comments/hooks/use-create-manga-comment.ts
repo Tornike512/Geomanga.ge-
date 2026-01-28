@@ -6,9 +6,10 @@ export const useCreateMangaComment = (mangaId: number) => {
 
   return useMutation({
     mutationFn: (content: string) => createMangaComment(mangaId, content),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ["comments", "manga", mangaId],
+        refetchType: "all",
       });
     },
   });
