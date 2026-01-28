@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useMemo } from "react";
 import { getAvatarUrl } from "@/utils/image-urls";
 
 interface AvatarProps {
@@ -20,24 +19,33 @@ export function Avatar({ src, alt, size = "md", className = "" }: AvatarProps) {
   const { width, height, className: sizeClass } = sizeMap[size];
   const avatarUrl = getAvatarUrl(src);
 
-  // Add cache-busting parameter only when src changes
-  const urlWithCacheBust = useMemo(() => {
-    return src ? `${avatarUrl}?t=${Date.now()}` : avatarUrl;
-  }, [src, avatarUrl]);
+  // Check if it's an external URL (Google, etc.)
+  const isExternal = avatarUrl.startsWith("http");
 
   return (
     <div
       className={`${sizeClass} ${className} relative shrink-0 overflow-hidden rounded-full bg-[var(--muted)]`}
     >
-      <Image
-        src={urlWithCacheBust}
-        alt={alt}
-        width={width}
-        height={height}
-        className="h-full w-full object-cover"
-        priority={false}
-        unoptimized
-      />
+      {isExternal ? (
+        // Use native img for external URLs to avoid Next.js Image issues
+        // biome-ignore lint/performance/noImgElement: External URLs need native img
+        <img
+          src={avatarUrl}
+          alt={alt}
+          className="h-full w-full object-cover"
+          referrerPolicy="no-referrer"
+        />
+      ) : (
+        <Image
+          src={avatarUrl}
+          alt={alt}
+          width={width}
+          height={height}
+          className="h-full w-full object-cover"
+          priority={false}
+          unoptimized
+        />
+      )}
     </div>
   );
 }
