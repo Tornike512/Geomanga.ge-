@@ -127,12 +127,12 @@ export function ChapterComments({ chapterId }: ChapterCommentsProps) {
           )}
         </>
       ) : (
-        <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] py-12 text-center">
-          <MessageCircle className="mx-auto h-12 w-12 text-[var(--muted-foreground)]" />
-          <p className="mt-3 text-[var(--muted-foreground)]">
+        <div className="flex flex-col items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] py-12">
+          <MessageCircle className="h-12 w-12 text-[var(--muted-foreground)]" />
+          <p className="mt-3 text-center text-[var(--muted-foreground)]">
             ჯერ არ არის კომენტარები
           </p>
-          <p className="mt-1 text-[var(--muted-foreground)] text-sm">
+          <p className="mt-1 text-center text-[var(--muted-foreground)] text-sm">
             იყავი პირველი, ვინც დაწერს კომენტარს!
           </p>
         </div>
