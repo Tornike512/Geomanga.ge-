@@ -10,6 +10,7 @@ import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth";
+import { MangaComments } from "@/features/comments";
 import {
   useAddBookmark,
   useBookmarks,
@@ -434,6 +435,15 @@ export default function MangaDetailPage() {
           </div>
         </div>
       </section>
+
+      {/* Comments Section - only for local manga */}
+      {!isMangaDex && localManga && (
+        <section className="border-[var(--border)] border-t py-8 md:py-8">
+          <div className="container mx-auto max-w-[1920px] px-6 md:px-8">
+            <MangaComments mangaId={localManga.id} />
+          </div>
+        </section>
+      )}
     </div>
   );
 }
