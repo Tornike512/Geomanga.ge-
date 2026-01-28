@@ -9,6 +9,7 @@ import {
   useChapterComments,
   useCreateChapterComment,
   useDeleteComment,
+  useReplyToComment,
   useToggleLikeComment,
   useUpdateComment,
 } from "../hooks";
@@ -33,6 +34,7 @@ export function ChapterComments({ chapterId }: ChapterCommentsProps) {
   const deleteComment = useDeleteComment();
   const updateComment = useUpdateComment();
   const toggleLike = useToggleLikeComment();
+  const replyToComment = useReplyToComment();
 
   const handleSubmitComment = (content: string) => {
     createComment.mutate(content, {
@@ -54,6 +56,10 @@ export function ChapterComments({ chapterId }: ChapterCommentsProps) {
 
   const handleLikeComment = (commentId: number) => {
     toggleLike.mutate(commentId);
+  };
+
+  const handleReplyComment = (commentId: number, content: string) => {
+    replyToComment.mutate({ commentId, content });
   };
 
   const totalPages = commentsData?.pages ?? 1;
@@ -97,7 +103,9 @@ export function ChapterComments({ chapterId }: ChapterCommentsProps) {
                 onLike={handleLikeComment}
                 onEdit={handleEditComment}
                 onDelete={handleDeleteComment}
+                onReply={handleReplyComment}
                 isLiking={toggleLike.isPending}
+                isReplying={replyToComment.isPending}
               />
             ))}
           </div>

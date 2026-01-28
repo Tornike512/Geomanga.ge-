@@ -5,6 +5,7 @@ export interface Comment {
   readonly user_id: number;
   readonly manga_id: number;
   readonly chapter_id: number | undefined;
+  readonly parent_id: number | null;
   readonly content: string;
   readonly likes: number;
   readonly created_at: string;
@@ -12,6 +13,7 @@ export interface Comment {
 
 export interface CommentDetail extends Comment {
   readonly user: User;
+  readonly replies?: CommentDetail[];
 }
 
 export interface CommentListResponse {

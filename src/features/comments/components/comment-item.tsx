@@ -1,6 +1,12 @@
 "use client";
 
-import { Heart, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import {
+  Heart,
+  MessageCircle,
+  MoreVertical,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Avatar } from "@/components/avatar";
 import { Button } from "@/components/button";
@@ -15,7 +21,10 @@ interface CommentItemProps {
   readonly onLike: (commentId: number) => void;
   readonly onEdit: (commentId: number, content: string) => void;
   readonly onDelete: (commentId: number) => void;
+  readonly onReply?: (commentId: number, content: string) => void;
   readonly isLiking?: boolean;
+  readonly isReplying?: boolean;
+  readonly isReply?: boolean;
 }
 
 export function CommentItem({
@@ -24,11 +33,16 @@ export function CommentItem({
   onLike,
   onEdit,
   onDelete,
+  onReply,
   isLiking,
+  isReplying,
+  isReply = false,
 }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showReplyForm, setShowReplyForm] = useState(false);
+  const [replyContent, setReplyContent] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
 
   const isOwner = currentUser?.id === comment.user_id;
@@ -47,6 +61,19 @@ export function CommentItem({
   const handleCancelEdit = () => {
     setEditContent(comment.content);
     setIsEditing(false);
+  };
+
+  const handleSubmitReply = () => {
+    if (replyContent.trim() && onReply) {
+      onReply(comment.id, replyContent.trim());
+      setReplyContent("");
+      setShowReplyForm(false);
+    }
+  };
+
+  const handleCancelReply = () => {
+    setReplyContent("");
+    setShowReplyForm(false);
   };
 
   useEffect(() => {
@@ -160,6 +187,65 @@ export function CommentItem({
               />
               <span>{comment.likes}</span>
             </button>
+            {!isReply && currentUser && onReply && (
+              <button
+                type="button"
+                onClick={() => setShowReplyForm(!showReplyForm)}
+                className="flex items-center gap-1.5 text-[var(--muted-foreground)] text-xs transition-colors hover:text-[var(--accent)]"
+              >
+                <MessageCircle className="h-4 w-4" />
+                <span>პასუხი</span>
+              </button>
+            )}
+          </div>
+        )}
+
+        {showReplyForm && (
+          <div className="mt-3">
+            <textarea
+              value={replyContent}
+              onChange={(e) => setReplyContent(e.target.value)}
+              placeholder="დაწერე პასუხი..."
+              className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-[var(--foreground)] text-sm placeholder:text-[var(--muted-foreground)] focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+              rows={2}
+              maxLength={2000}
+              disabled={isReplying}
+            />
+            <div className="mt-2 flex justify-end gap-2">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleCancelReply}
+                disabled={isReplying}
+              >
+                გაუქმება
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleSubmitReply}
+                disabled={!replyContent.trim() || isReplying}
+                loading={isReplying}
+              >
+                პასუხი
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {comment.replies && comment.replies.length > 0 && (
+          <div className="mt-4 space-y-4 border-[var(--border)] border-l-2 pl-4">
+            {comment.replies.map((reply) => (
+              <CommentItem
+                key={reply.id}
+                comment={reply}
+                currentUser={currentUser}
+                onLike={onLike}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                isLiking={isLiking}
+                isReply={true}
+              />
+            ))}
           </div>
         )}
       </div>
