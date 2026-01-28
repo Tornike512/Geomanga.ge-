@@ -52,7 +52,7 @@ export function Header() {
             )}
           </nav>
 
-          <div className="hidden min-w-0 flex-1 md:block">
+          <div className="min-w-0 flex-1">
             <SearchBar />
           </div>
 
