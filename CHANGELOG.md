@@ -1,3 +1,9 @@
+## 1.9.0 (2026-01-28)
+
+* feat: enhance Header component with mobile menu and user navigation ([7dad5a3](https://github.com/Tornike512/Geomanga.ge-/commit/7dad5a3))
+* feat: refactor LibraryPage to redirect to bookmarks tab and remove unused code ([5c38fc1](https://github.com/Tornike512/Geomanga.ge-/commit/5c38fc1))
+* fix: adjust SearchBar visibility in Header component ([ef5865e](https://github.com/Tornike512/Geomanga.ge-/commit/ef5865e))
+
 ## 1.8.0 (2026-01-27)
 
 * fix: add type definition for MangaDexResponse in use-fetch-mangadex hook ([3b26241](https://github.com/Tornike512/Geomanga.ge-/commit/3b26241))
