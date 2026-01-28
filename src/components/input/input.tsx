@@ -9,7 +9,7 @@ export function Input({ className, type = "text", ...props }: InputProps) {
       type={type}
       className={cn(
         // Glass effect background with backdrop blur
-        "flex h-11 w-full rounded-lg border border-[var(--border)] bg-[var(--card)] px-4 py-3 text-[var(--foreground)] text-xs backdrop-blur-sm transition-all duration-200 sm:text-base",
+        "flex h-10 w-full rounded-lg border border-[var(--border)] bg-[var(--card)] px-2 py-2 text-[var(--foreground)] text-xs backdrop-blur-sm transition-all duration-200 sm:h-11 sm:px-4 sm:py-3 sm:text-base",
         // Placeholder styling
         "placeholder:text-[var(--muted-foreground)]",
         // Focus state - amber glow

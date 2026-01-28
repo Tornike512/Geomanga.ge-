@@ -23,9 +23,9 @@ export function SearchBar() {
             setIsOpen(e.target.value.length > 2);
           }}
           onFocus={() => query.length > 2 && setIsOpen(true)}
-          className="h-11 w-full pr-12 pl-10"
+          className="h-10 w-full pr-7 pl-7 sm:h-11 sm:pr-12 sm:pl-10"
         />
-        <Search className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-3 h-4 w-4 text-[var(--muted-foreground)]" />
+        <Search className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-2 h-3.5 w-3.5 text-[var(--muted-foreground)] sm:left-3 sm:h-4 sm:w-4" />
         {query && (
           <button
             type="button"
@@ -33,9 +33,9 @@ export function SearchBar() {
               setQuery("");
               setIsOpen(false);
             }}
-            className="-translate-y-1/2 absolute top-1/2 right-3 text-[var(--muted-foreground)] transition-colors duration-200 hover:text-[var(--foreground)]"
+            className="-translate-y-1/2 absolute top-1/2 right-1.5 text-[var(--muted-foreground)] transition-colors duration-200 hover:text-[var(--foreground)] sm:right-3"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </button>
         )}
       </div>
