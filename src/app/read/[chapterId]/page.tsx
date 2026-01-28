@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Spinner } from "@/components/spinner";
+import { ChapterComments } from "@/features/comments";
 import { useMangaDexChapterPages } from "@/features/manga";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
 import { useTrackReading } from "@/features/reader/hooks/use-track-reading";
@@ -251,6 +252,11 @@ export default function ReaderPage() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Comments Section */}
+        <div className="border-[var(--border)] border-t bg-[var(--background)] pb-20">
+          <ChapterComments chapterId={localChapter.id} />
         </div>
 
         {/* Chapter Navigation */}
