@@ -65,10 +65,10 @@ export function MangaRating({ mangaId }: MangaRatingProps) {
           <>
             <div className="flex flex-wrap items-center gap-1">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((score) => (
-                <button
+                <Button
                   key={score}
-                  type="button"
-                  className="p-0.5 transition-transform hover:scale-110 disabled:cursor-not-allowed disabled:opacity-50"
+                  variant="unstyled"
+                  className="p-0.5 transition-transform hover:scale-110"
                   onMouseEnter={() => setHoveredScore(score)}
                   onMouseLeave={() => setHoveredScore(null)}
                   onClick={() => handleRate(score)}
@@ -82,7 +82,7 @@ export function MangaRating({ mangaId }: MangaRatingProps) {
                         : "text-[var(--muted-foreground)]"
                     }`}
                   />
-                </button>
+                </Button>
               ))}
               <span className="ml-2 min-w-[2.5rem] text-[var(--muted-foreground)] text-sm">
                 {displayScore > 0 ? `${displayScore}/10` : ""}

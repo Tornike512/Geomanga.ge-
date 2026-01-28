@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { Button } from "@/components/button";
 import { fireEvent, render, screen, waitFor } from "@/tests";
 import type { DropdownOption } from "./dropdown";
 import { Dropdown } from "./dropdown";
@@ -229,7 +230,7 @@ describe("Dropdown", () => {
           onChange={() => {}}
           placeholder="Select status"
         />
-        <button type="button">Outside button</button>
+        <Button>Outside button</Button>
       </div>,
     );
 

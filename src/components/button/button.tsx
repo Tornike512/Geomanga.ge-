@@ -5,7 +5,7 @@ export interface ButtonProps
   children: React.ReactNode;
   loading?: boolean;
   ref?: React.Ref<HTMLButtonElement>;
-  variant?: "default" | "ghost" | "outline" | "destructive";
+  variant?: "default" | "ghost" | "outline" | "destructive" | "unstyled";
   size?: "default" | "sm" | "lg";
 }
 
@@ -26,10 +26,11 @@ export const Button = ({
       disabled={loading || props.disabled}
       className={cn(
         // Base styles - Minimalist Dark: smooth, refined, no uppercase
-        "inline-flex cursor-pointer items-center justify-center font-medium tracking-normal transition-all duration-200 ease-out",
+        variant !== "unstyled" &&
+          "inline-flex cursor-pointer items-center justify-center font-medium tracking-normal transition-all duration-200 ease-out",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
         "disabled:pointer-events-none disabled:opacity-50",
-        "active:scale-[0.98]", // Subtle press effect
+        variant !== "unstyled" && "active:scale-[0.98]", // Subtle press effect
         // Variant styles
         {
           // Primary (Amber) - warm glow on hover
@@ -44,9 +45,11 @@ export const Button = ({
           // Destructive - red with amber focus
           "rounded-lg bg-red-600 text-white shadow-sm hover:shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:brightness-110":
             variant === "destructive",
+          // Unstyled - minimal styling, allows full customization via className
+          "": variant === "unstyled",
         },
-        // Size styles
-        {
+        // Size styles (not applied for unstyled variant)
+        variant !== "unstyled" && {
           "h-11 px-6 py-3 text-base": size === "default",
           "h-9 px-4 py-2 text-sm": size === "sm",
           "h-12 px-8 py-4 text-lg": size === "lg",
