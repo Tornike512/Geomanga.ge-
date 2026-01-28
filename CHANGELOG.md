@@ -1,3 +1,7 @@
+## <small>1.9.1 (2026-01-28)</small>
+
+* fix: change mobile sidebar overlay from div to button for better accessibility ([b4bc9cb](https://github.com/Tornike512/Geomanga.ge-/commit/b4bc9cb))
+
 ## 1.9.0 (2026-01-28)
 
 * feat: enhance Header component with mobile menu and user navigation ([7dad5a3](https://github.com/Tornike512/Geomanga.ge-/commit/7dad5a3))
