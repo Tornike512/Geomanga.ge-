@@ -24,7 +24,6 @@ interface CommentItemProps {
   readonly onReply?: (commentId: number, content: string) => void;
   readonly isLiking?: boolean;
   readonly isReplying?: boolean;
-  readonly isReply?: boolean;
 }
 
 export function CommentItem({
@@ -36,7 +35,6 @@ export function CommentItem({
   onReply,
   isLiking,
   isReplying,
-  isReply = false,
 }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
@@ -187,7 +185,7 @@ export function CommentItem({
               />
               <span>{comment.likes}</span>
             </button>
-            {!isReply && currentUser && onReply && (
+            {currentUser && onReply && (
               <button
                 type="button"
                 onClick={() => setShowReplyForm(!showReplyForm)}
@@ -242,8 +240,9 @@ export function CommentItem({
                 onLike={onLike}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                onReply={onReply}
                 isLiking={isLiking}
-                isReply={true}
+                isReplying={isReplying}
               />
             ))}
           </div>
