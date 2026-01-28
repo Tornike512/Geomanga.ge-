@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "@/components/button";
 import { cn } from "@/utils/cn";
 
 export interface DropdownOption {
@@ -136,8 +137,8 @@ export const Dropdown = ({
   return (
     <div ref={dropdownRef} className={cn("relative inline-block", className)}>
       {/* Trigger Button */}
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         id={id}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -155,7 +156,7 @@ export const Dropdown = ({
           // Default state - glass effect
           "border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] backdrop-blur-sm",
           // Hover state
-          "hover:border-[var(--border-hover)]",
+          "hover:border-[var(--border-hover)] hover:bg-[var(--card)]",
           // Open state
           isOpen && [
             "border-[var(--accent)]/50",
@@ -194,7 +195,7 @@ export const Dropdown = ({
             d="M19 9l-7 7-7-7"
           />
         </svg>
-      </button>
+      </Button>
 
       {/* Dropdown Menu */}
       {/* biome-ignore lint/a11y/useSemanticElements: Custom dropdown requires div with role=listbox for proper ARIA implementation */}

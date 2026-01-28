@@ -105,39 +105,42 @@ export function CommentItem({
           </div>
           {canModify && !isEditing && (
             <div ref={menuRef} className="relative">
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="rounded p-1 text-[var(--muted-foreground)] transition-colors hover:bg-white/5 hover:text-[var(--foreground)]"
+                className="h-auto p-1"
               >
                 <MoreVertical className="h-4 w-4" />
-              </button>
+              </Button>
               {isMenuOpen && (
                 <div className="absolute right-0 z-50 mt-1 w-40 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] py-1 shadow-lg">
                   {isOwner && (
-                    <button
-                      type="button"
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => {
                         setIsEditing(true);
                         setIsMenuOpen(false);
                       }}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-[var(--foreground)] text-sm transition-colors hover:bg-white/5"
+                      className="h-auto w-full justify-start gap-2 rounded-none px-3 py-2"
                     >
                       <Pencil className="h-4 w-4" />
                       რედაქტირება
-                    </button>
+                    </Button>
                   )}
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => {
                       onDelete(comment.id);
                       setIsMenuOpen(false);
                     }}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-red-500 text-sm transition-colors hover:bg-white/5"
+                    className="h-auto w-full justify-start gap-2 rounded-none px-3 py-2 text-red-500 hover:text-red-500"
                   >
                     <Trash2 className="h-4 w-4" />
                     წაშლა
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
@@ -174,26 +177,28 @@ export function CommentItem({
 
         {!isEditing && (
           <div className="mt-2 flex items-center gap-4">
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => onLike(comment.id)}
               disabled={isLiking || !currentUser}
-              className="flex items-center gap-1.5 text-[var(--muted-foreground)] text-xs transition-colors hover:text-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-auto gap-1.5 p-0 text-[var(--muted-foreground)] text-xs hover:bg-transparent hover:text-[var(--accent)]"
             >
               <Heart
                 className={`h-4 w-4 ${comment.likes > 0 ? "fill-[var(--accent)] text-[var(--accent)]" : ""}`}
               />
               <span>{comment.likes}</span>
-            </button>
+            </Button>
             {currentUser && onReply && (
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setShowReplyForm(!showReplyForm)}
-                className="flex items-center gap-1.5 text-[var(--muted-foreground)] text-xs transition-colors hover:text-[var(--accent)]"
+                className="h-auto gap-1.5 p-0 text-[var(--muted-foreground)] text-xs hover:bg-transparent hover:text-[var(--accent)]"
               >
                 <MessageCircle className="h-4 w-4" />
                 <span>პასუხი</span>
-              </button>
+              </Button>
             )}
           </div>
         )}

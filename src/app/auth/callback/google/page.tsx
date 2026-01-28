@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
+import { Button } from "@/components/button";
 import { useGoogleAuth } from "@/features/auth";
 
 export default function GoogleCallbackPage() {
@@ -34,13 +35,13 @@ export default function GoogleCallbackPage() {
           <p className="mb-4 text-red-400">
             Google-ით ავთენტიფიკაცია ვერ მოხერხდა
           </p>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             onClick={() => router.push("/login")}
             className="text-[var(--accent)] hover:underline"
           >
             სცადეთ თავიდან
-          </button>
+          </Button>
         </div>
       </div>
     );

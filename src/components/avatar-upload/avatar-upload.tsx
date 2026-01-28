@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { Button } from "@/components/button";
 
 interface AvatarUploadProps {
   readonly onFileSelect: (file: File | undefined) => void;
@@ -100,14 +101,14 @@ export function AvatarUpload({ onFileSelect, error }: AvatarUploadProps) {
         </span>
       </label>
 
-      <button
-        type="button"
-        className={`relative flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors ${
+      <Button
+        variant="ghost"
+        className={`relative flex h-auto w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors ${
           isDragging
             ? "border-[var(--accent)] bg-[var(--accent)]/5"
             : displayError
               ? "border-red-500/30 bg-red-500/5"
-              : "border-[var(--border)] hover:border-[var(--accent)]/50"
+              : "border-[var(--border)] hover:border-[var(--accent)]/50 hover:bg-transparent"
         }`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -134,16 +135,17 @@ export function AvatarUpload({ onFileSelect, error }: AvatarUploadProps) {
                 unoptimized
               />
             </div>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={(e) => {
                 e.stopPropagation();
                 handleRemove();
               }}
-              className="rounded-md bg-red-500/10 px-4 py-2 text-red-400 text-sm transition-colors hover:bg-red-500/20"
+              className="rounded-md bg-red-500/10 px-4 py-2 text-red-400 hover:bg-red-500/20 hover:text-red-400"
             >
               წაშლა
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2 text-center">
@@ -175,7 +177,7 @@ export function AvatarUpload({ onFileSelect, error }: AvatarUploadProps) {
             </div>
           </div>
         )}
-      </button>
+      </Button>
 
       {displayError && (
         <p className="mt-2 text-red-400 text-sm">{displayError}</p>

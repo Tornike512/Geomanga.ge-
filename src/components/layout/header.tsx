@@ -80,26 +80,29 @@ export function Header() {
             </div>
 
             {/* Hamburger menu - visible only on < sm screens */}
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="ml-auto shrink-0 text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)] sm:hidden"
+              className="ml-auto h-auto shrink-0 p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] sm:hidden"
               aria-label="Open menu"
             >
               <Menu className="h-6 w-6" />
-            </button>
+            </Button>
           </div>
         </div>
       </header>
 
       {/* Mobile sidebar overlay */}
       {isMobileMenuOpen && (
-        <button
-          type="button"
-          className="fixed inset-0 z-50 cursor-default bg-black/50 sm:hidden"
+        <Button
+          variant="ghost"
+          className="fixed inset-0 z-50 h-auto cursor-default rounded-none bg-black/50 p-0 hover:bg-black/50 sm:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-label="Close menu"
-        />
+        >
+          <span className="sr-only">Close menu</span>
+        </Button>
       )}
 
       {/* Mobile sidebar */}
@@ -118,14 +121,15 @@ export function Header() {
               height={32}
               className="h-8 w-auto"
             />
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)]"
+              className="h-auto p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
               aria-label="Close menu"
             >
               <X className="h-6 w-6" />
-            </button>
+            </Button>
           </div>
 
           {/* User section */}
