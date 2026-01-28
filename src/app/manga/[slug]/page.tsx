@@ -21,6 +21,7 @@ import {
   useMangaDexChapters,
   useMangaDexMangaById,
 } from "@/features/manga";
+import { MangaRating } from "@/features/ratings";
 import { useChaptersByManga } from "@/features/reader";
 import { UserRole } from "@/types/user.types";
 import { formatDate, formatNumber, formatRating } from "@/utils/formatters";
@@ -268,6 +269,13 @@ export default function MangaDetailPage() {
                   </div>
                 )}
               </div>
+
+              {/* Rating Section - only for local manga */}
+              {!isMangaDex && localManga && (
+                <div className="mt-6">
+                  <MangaRating mangaId={localManga.id} />
+                </div>
+              )}
             </div>
           </div>
         </div>
