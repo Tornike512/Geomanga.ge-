@@ -94,9 +94,11 @@ export function Header() {
 
       {/* Mobile sidebar overlay */}
       {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/50 sm:hidden"
+        <button
+          type="button"
+          className="fixed inset-0 z-50 cursor-default bg-black/50 sm:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
+          aria-label="Close menu"
         />
       )}
 
