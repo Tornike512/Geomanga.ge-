@@ -17,6 +17,9 @@ export interface CommentDetail extends Comment {
 export interface CommentListResponse {
   readonly items: CommentDetail[];
   readonly total: number;
+  readonly page: number;
+  readonly page_size: number;
+  readonly pages: number;
 }
 
 export interface CommentCreate {
@@ -27,4 +30,15 @@ export interface CommentCreate {
 
 export interface CommentUpdate {
   readonly content: string;
+}
+
+export interface CommentPaginationParams {
+  readonly page?: number;
+  readonly page_size?: number;
+}
+
+export interface CommentLikeResponse {
+  readonly comment_id: number;
+  readonly likes: number;
+  readonly liked: boolean;
 }
