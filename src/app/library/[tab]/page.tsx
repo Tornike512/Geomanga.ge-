@@ -26,6 +26,13 @@ function isValidTab(tab: string): tab is Tab {
   return tab in TABS;
 }
 
+function formatDate(dateString: string | null | undefined): string {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString();
+}
+
 export default function LibraryTabPage() {
   const params = useParams();
   const tab = params.tab as string;
@@ -179,34 +186,31 @@ export default function LibraryTabPage() {
                 <Link
                   key={history.id}
                   href={`/read/${history.chapter.id}`}
-                  className="flex gap-4 rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)]"
+                  className="group flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)] p-3 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] sm:gap-4 sm:p-4"
                 >
                   <Image
                     src={history.manga.cover_image_url || "/placeholder.png"}
                     alt={history.manga.title}
                     width={64}
                     height={96}
-                    className="h-24 w-16 rounded-lg object-cover"
+                    className="h-20 w-14 shrink-0 rounded-lg object-cover sm:h-24 sm:w-16"
                   />
-                  <div className="flex-1">
-                    <h3 className="mb-1 font-medium text-base">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="mb-1 truncate font-medium text-sm sm:text-base">
                       {history.manga.title}
                     </h3>
-                    <p className="mb-2 text-[var(--muted-foreground)] text-sm">
-                      თავი {history.chapter.chapter_number}:{" "}
-                      {history.chapter.title}
+                    <p className="mb-1 truncate text-[var(--muted-foreground)] text-xs sm:mb-2 sm:text-sm">
+                      თავი {history.chapter.chapter_number}
+                      {history.chapter.title && `: ${history.chapter.title}`}
                     </p>
-                    <div className="flex items-center gap-4 text-[var(--muted-foreground)] text-xs">
-                      <span>
-                        {new Date(history.last_read_at).toLocaleDateString()}
-                      </span>
-                    </div>
+                    {formatDate(history.last_read_at) && (
+                      <div className="text-[var(--muted-foreground)] text-xs">
+                        {formatDate(history.last_read_at)}
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center">
-                    <Button variant="ghost">
-                      კითხვის გაგრძელება
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Button>
+                  <div className="shrink-0">
+                    <ArrowRight className="h-5 w-5 text-[var(--muted-foreground)] transition-colors group-hover:text-[var(--accent)]" />
                   </div>
                 </Link>
               ))}
