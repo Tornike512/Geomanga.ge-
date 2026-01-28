@@ -13,6 +13,11 @@ const nextConfig = {
         hostname: 'uploads.mangadex.org',
         pathname: '/covers/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/**',
+      },
     ],
   },
 };
