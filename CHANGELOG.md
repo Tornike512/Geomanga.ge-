@@ -1,3 +1,8 @@
+## 1.11.0 (2026-01-28)
+
+* Merge branch 'main' of github.com:Tornike512/Geomanga.ge- ([9a3e13a](https://github.com/Tornike512/Geomanga.ge-/commit/9a3e13a))
+* feat: add coding conventions document outlining best practices for data fetching, forms and so on ([ad31c3a](https://github.com/Tornike512/Geomanga.ge-/commit/ad31c3a))
+
 ## 1.10.0 (2026-01-28)
 
 * feat: add comments section for local manga with MangaComments component ([335fc4a](https://github.com/Tornike512/Geomanga.ge-/commit/335fc4a))
