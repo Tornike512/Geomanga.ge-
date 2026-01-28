@@ -1,3 +1,21 @@
+## 1.10.0 (2026-01-28)
+
+* feat: add comments section for local manga with MangaComments component ([335fc4a](https://github.com/Tornike512/Geomanga.ge-/commit/335fc4a))
+* feat: add comments section with functionality to create, edit, delete, and like comments ([2b200c2](https://github.com/Tornike512/Geomanga.ge-/commit/2b200c2))
+* feat: add MangaRating component and integrate it into MangaDetailPage for local manga ratings ([d5f625f](https://github.com/Tornike512/Geomanga.ge-/commit/d5f625f))
+* feat: add support for additional image source from Google user content ([208814b](https://github.com/Tornike512/Geomanga.ge-/commit/208814b))
+* feat: implement pagination for chapter and manga comments, add toggle like functionality ([b462d2c](https://github.com/Tornike512/Geomanga.ge-/commit/b462d2c))
+* feat: implement replies functionality for chapter comments ([ee88669](https://github.com/Tornike512/Geomanga.ge-/commit/ee88669))
+* feat: improve LibraryTabPage layout and enhance date formatting ([7832ac0](https://github.com/Tornike512/Geomanga.ge-/commit/7832ac0))
+* feat: update Button component to include 'unstyled' variant and refactor usage in MangaRating ([827b875](https://github.com/Tornike512/Geomanga.ge-/commit/827b875))
+* fix: adjust input component text size for better readability ([be93451](https://github.com/Tornike512/Geomanga.ge-/commit/be93451))
+* fix: adjust input heights and padding for consistency across components ([a5b23ec](https://github.com/Tornike512/Geomanga.ge-/commit/a5b23ec))
+* fix: improve layout and styling of comments section and form components ([0406d3b](https://github.com/Tornike512/Geomanga.ge-/commit/0406d3b))
+* fix: remove unnecessary isReply prop from CommentItem component ([cbccd69](https://github.com/Tornike512/Geomanga.ge-/commit/cbccd69))
+* fix: update Avatar component to handle external image URLs correctly ([5443104](https://github.com/Tornike512/Geomanga.ge-/commit/5443104))
+* fix: update mutation success handlers to await queryClient.invalidateQueries with refetchType ([99de39e](https://github.com/Tornike512/Geomanga.ge-/commit/99de39e))
+* refactor: replace button elements with Button component for consistency ([118d226](https://github.com/Tornike512/Geomanga.ge-/commit/118d226))
+
 ## <small>1.9.1 (2026-01-28)</small>
 
 * fix: change mobile sidebar overlay from div to button for better accessibility ([b4bc9cb](https://github.com/Tornike512/Geomanga.ge-/commit/b4bc9cb))
