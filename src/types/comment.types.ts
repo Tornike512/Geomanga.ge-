@@ -13,6 +13,7 @@ export interface Comment {
 
 export interface CommentDetail extends Comment {
   readonly user: User;
+  readonly is_author: boolean;
   readonly replies?: CommentDetail[];
 }
 

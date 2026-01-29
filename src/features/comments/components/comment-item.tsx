@@ -104,6 +104,21 @@ export function CommentItem({
               >
                 {comment.user.username}
               </Link>
+              {comment.is_author && (
+                <span className="rounded-full bg-amber-500 px-2 py-0.5 font-medium text-black text-xs">
+                  ავტორი
+                </span>
+              )}
+              {comment.user.role === UserRole.ADMIN && (
+                <span className="rounded-full bg-red-500 px-2 py-0.5 font-medium text-white text-xs">
+                  ადმინი
+                </span>
+              )}
+              {comment.user.role === UserRole.MODERATOR && (
+                <span className="rounded-full bg-purple-500 px-2 py-0.5 font-medium text-white text-xs">
+                  მოდერატორი
+                </span>
+              )}
               <span className="text-[var(--muted-foreground)] text-xs">
                 {formatRelativeTime(comment.created_at)}
               </span>
