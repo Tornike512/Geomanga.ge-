@@ -47,3 +47,13 @@ export interface PasswordUpdate {
   readonly current_password: string;
   readonly new_password: string;
 }
+
+export interface PublicUserProfile {
+  readonly id: number;
+  readonly username: string;
+  readonly avatar_url: string | null;
+  readonly role: UserRole;
+  readonly created_at: string;
+  readonly comment_count: number;
+  readonly rating_count: number;
+}

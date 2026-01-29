@@ -7,6 +7,7 @@ import {
   Pencil,
   Trash2,
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Avatar } from "@/components/avatar";
 import { Button } from "@/components/button";
@@ -86,18 +87,23 @@ export function CommentItem({
 
   return (
     <div className="flex gap-3">
-      <Avatar
-        src={comment.user.avatar_url}
-        alt={comment.user.username}
-        size="sm"
-      />
+      <Link href={`/user/${comment.user_id}`}>
+        <Avatar
+          src={comment.user.avatar_url}
+          alt={comment.user.username}
+          size="sm"
+        />
+      </Link>
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-medium text-[var(--foreground)] text-sm">
+              <Link
+                href={`/user/${comment.user_id}`}
+                className="font-medium text-[var(--foreground)] text-sm transition-colors hover:text-[var(--accent)]"
+              >
                 {comment.user.username}
-              </span>
+              </Link>
               <span className="text-[var(--muted-foreground)] text-xs">
                 {formatRelativeTime(comment.created_at)}
               </span>
