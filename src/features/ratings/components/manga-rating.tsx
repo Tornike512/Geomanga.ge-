@@ -68,7 +68,7 @@ export function MangaRating({ mangaId }: MangaRatingProps) {
                 <Button
                   key={score}
                   variant="unstyled"
-                  className="p-0.5 transition-transform hover:scale-110"
+                  className="cursor-pointer p-0.5 transition-transform hover:scale-110"
                   onMouseEnter={() => setHoveredScore(score)}
                   onMouseLeave={() => setHoveredScore(null)}
                   onClick={() => handleRate(score)}
