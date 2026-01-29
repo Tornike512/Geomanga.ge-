@@ -1,3 +1,10 @@
+## 1.13.0 (2026-01-29)
+
+* fix: update button label from 'ლოკალური' to 'ქართული თარგმნილი' ([b2109ae](https://github.com/Tornike512/Geomanga.ge-/commit/b2109ae))
+* style: remove unnecessary max-width and padding from comments container ([0a8f0b3](https://github.com/Tornike512/Geomanga.ge-/commit/0a8f0b3))
+* Merge branch 'main' of github.com:Tornike512/Geomanga.ge- ([63678d2](https://github.com/Tornike512/Geomanga.ge-/commit/63678d2))
+* feat: add sorting functionality to chapters by chapter number ([41d5b1c](https://github.com/Tornike512/Geomanga.ge-/commit/41d5b1c))
+
 ## 1.12.0 (2026-01-29)
 
 * feat: add author and role indicators to comment items ([538b817](https://github.com/Tornike512/Geomanga.ge-/commit/538b817))
