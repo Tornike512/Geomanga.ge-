@@ -1,3 +1,13 @@
+## 1.12.0 (2026-01-29)
+
+* feat: add author and role indicators to comment items ([538b817](https://github.com/Tornike512/Geomanga.ge-/commit/538b817))
+* feat: add uploader information to MangaDetail and update types ([3b7dd51](https://github.com/Tornike512/Geomanga.ge-/commit/3b7dd51))
+* feat: implement public profile page and related API/hooks for user profiles ([439a7d6](https://github.com/Tornike512/Geomanga.ge-/commit/439a7d6))
+* fix: add variant to genre badges for consistent styling ([b1cd20f](https://github.com/Tornike512/Geomanga.ge-/commit/b1cd20f))
+* fix: rename score to rating in MangaRating component and types for consistency ([dfac2a4](https://github.com/Tornike512/Geomanga.ge-/commit/dfac2a4))
+* fix: reorder commands in pre-push hook for correct execution sequence ([68877c5](https://github.com/Tornike512/Geomanga.ge-/commit/68877c5))
+* fix: update button class to include cursor pointer for better UX ([7188324](https://github.com/Tornike512/Geomanga.ge-/commit/7188324))
+
 ## 1.11.0 (2026-01-28)
 
 * Merge branch 'main' of github.com:Tornike512/Geomanga.ge- ([9a3e13a](https://github.com/Tornike512/Geomanga.ge-/commit/9a3e13a))
