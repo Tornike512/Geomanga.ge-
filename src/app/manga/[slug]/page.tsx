@@ -141,7 +141,9 @@ export default function MangaDetailPage() {
                   <div className="mb-4 flex flex-wrap items-center gap-2">
                     <Badge variant="secondary">{manga.status}</Badge>
                     {genres.slice(0, 5).map((genre) => (
-                      <Badge key={genre.id}>{genre.name}</Badge>
+                      <Badge key={genre.id} variant="secondary">
+                        {genre.name}
+                      </Badge>
                     ))}
                   </div>
                 </div>
