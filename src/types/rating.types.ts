@@ -2,13 +2,13 @@ export interface Rating {
   readonly id: number;
   readonly user_id: number;
   readonly manga_id: number;
-  readonly score: number;
+  readonly rating: number;
   readonly created_at: string;
 }
 
 export interface RatingCreate {
   readonly manga_id: number;
-  readonly score: number;
+  readonly rating: number;
 }
 
 export interface MangaRatingStats {

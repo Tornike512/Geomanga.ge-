@@ -25,12 +25,12 @@ export function MangaRating({ mangaId }: MangaRatingProps) {
 
   const [hoveredScore, setHoveredScore] = useState<number | null>(null);
 
-  const currentScore = userRating?.score || 0;
+  const currentScore = userRating?.rating || 0;
   const displayScore = hoveredScore ?? currentScore;
 
   const handleRate = (score: number) => {
     if (!user) return;
-    submitRating.mutate({ manga_id: mangaId, score });
+    submitRating.mutate({ manga_id: mangaId, rating: score });
   };
 
   const handleRemoveRating = () => {
@@ -92,7 +92,7 @@ export function MangaRating({ mangaId }: MangaRatingProps) {
             {userRating && (
               <div className="flex items-center justify-between">
                 <span className="text-[var(--muted-foreground)] text-sm">
-                  შენი შეფასება: {userRating.score}/10
+                  შენი შეფასება: {userRating.rating}/10
                 </span>
                 <Button
                   variant="ghost"
