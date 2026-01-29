@@ -1,3 +1,7 @@
+## 1.14.0 (2026-01-29)
+
+* feat: add delete functionality for manga and chapters ([4992aad](https://github.com/Tornike512/Geomanga.ge-/commit/4992aad))
+
 ## 1.13.0 (2026-01-29)
 
 * fix: update button label from 'ლოკალური' to 'ქართული თარგმნილი' ([b2109ae](https://github.com/Tornike512/Geomanga.ge-/commit/b2109ae))
