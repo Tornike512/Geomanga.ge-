@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import Marquee from "react-fast-marquee";
+import { Avatar } from "@/components/avatar";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
@@ -148,45 +149,70 @@ export default function MangaDetailPage() {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col gap-2 sm:flex-row">
-                  {!isMangaDex &&
-                    user &&
-                    (user.role === UserRole.UPLOADER ||
-                      user.role === UserRole.ADMIN) && (
-                      <Link href={`/upload/chapter?mangaId=${localManga?.id}`}>
-                        <Button variant="outline">
-                          <svg
-                            className="mr-2 h-4 w-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            role="img"
-                            aria-label="დამატება"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 4v16m8-8H4"
-                            />
-                          </svg>
-                          თავის დამატება
-                        </Button>
-                      </Link>
-                    )}
-                  {!isMangaDex && user && localManga && (
-                    <Button
-                      variant={isBookmarked ? "default" : "outline"}
-                      onClick={() =>
-                        isBookmarked
-                          ? removeBookmark.mutate(localManga.id)
-                          : addBookmark.mutate({ manga_id: localManga.id })
-                      }
+                {/* Uploader & Action Buttons */}
+                <div className="flex flex-col items-end gap-3">
+                  {/* Uploader Info */}
+                  {!isMangaDex && localManga?.uploader && (
+                    <Link
+                      href={`/user/${localManga.uploader.id}`}
+                      className="flex items-center gap-2"
                     >
-                      {isBookmarked ? "❤️ სანიშნებშია" : "🤍 სანიშნებში"}
-                    </Button>
+                      <Avatar
+                        src={localManga.uploader.avatar_url ?? undefined}
+                        alt={localManga.uploader.username}
+                        size="sm"
+                      />
+                      <span className="text-[var(--muted-foreground)] text-sm">
+                        ატვირთა:{" "}
+                        <span className="font-medium text-[var(--foreground)] transition-colors hover:text-[var(--accent)]">
+                          {localManga.uploader.username}
+                        </span>
+                      </span>
+                    </Link>
                   )}
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    {!isMangaDex &&
+                      user &&
+                      (user.role === UserRole.UPLOADER ||
+                        user.role === UserRole.ADMIN) && (
+                        <Link
+                          href={`/upload/chapter?mangaId=${localManga?.id}`}
+                        >
+                          <Button variant="outline">
+                            <svg
+                              className="mr-2 h-4 w-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              role="img"
+                              aria-label="დამატება"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 4v16m8-8H4"
+                              />
+                            </svg>
+                            თავის დამატება
+                          </Button>
+                        </Link>
+                      )}
+                    {!isMangaDex && user && localManga && (
+                      <Button
+                        variant={isBookmarked ? "default" : "outline"}
+                        onClick={() =>
+                          isBookmarked
+                            ? removeBookmark.mutate(localManga.id)
+                            : addBookmark.mutate({ manga_id: localManga.id })
+                        }
+                      >
+                        {isBookmarked ? "❤️ სანიშნებშია" : "🤍 სანიშნებში"}
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
 

@@ -1,5 +1,13 @@
 import type { Chapter } from "./chapter.types";
 import type { Genre } from "./genre.types";
+import type { UserRole } from "./user.types";
+
+export interface MangaUploader {
+  readonly id: number;
+  readonly username: string;
+  readonly avatar_url: string | null;
+  readonly role: UserRole;
+}
 
 export enum MangaStatus {
   ONGOING = "ongoing",
@@ -50,6 +58,7 @@ export interface MangaDetail extends Manga {
   readonly genres: Genre[];
   readonly chapter_count: number;
   readonly latest_chapter: Chapter | undefined;
+  readonly uploader?: MangaUploader;
 }
 
 export interface MangaListResponse {
