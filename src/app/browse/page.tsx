@@ -264,7 +264,7 @@ export default function BrowsePage() {
           className="flex items-center gap-2"
         >
           <Server className="h-4 w-4" />
-          ლოკალური
+          ქართულად თარგმნილი
         </Button>
         <Button
           variant={source === "mangadex" ? "default" : "outline"}
