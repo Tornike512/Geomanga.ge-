@@ -1,9 +1,9 @@
 "use client";
 
-import { ExternalLink, Globe, Star } from "lucide-react";
+import { ExternalLink, Globe, Star, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Marquee from "react-fast-marquee";
 import { Avatar } from "@/components/avatar";
 import { Badge } from "@/components/badge";
@@ -18,18 +18,20 @@ import {
   useRemoveBookmark,
 } from "@/features/library";
 import {
+  useDeleteManga,
   useMangaBySlug,
   useMangaDexChapters,
   useMangaDexMangaById,
 } from "@/features/manga";
 import { MangaRating } from "@/features/ratings";
-import { useChaptersByManga } from "@/features/reader";
+import { useChaptersByManga, useDeleteChapter } from "@/features/reader";
 import { UserRole } from "@/types/user.types";
 import { formatDate, formatNumber, formatRating } from "@/utils/formatters";
 import { getCoverUrl } from "@/utils/image-urls";
 
 export default function MangaDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const slug = params.slug as string;
 
   // Check if this is a MangaDex manga (slug starts with "md-")
@@ -50,6 +52,31 @@ export default function MangaDetailPage() {
   const { data: bookmarks } = useBookmarks();
   const addBookmark = useAddBookmark();
   const removeBookmark = useRemoveBookmark();
+  const deleteManga = useDeleteManga();
+  const deleteChapter = useDeleteChapter();
+
+  const canDeleteManga = user?.role === UserRole.ADMIN;
+  const canDeleteChapter =
+    user?.role === UserRole.MODERATOR || user?.role === UserRole.ADMIN;
+
+  const handleDeleteManga = () => {
+    if (!localManga) return;
+    if (
+      window.confirm("ნამდვილად გსურთ მანგის წაშლა? ეს მოქმედება შეუქცევადია.")
+    ) {
+      deleteManga.mutate(localManga.id, {
+        onSuccess: () => {
+          router.push("/");
+        },
+      });
+    }
+  };
+
+  const handleDeleteChapter = (chapterId: number, chapterNumber: number) => {
+    if (window.confirm(`ნამდვილად გსურთ თავი ${chapterNumber}-ის წაშლა?`)) {
+      deleteChapter.mutate(chapterId);
+    }
+  };
 
   const isBookmarked = bookmarks?.items.some(
     (b) => b.manga_id === localManga?.id,
@@ -210,6 +237,16 @@ export default function MangaDetailPage() {
                         }
                       >
                         {isBookmarked ? "❤️ სანიშნებშია" : "🤍 სანიშნებში"}
+                      </Button>
+                    )}
+                    {!isMangaDex && canDeleteManga && localManga && (
+                      <Button
+                        variant="destructive"
+                        onClick={handleDeleteManga}
+                        loading={deleteManga.isPending}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        მანგის წაშლა
                       </Button>
                     )}
                   </div>
@@ -436,12 +473,14 @@ export default function MangaDetailPage() {
               ) : (
                 // Local chapters
                 localChapters?.map((chapter) => (
-                  <Link
+                  <div
                     key={chapter.id}
-                    href={`/read/${chapter.id}`}
-                    className="group block rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                    className="group flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
                   >
-                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                    <Link
+                      href={`/read/${chapter.id}`}
+                      className="flex flex-1 flex-col gap-2 md:flex-row md:items-center md:justify-between"
+                    >
                       <div className="flex-1">
                         <div className="font-medium text-[var(--foreground)] text-base group-hover:text-[var(--accent)]">
                           თავი {chapter.chapter_number}
@@ -455,8 +494,23 @@ export default function MangaDetailPage() {
                       <div className="text-[var(--muted-foreground)] text-xs">
                         {formatDate(chapter.release_date)}
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                    {canDeleteChapter && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          handleDeleteChapter(
+                            chapter.id,
+                            chapter.chapter_number,
+                          )
+                        }
+                        className="text-[var(--muted-foreground)] hover:text-red-500"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
                 ))
               )
             ) : (
