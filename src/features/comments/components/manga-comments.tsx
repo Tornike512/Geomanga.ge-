@@ -67,7 +67,7 @@ export function MangaComments({ mangaId }: MangaCommentsProps) {
   const hasPrevPage = page > 1;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
+    <div className="py-8">
       <div className="mb-6 flex items-center gap-2">
         <MessageCircle className="h-5 w-5 text-[var(--accent)]" />
         <h2 className="font-semibold text-[var(--foreground)] text-lg">
