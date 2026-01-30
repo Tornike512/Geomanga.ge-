@@ -231,7 +231,7 @@ function ChapterUploadContent() {
                   className="hidden"
                   disabled={isUploading}
                 />
-                <div className="mb-6 rounded-lg border-2 border-[var(--border)] border-dashed bg-[var(--muted)] p-12 text-center transition-colors hover:border-[var(--accent)] hover:bg-[var(--muted)]/50">
+                <div className="mb-6 flex flex-col items-center justify-center rounded-lg border-2 border-[var(--border)] border-dashed bg-[var(--muted)] p-12 text-center transition-colors hover:border-[var(--accent)] hover:bg-[var(--muted)]/50">
                   <svg
                     className="mx-auto mb-4 h-16 w-16 text-[var(--muted-foreground)] opacity-40"
                     fill="none"
