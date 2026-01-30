@@ -1,3 +1,14 @@
+## 1.15.0 (2026-01-30)
+
+* fix: update pageRefs type to RefObject and improve back navigation links ([54e0021](https://github.com/Tornike512/Geomanga.ge-/commit/54e0021))
+* fix: update tab count check and improve type safety in useMangaCategories hook ([a4e750d](https://github.com/Tornike512/Geomanga.ge-/commit/a4e750d))
+* feat: add "Continue Reading" button for local manga in detail page ([c560256](https://github.com/Tornike512/Geomanga.ge-/commit/c560256))
+* feat: enhance manga detail page with reading progress functionality ([55dc303](https://github.com/Tornike512/Geomanga.ge-/commit/55dc303))
+* feat: implement initial page scrolling and URL tracking in ReaderPage component ([41a203b](https://github.com/Tornike512/Geomanga.ge-/commit/41a203b))
+* feat: implement library management features with add, remove, and fetch functionality ([eaff18d](https://github.com/Tornike512/Geomanga.ge-/commit/eaff18d))
+* refactor: rename manga categories functions and types for consistency ([8d7dcd8](https://github.com/Tornike512/Geomanga.ge-/commit/8d7dcd8))
+* style: update upload area layout for improved file selection experience ([588f268](https://github.com/Tornike512/Geomanga.ge-/commit/588f268))
+
 ## 1.14.0 (2026-01-29)
 
 * feat: add delete functionality for manga and chapters ([4992aad](https://github.com/Tornike512/Geomanga.ge-/commit/4992aad))
