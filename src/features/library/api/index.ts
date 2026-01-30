@@ -1,5 +1,9 @@
 export { addBookmark } from "./add-bookmark";
+export { addLibraryEntry } from "./add-library-entry";
 export { getBookmarks } from "./get-bookmarks";
+export { getLibraryEntries } from "./get-library-entries";
+export { getMangaCategories } from "./get-manga-categories";
 export { getMangaProgress } from "./get-manga-progress";
 export { getReadingHistory } from "./get-reading-history";
 export { removeBookmark } from "./remove-bookmark";
+export { removeLibraryEntry } from "./remove-library-entry";

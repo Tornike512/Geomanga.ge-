@@ -7,10 +7,11 @@ import { notFound, useParams } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/button";
 import { Spinner } from "@/components/spinner";
-import { useBookmarks } from "@/features/library/hooks/use-bookmarks";
+import { useLibraryEntries } from "@/features/library/hooks/use-library-entries";
 import { useReadingHistory } from "@/features/library/hooks/use-reading-history";
 import { MangaGrid } from "@/features/manga/components/manga-grid";
 import type { ReadingHistoryWithDetails } from "@/types/history.types";
+import type { LibraryCategory } from "@/types/library.types";
 
 const TABS = {
   bookmarks: "სანიშნეები",
@@ -21,6 +22,13 @@ const TABS = {
 } as const;
 
 type Tab = keyof typeof TABS;
+
+const LIBRARY_TAB_TO_CATEGORY: Partial<Record<Tab, LibraryCategory>> = {
+  bookmarks: "bookmarks",
+  dropped: "dropped",
+  toread: "toread",
+  favorites: "favorites",
+};
 
 function isValidTab(tab: string): tab is Tab {
   return tab in TABS;
@@ -45,11 +53,17 @@ export default function LibraryTabPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
 
+  const libraryCategory = LIBRARY_TAB_TO_CATEGORY[activeTab];
+  const isLibraryTab = !!libraryCategory;
+
   const {
-    data: bookmarksData,
-    isLoading: bookmarksLoading,
-    error: bookmarksError,
-  } = useBookmarks({ page: currentPage, limit: pageSize });
+    data: libraryData,
+    isLoading: libraryLoading,
+    error: libraryError,
+  } = useLibraryEntries(libraryCategory || "bookmarks", {
+    page: currentPage,
+    limit: pageSize,
+  });
 
   const {
     data: historyData,
@@ -57,26 +71,24 @@ export default function LibraryTabPage() {
     error: historyError,
   } = useReadingHistory({ page: currentPage, limit: pageSize });
 
-  // Currently only bookmarks and history have data hooks
-  // New tabs (dropped, toread, favorites) will show empty state for now
-  const isLoading =
-    activeTab === "bookmarks"
-      ? bookmarksLoading
-      : activeTab === "history"
-        ? historyLoading
-        : false;
-  const error =
-    activeTab === "bookmarks"
-      ? bookmarksError
-      : activeTab === "history"
-        ? historyError
-        : null;
+  // Fetch counts for all library tabs (for display in tabs)
+  const { data: bookmarksCount } = useLibraryEntries("bookmarks", { limit: 1 });
+  const { data: droppedCount } = useLibraryEntries("dropped", { limit: 1 });
+  const { data: toreadCount } = useLibraryEntries("toread", { limit: 1 });
+  const { data: favoritesCount } = useLibraryEntries("favorites", { limit: 1 });
+
+  const tabCounts: Partial<Record<Tab, number>> = {
+    bookmarks: bookmarksCount?.total,
+    history: historyData?.total,
+    dropped: droppedCount?.total,
+    toread: toreadCount?.total,
+    favorites: favoritesCount?.total,
+  };
+
+  const isLoading = activeTab === "history" ? historyLoading : libraryLoading;
+  const error = activeTab === "history" ? historyError : libraryError;
   const data =
-    activeTab === "bookmarks"
-      ? bookmarksData
-      : activeTab === "history"
-        ? historyData
-        : null;
+    activeTab === "history" ? historyData : isLibraryTab ? libraryData : null;
 
   return (
     <div className="container mx-auto box-border max-w-[1920px] overflow-hidden px-6 py-12 md:px-8 md:py-12 lg:px-12">
@@ -104,11 +116,8 @@ export default function LibraryTabPage() {
             }`}
           >
             {TABS[tabKey]}
-            {tabKey === "bookmarks" && bookmarksData && (
-              <span className="ml-2 opacity-70">({bookmarksData.total})</span>
-            )}
-            {tabKey === "history" && historyData && (
-              <span className="ml-2 opacity-70">({historyData.total})</span>
+            {tabCounts[tabKey] !== undefined && tabCounts[tabKey]! > 0 && (
+              <span className="ml-2 opacity-70">({tabCounts[tabKey]})</span>
             )}
           </Link>
         ))}
@@ -175,8 +184,8 @@ export default function LibraryTabPage() {
         </div>
       ) : (
         <>
-          {activeTab === "bookmarks" ? (
-            <MangaGrid manga={data.items.map((bookmark) => bookmark.manga)} />
+          {isLibraryTab ? (
+            <MangaGrid manga={data.items.map((entry) => entry.manga)} />
           ) : (
             <div className="space-y-4">
               {(activeTab === "history" && "items" in data

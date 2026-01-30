@@ -12,11 +12,7 @@ import { Card } from "@/components/card";
 import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth";
 import { MangaComments } from "@/features/comments";
-import {
-  useAddBookmark,
-  useBookmarks,
-  useRemoveBookmark,
-} from "@/features/library";
+import { LibraryDropdown } from "@/features/library";
 import {
   useDeleteManga,
   useMangaBySlug,
@@ -49,9 +45,6 @@ export default function MangaDetailPage() {
     useMangaDexChapters(mangaDexId || "", "en");
 
   const { data: user } = useCurrentUser();
-  const { data: bookmarks } = useBookmarks();
-  const addBookmark = useAddBookmark();
-  const removeBookmark = useRemoveBookmark();
   const deleteManga = useDeleteManga();
   const deleteChapter = useDeleteChapter();
 
@@ -77,10 +70,6 @@ export default function MangaDetailPage() {
       deleteChapter.mutate(chapterId);
     }
   };
-
-  const isBookmarked = bookmarks?.items.some(
-    (b) => b.manga_id === localManga?.id,
-  );
 
   const isLoading = isMangaDex ? mangaDexLoading : localLoading;
   const manga = isMangaDex ? mangaDexManga : localManga;
@@ -228,16 +217,7 @@ export default function MangaDetailPage() {
                         </Link>
                       )}
                     {!isMangaDex && user && localManga && (
-                      <Button
-                        variant={isBookmarked ? "default" : "outline"}
-                        onClick={() =>
-                          isBookmarked
-                            ? removeBookmark.mutate(localManga.id)
-                            : addBookmark.mutate({ manga_id: localManga.id })
-                        }
-                      >
-                        {isBookmarked ? "❤️ სანიშნებშია" : "🤍 სანიშნებში"}
-                      </Button>
+                      <LibraryDropdown mangaId={localManga.id} />
                     )}
                     {!isMangaDex && canDeleteManga && localManga && (
                       <Button
