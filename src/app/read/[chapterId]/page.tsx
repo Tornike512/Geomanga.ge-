@@ -13,6 +13,122 @@ import { useMangaDexChapterPages } from "@/features/manga";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
 import { useTrackReading } from "@/features/reader/hooks/use-track-reading";
 
+// Parse initial page ID from URL (e.g., /read/1/18 -> "18")
+function getInitialPageIdFromUrl(chapterId: string): string | null {
+  if (typeof window === "undefined") return null;
+
+  const pathname = window.location.pathname;
+  const expectedPrefix = `/read/${chapterId}/`;
+
+  if (pathname.startsWith(expectedPrefix)) {
+    const pageId = pathname.slice(expectedPrefix.length);
+    return pageId || null;
+  }
+
+  return null;
+}
+
+// Custom hook to scroll to initial page from URL
+function useInitialPageScroll(
+  chapterId: string,
+  pageRefs: React.MutableRefObject<Map<number | string, HTMLDivElement | null>>,
+  pagesCount: number,
+) {
+  const hasScrolledRef = useRef(false);
+
+  useEffect(() => {
+    // Only scroll once and when pages are loaded
+    if (hasScrolledRef.current || pagesCount === 0) return;
+
+    const initialPageId = getInitialPageIdFromUrl(chapterId);
+    if (!initialPageId) return;
+
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      // Try to find the element - check both string and number keys
+      let element = pageRefs.current.get(initialPageId);
+      if (!element) {
+        // Try as number for local chapters
+        const numericId = Number(initialPageId);
+        if (!Number.isNaN(numericId)) {
+          element = pageRefs.current.get(numericId);
+        }
+      }
+
+      if (element) {
+        element.scrollIntoView({ behavior: "instant", block: "start" });
+        hasScrolledRef.current = true;
+      }
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [chapterId, pageRefs, pagesCount]);
+}
+
+// Custom hook to track visible page and update URL
+function usePageScrollTracking(
+  chapterId: string,
+  pageRefs: React.MutableRefObject<Map<number | string, HTMLDivElement | null>>,
+  pagesCount: number,
+) {
+  const [currentPageId, setCurrentPageId] = useState<number | string | null>(
+    null,
+  );
+
+  useEffect(() => {
+    // Wait for pages to be rendered
+    if (pagesCount === 0) return;
+
+    const observerCallback: IntersectionObserverCallback = (entries) => {
+      // Find the entry that is most visible (highest intersection ratio)
+      let mostVisibleEntry: IntersectionObserverEntry | null = null;
+      let maxRatio = 0;
+
+      for (const entry of entries) {
+        if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+          maxRatio = entry.intersectionRatio;
+          mostVisibleEntry = entry;
+        }
+      }
+
+      if (mostVisibleEntry) {
+        const pageId = mostVisibleEntry.target.getAttribute("data-page-id");
+        if (pageId) {
+          const parsedId = pageId.includes("-") ? pageId : Number(pageId);
+          setCurrentPageId(parsedId);
+
+          // Update URL without triggering navigation
+          const newUrl = `/read/${chapterId}/${pageId}`;
+          window.history.replaceState(
+            { ...window.history.state, pageId },
+            "",
+            newUrl,
+          );
+        }
+      }
+    };
+
+    const observer = new IntersectionObserver(observerCallback, {
+      root: null, // viewport
+      rootMargin: "-40% 0px -40% 0px", // Consider page visible when it's in the middle 20% of viewport
+      threshold: [0, 0.25, 0.5, 0.75, 1],
+    });
+
+    // Observe all page elements
+    pageRefs.current.forEach((element) => {
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [chapterId, pageRefs, pagesCount]);
+
+  return currentPageId;
+}
+
 // Custom hook for auto-hiding UI based on scroll and mouse movement
 function useAutoHideUI(hideDelay = 2000) {
   const [isVisible, setIsVisible] = useState(true);
@@ -111,6 +227,22 @@ export default function ReaderPage() {
 
   const trackReading = useTrackReading();
 
+  // Refs for page elements (used for scroll tracking)
+  const pageRefs = useRef<Map<number | string, HTMLDivElement | null>>(
+    new Map(),
+  );
+
+  // Calculate pages count for scroll tracking
+  const pagesCount = isMangaDex
+    ? mangaDexPages?.length || 0
+    : localChapter?.pages?.length || 0;
+
+  // Track current page and update URL
+  const currentPageId = usePageScrollTracking(chapterId, pageRefs, pagesCount);
+
+  // Scroll to initial page from URL (e.g., /read/1/18 scrolls to page 18)
+  useInitialPageScroll(chapterId, pageRefs, pagesCount);
+
   // Track reading progress when local chapter loads
   useEffect(() => {
     if (localChapter && !isMangaDex) {
@@ -150,8 +282,33 @@ export default function ReaderPage() {
     }
   }, [isMangaDex, mangaDexChapterId]);
 
+  // Clear refs when chapter changes
+  useEffect(() => {
+    pageRefs.current.clear();
+  }, []);
+
   const isLoading = isMangaDex ? mangaDexLoading : localLoading;
   const error = isMangaDex ? mangaDexError : localError;
+
+  // Helper to get current page number for display
+  const getCurrentPageNumber = (): number | null => {
+    if (!currentPageId) return null;
+
+    if (typeof currentPageId === "string" && currentPageId.startsWith("md-")) {
+      // MangaDex page: extract number from "md-X"
+      return parseInt(currentPageId.slice(3), 10);
+    }
+
+    if (!isMangaDex && localChapter?.pages) {
+      // Local chapter: find the page and return its page_number
+      const page = localChapter.pages.find((p) => p.id === currentPageId);
+      return page?.page_number ?? null;
+    }
+
+    return null;
+  };
+
+  const currentPageNumber = getCurrentPageNumber();
 
   if (isLoading) {
     return (
@@ -239,7 +396,14 @@ export default function ReaderPage() {
         <div className="py-4">
           <div className="mx-auto max-w-4xl">
             {localChapter.pages.map((page) => (
-              <div key={page.id} className="w-full">
+              <div
+                key={page.id}
+                ref={(el) => {
+                  pageRefs.current.set(page.id, el);
+                }}
+                data-page-id={page.id}
+                className="w-full"
+              >
                 <Image
                   src={page.image_url}
                   alt={`გვერდი ${page.page_number}`}
@@ -279,7 +443,9 @@ export default function ReaderPage() {
             )}
 
             <div className="text-[var(--muted-foreground)] text-xs">
-              თავი {localChapter.chapter_number}
+              {currentPageNumber
+                ? `${currentPageNumber} / ${localChapter.pages.length}`
+                : `თავი ${localChapter.chapter_number}`}
             </div>
 
             {localChapter.next_chapter_id ? (
@@ -343,17 +509,27 @@ export default function ReaderPage() {
       {/* Reader Content */}
       <div className="py-4">
         <div className="mx-auto max-w-4xl">
-          {mangaDexPages?.map((pageUrl, index) => (
-            <div key={pageUrl} className="w-full">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <Image
-                src={pageUrl}
-                alt={`გვერდი ${index + 1}`}
-                className="h-auto w-full"
-                loading={index <= 2 ? "eager" : "lazy"}
-              />
-            </div>
-          ))}
+          {mangaDexPages?.map((pageUrl, index) => {
+            const pageId = `md-${index + 1}`;
+            return (
+              <div
+                key={pageUrl}
+                ref={(el) => {
+                  pageRefs.current.set(pageId, el);
+                }}
+                data-page-id={pageId}
+                className="w-full"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <Image
+                  src={pageUrl}
+                  alt={`გვერდი ${index + 1}`}
+                  className="h-auto w-full"
+                  loading={index <= 2 ? "eager" : "lazy"}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -363,7 +539,10 @@ export default function ReaderPage() {
       >
         <div className="mx-auto flex max-w-[1920px] items-center justify-center px-4 py-2">
           <div className="text-[var(--muted-foreground)] text-xs">
-            {mangaDexPages?.length || 0} გვერდი • MangaDex
+            {currentPageNumber
+              ? `${currentPageNumber} / ${mangaDexPages?.length || 0}`
+              : `${mangaDexPages?.length || 0} გვერდი`}{" "}
+            • MangaDex
           </div>
         </div>
       </div>
