@@ -31,7 +31,7 @@ function getInitialPageIdFromUrl(chapterId: string): string | null {
 // Custom hook to scroll to initial page from URL
 function useInitialPageScroll(
   chapterId: string,
-  pageRefs: React.MutableRefObject<Map<number | string, HTMLDivElement | null>>,
+  pageRefs: React.RefObject<Map<number | string, HTMLDivElement | null>>,
   pagesCount: number,
 ) {
   const hasScrolledRef = useRef(false);
@@ -68,7 +68,7 @@ function useInitialPageScroll(
 // Custom hook to track visible page and update URL
 function usePageScrollTracking(
   chapterId: string,
-  pageRefs: React.MutableRefObject<Map<number | string, HTMLDivElement | null>>,
+  pageRefs: React.RefObject<Map<number | string, HTMLDivElement | null>>,
   pagesCount: number,
 ) {
   const [currentPageId, setCurrentPageId] = useState<number | string | null>(
@@ -332,7 +332,13 @@ export default function ReaderPage() {
               ? "MangaDex-დან გვერდების ჩატვირთვა ვერ მოხერხდა"
               : "ამ თავს ჯერ არ აქვს ატვირთული გვერდები"}
           </p>
-          <Button onClick={() => router.back()}>უკან</Button>
+          {isMangaDex && mangaDexInfo.mangaId ? (
+            <Link href={`/manga/md-${mangaDexInfo.mangaId}`}>
+              <Button>უკან</Button>
+            </Link>
+          ) : (
+            <Button onClick={() => router.back()}>უკან</Button>
+          )}
         </div>
       </div>
     );
@@ -353,7 +359,9 @@ export default function ReaderPage() {
             <p className="mb-4 text-gray-400">
               ამ თავს ჯერ არ აქვს ატვირთული გვერდები
             </p>
-            <Button onClick={() => router.back()}>უკან</Button>
+            <Link href={`/manga/${localChapter.manga?.slug}`}>
+              <Button>უკან</Button>
+            </Link>
           </div>
         </div>
       );
@@ -367,15 +375,12 @@ export default function ReaderPage() {
         >
           <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-2">
             <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 px-3"
-                onClick={() => router.back()}
-              >
-                <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
-                უკან
-              </Button>
+              <Link href={`/manga/${localChapter.manga?.slug}`}>
+                <Button variant="outline" size="sm" className="h-8 px-3">
+                  <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
+                  უკან
+                </Button>
+              </Link>
               <div className="text-white">
                 <h1 className="font-medium text-sm tracking-tight">
                   {localChapter.manga?.title || "უცნობი მანგა"}
@@ -476,15 +481,24 @@ export default function ReaderPage() {
       >
         <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-2">
           <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 px-3"
-              onClick={() => router.back()}
-            >
-              <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
-              უკან
-            </Button>
+            {mangaDexInfo.mangaId ? (
+              <Link href={`/manga/md-${mangaDexInfo.mangaId}`}>
+                <Button variant="outline" size="sm" className="h-8 px-3">
+                  <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
+                  უკან
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 px-3"
+                onClick={() => router.back()}
+              >
+                <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
+                უკან
+              </Button>
+            )}
             <div className="text-white">
               <div className="flex items-center gap-2">
                 <Badge variant="secondary" className="gap-1 py-0.5 text-xs">
