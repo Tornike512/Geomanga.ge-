@@ -54,11 +54,21 @@ export interface Manga {
   readonly genres?: Genre[];
 }
 
+export interface ReadingProgress {
+  readonly chapter_id: number;
+  readonly chapter_number: number;
+  readonly chapter_title: string | null;
+  readonly last_page_read: number;
+  readonly completed: boolean;
+  readonly last_read_at: string;
+}
+
 export interface MangaDetail extends Manga {
   readonly genres: Genre[];
   readonly chapter_count: number;
   readonly latest_chapter: Chapter | undefined;
   readonly uploader?: MangaUploader;
+  readonly reading_progress?: ReadingProgress | null;
 }
 
 export interface MangaListResponse {
