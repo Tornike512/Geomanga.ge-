@@ -94,6 +94,7 @@ export const LibraryDropdown = ({
       </Button>
 
       {/* Dropdown Menu */}
+      {/* biome-ignore lint/a11y/useSemanticElements: Custom dropdown menu with checkboxes requires div with role=listbox */}
       <div
         role="listbox"
         aria-label="ბიბლიოთეკის კატეგორიები"
@@ -118,6 +119,7 @@ export const LibraryDropdown = ({
             const label = LIBRARY_CATEGORIES[category];
 
             return (
+              // biome-ignore lint/a11y/useSemanticElements: Custom checkbox option in dropdown requires button with role=option
               <button
                 type="button"
                 key={category}

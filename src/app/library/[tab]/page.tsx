@@ -116,7 +116,7 @@ export default function LibraryTabPage() {
             }`}
           >
             {TABS[tabKey]}
-            {tabCounts[tabKey] !== undefined && tabCounts[tabKey]! > 0 && (
+            {tabCounts[tabKey] != null && tabCounts[tabKey] > 0 && (
               <span className="ml-2 opacity-70">({tabCounts[tabKey]})</span>
             )}
           </Link>
