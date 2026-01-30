@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMangaCategories } from "../api/get-manga-categories";
+import { getMangaCategory } from "../api/get-manga-categories";
 
-export const useMangaCategories = (mangaId: number | undefined) => {
+export const useMangaCategory = (mangaId: number | undefined) => {
   return useQuery({
     queryKey: ["manga-categories", mangaId],
-    queryFn: () => getMangaCategories(mangaId as number),
+    queryFn: () => getMangaCategory(mangaId as number),
     enabled: !!mangaId,
     staleTime: 30 * 1000,
   });

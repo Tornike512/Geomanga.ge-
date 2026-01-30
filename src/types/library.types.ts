@@ -34,6 +34,6 @@ export interface LibraryEntryCreate {
   readonly category: LibraryCategory;
 }
 
-export interface MangaCategoriesResponse {
-  readonly categories: LibraryCategory[];
+export interface MangaCategoryResponse {
+  readonly category: LibraryCategory | null;
 }

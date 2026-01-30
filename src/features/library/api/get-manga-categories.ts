@@ -1,13 +1,10 @@
 import { api } from "@/lib/api-client";
-import type { MangaCategoriesResponse } from "@/types/library.types";
+import type { MangaCategoryResponse } from "@/types/library.types";
 
-export const getMangaCategories = async (
+export const getMangaCategory = async (
   mangaId: number,
-): Promise<MangaCategoriesResponse> => {
-  return api.get<MangaCategoriesResponse>(
-    `/library/manga/${mangaId}/categories`,
-    {
-      requiresAuth: true,
-    },
-  );
+): Promise<MangaCategoryResponse> => {
+  return api.get<MangaCategoryResponse>(`/library/manga/${mangaId}/category`, {
+    requiresAuth: true,
+  });
 };

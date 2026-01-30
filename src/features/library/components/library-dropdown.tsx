@@ -9,7 +9,7 @@ import {
 } from "@/types/library.types";
 import { cn } from "@/utils/cn";
 import { useAddLibraryEntry } from "../hooks/use-add-library-entry";
-import { useMangaCategories } from "../hooks/use-manga-categories";
+import { useMangaCategory } from "../hooks/use-manga-categories";
 import { useRemoveLibraryEntry } from "../hooks/use-remove-library-entry";
 
 interface LibraryDropdownProps {
@@ -24,28 +24,27 @@ export const LibraryDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data: categoriesData, isLoading } = useMangaCategories(mangaId);
+  const { data: categoryData, isLoading } = useMangaCategory(mangaId);
   const addEntry = useAddLibraryEntry();
   const removeEntry = useRemoveLibraryEntry();
 
-  const selectedCategories = categoriesData?.categories || [];
-  const hasAnyCategory = selectedCategories.length > 0;
+  const currentCategory = categoryData?.category || null;
 
   const handleToggle = useCallback((): void => {
     setIsOpen((prev) => !prev);
   }, []);
 
-  const handleCategoryToggle = useCallback(
+  const handleCategorySelect = useCallback(
     (category: LibraryCategory) => {
-      const isSelected = selectedCategories.includes(category);
-
-      if (isSelected) {
+      if (currentCategory === category) {
+        // Clicking the same category removes it
         removeEntry.mutate({ mangaId, category });
       } else {
+        // Selecting a new category (API auto-removes from previous)
         addEntry.mutate({ manga_id: mangaId, category });
       }
     },
-    [mangaId, selectedCategories, addEntry, removeEntry],
+    [mangaId, currentCategory, addEntry, removeEntry],
   );
 
   // Close dropdown when clicking outside
@@ -68,21 +67,19 @@ export const LibraryDropdown = ({
   return (
     <div ref={dropdownRef} className={cn("relative inline-block", className)}>
       <Button
-        variant={hasAnyCategory ? "default" : "outline"}
+        variant={currentCategory ? "default" : "outline"}
         onClick={handleToggle}
         disabled={isLoading}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         className="gap-2"
       >
-        {hasAnyCategory ? (
+        {currentCategory === "favorites" && (
           <Heart className="h-4 w-4 fill-current" />
-        ) : (
-          <Heart className="h-4 w-4" />
         )}
         <span>
-          {hasAnyCategory
-            ? `${selectedCategories.length} სიაში`
+          {currentCategory
+            ? LIBRARY_CATEGORIES[currentCategory]
             : "სიაში დამატება"}
         </span>
         <ChevronDown
@@ -115,17 +112,17 @@ export const LibraryDropdown = ({
 
         {(Object.keys(LIBRARY_CATEGORIES) as LibraryCategory[]).map(
           (category) => {
-            const isSelected = selectedCategories.includes(category);
+            const isSelected = currentCategory === category;
             const label = LIBRARY_CATEGORIES[category];
 
             return (
-              // biome-ignore lint/a11y/useSemanticElements: Custom checkbox option in dropdown requires button with role=option
+              // biome-ignore lint/a11y/useSemanticElements: Custom radio option in dropdown requires button with role=option
               <button
                 type="button"
                 key={category}
                 role="option"
                 aria-selected={isSelected}
-                onClick={() => handleCategoryToggle(category)}
+                onClick={() => handleCategorySelect(category)}
                 disabled={isPending}
                 className={cn(
                   "flex w-full cursor-pointer items-center justify-between px-4 py-3 text-left text-sm",
@@ -138,7 +135,7 @@ export const LibraryDropdown = ({
                 <span>{label}</span>
                 <div
                   className={cn(
-                    "flex h-5 w-5 items-center justify-center rounded border transition-all duration-150",
+                    "flex h-5 w-5 items-center justify-center rounded-full border transition-all duration-150",
                     isSelected
                       ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)]"
                       : "border-[var(--border)]",
