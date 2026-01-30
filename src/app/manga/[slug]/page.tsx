@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, Globe, Star, Trash2 } from "lucide-react";
+import { BookOpen, ExternalLink, Globe, Star, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -216,6 +216,12 @@ export default function MangaDetailPage() {
                           </Button>
                         </Link>
                       )}
+                    {!isMangaDex && user && localManga && (
+                      <Button variant="default">
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        კითხვის გაგრძელება
+                      </Button>
+                    )}
                     {!isMangaDex && user && localManga && (
                       <LibraryDropdown mangaId={localManga.id} />
                     )}
