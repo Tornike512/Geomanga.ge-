@@ -11,6 +11,23 @@ interface MangaDexCardProps {
   readonly manga: MangaDexTransformedManga;
 }
 
+const getMangaStatusLabel = (
+  status: "ongoing" | "completed" | "hiatus" | "cancelled",
+): string => {
+  switch (status) {
+    case "ongoing":
+      return "გრძელდება";
+    case "completed":
+      return "დასრულებული";
+    case "hiatus":
+      return "პაუზაზე";
+    case "cancelled":
+      return "გაუქმებული";
+    default:
+      return "";
+  }
+};
+
 export function MangaDexCard({ manga }: MangaDexCardProps) {
   const displayTags = manga.tags.slice(0, 3);
   // Use md-{mangadex_id} slug format to identify MangaDex manga
@@ -35,6 +52,25 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
               <span className="text-[var(--muted-foreground)]">No Cover</span>
             </div>
           )}
+          {/* Manga Publication Status Badge - Top Right */}
+          <div className="absolute top-2 right-2">
+            <Badge
+              variant={
+                manga.status === "completed"
+                  ? "default"
+                  : manga.status === "ongoing"
+                    ? "success"
+                    : manga.status === "hiatus"
+                      ? "warning"
+                      : "danger"
+              }
+              className={`rounded-lg border-2 px-3 py-1.5 font-bold text-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md ${
+                manga.status === "completed" ? "!text-green-400" : ""
+              }`}
+            >
+              {getMangaStatusLabel(manga.status)}
+            </Badge>
+          </div>
         </div>
         <div className="flex h-[180px] flex-col p-4">
           <h3 className="mb-2 line-clamp-2 font-medium text-[var(--foreground)] text-base tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)]">

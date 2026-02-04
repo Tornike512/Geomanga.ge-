@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Badge } from "@/components/badge";
 import { Card } from "@/components/card";
 import type { Manga } from "@/types/manga.types";
-import { TranslationStatus } from "@/types/manga.types";
+import { MangaStatus, TranslationStatus } from "@/types/manga.types";
 import { formatRating } from "@/utils/formatters";
 import { getCoverUrl } from "@/utils/image-urls";
 
@@ -20,6 +20,21 @@ const getTranslationStatusLabel = (status: TranslationStatus): string => {
       return "ითარგმნება";
     case TranslationStatus.COMPLETED:
       return "თარგმნილი";
+    default:
+      return "";
+  }
+};
+
+const getMangaStatusLabel = (status: MangaStatus): string => {
+  switch (status) {
+    case MangaStatus.ONGOING:
+      return "გრძელდება";
+    case MangaStatus.COMPLETED:
+      return "დასრულებული";
+    case MangaStatus.HIATUS:
+      return "პაუზაზე";
+    case MangaStatus.CANCELLED:
+      return "გაუქმებული";
     default:
       return "";
   }
@@ -40,6 +55,7 @@ export function MangaCard({ manga }: MangaCardProps) {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
+          {/* Translation Status Badge - Top Left */}
           {manga.translation_status && (
             <div className="absolute top-2 left-2">
               <Badge
@@ -48,12 +64,31 @@ export function MangaCard({ manga }: MangaCardProps) {
                     ? "success"
                     : "warning"
                 }
-                className="rounded-md text-xs"
+                className="rounded-lg border-2 px-3 py-1.5 font-bold text-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md"
               >
                 {getTranslationStatusLabel(manga.translation_status)}
               </Badge>
             </div>
           )}
+          {/* Manga Publication Status Badge - Top Right */}
+          <div className="absolute top-2 right-2">
+            <Badge
+              variant={
+                manga.status === MangaStatus.COMPLETED
+                  ? "default"
+                  : manga.status === MangaStatus.ONGOING
+                    ? "success"
+                    : manga.status === MangaStatus.HIATUS
+                      ? "warning"
+                      : "danger"
+              }
+              className={`rounded-lg border-2 px-3 py-1.5 font-bold text-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md ${
+                manga.status === MangaStatus.COMPLETED ? "!text-green-400" : ""
+              }`}
+            >
+              {getMangaStatusLabel(manga.status)}
+            </Badge>
+          </div>
         </div>
         <div className="flex h-[180px] flex-col p-4">
           <h3 className="mb-2 line-clamp-2 font-medium text-[var(--foreground)] text-base tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)]">
