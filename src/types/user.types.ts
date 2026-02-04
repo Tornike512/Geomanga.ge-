@@ -13,6 +13,9 @@ export interface User {
   readonly email: string;
   readonly gender: "male" | "female";
   readonly avatar_url: string | undefined;
+  readonly bio: string | null;
+  readonly banner_url: string | null;
+  readonly privacy_settings: PrivacySettings | null;
   readonly role: UserRole;
   readonly is_active: boolean;
   readonly created_at: string;
@@ -30,6 +33,9 @@ export interface UserUpdate {
   readonly username?: string;
   readonly email?: string;
   readonly avatar_url?: string;
+  readonly bio?: string;
+  readonly banner_url?: string;
+  readonly privacy_settings?: PrivacySettings;
 }
 
 export interface Token {
@@ -48,12 +54,44 @@ export interface PasswordUpdate {
   readonly new_password: string;
 }
 
+export type ProfileVisibility = "public" | "private";
+
+export interface PrivacySettings {
+  readonly show_comments: boolean;
+  readonly show_uploaded_manga: boolean;
+  readonly show_reading_progress: boolean;
+  readonly profile_visibility: ProfileVisibility;
+}
+
+export type MangaStatus = "ongoing" | "completed" | "hiatus" | "cancelled";
+
+export interface UploadedManga {
+  readonly id: number;
+  readonly title: string;
+  readonly cover_image: string | null;
+  readonly status: MangaStatus;
+}
+
+export interface RecentComment {
+  readonly id: number;
+  readonly content: string;
+  readonly created_at: string;
+  readonly manga_id: number;
+  readonly manga_title: string;
+}
+
 export interface PublicUserProfile {
   readonly id: number;
   readonly username: string;
   readonly avatar_url: string | null;
+  readonly bio: string | null;
+  readonly banner_url: string | null;
   readonly role: UserRole;
   readonly created_at: string;
   readonly comment_count: number;
   readonly rating_count: number;
+  readonly manga_count: number;
+  readonly privacy_settings: PrivacySettings | null;
+  readonly uploaded_manga: UploadedManga[];
+  readonly recent_comments: RecentComment[];
 }
