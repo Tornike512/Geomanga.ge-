@@ -1,7 +1,9 @@
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
-export const uploadBanner = async (file: File): Promise<{ url: string }> => {
+export const uploadBanner = async (
+  file: File,
+): Promise<{ url: string; filename: string }> => {
   // Validate file size (5MB max)
   const MAX_FILE_SIZE = 5 * 1024 * 1024;
   if (file.size > MAX_FILE_SIZE) {
@@ -32,5 +34,5 @@ export const uploadBanner = async (file: File): Promise<{ url: string }> => {
     );
   }
 
-  return response.json() as Promise<{ url: string }>;
+  return response.json() as Promise<{ url: string; filename: string }>;
 };
