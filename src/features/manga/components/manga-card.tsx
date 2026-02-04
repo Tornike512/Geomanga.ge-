@@ -95,7 +95,7 @@ export function MangaCard({ manga }: MangaCardProps) {
             {manga.title}
           </h3>
           {displayGenres.length > 0 && (
-            <div className="mb-3 flex max-h-[44px] flex-wrap gap-1 overflow-hidden">
+            <div className="mb-3 flex flex-wrap gap-1">
               {displayGenres.map((genre) => (
                 <Badge
                   key={genre.id}

@@ -77,7 +77,7 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
             {manga.title}
           </h3>
           {displayTags.length > 0 && (
-            <div className="mb-3 flex max-h-[44px] flex-wrap gap-1 overflow-hidden">
+            <div className="mb-3 flex flex-wrap gap-1">
               {displayTags.map((tag) => (
                 <Badge
                   key={tag.id}
