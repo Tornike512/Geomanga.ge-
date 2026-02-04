@@ -137,6 +137,30 @@ pre {
   color: var(--accent-foreground);
 }
 
+/* Custom Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--background);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #d97706;
+}
+
 /* Respect motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *,
