@@ -41,6 +41,7 @@ export interface Manga {
   readonly slug: string;
   readonly description: string | undefined;
   readonly cover_image_url: string | undefined;
+  readonly language: string;
   readonly status: MangaStatus;
   readonly translation_status: TranslationStatus;
   readonly content_type: ContentType;
@@ -108,6 +109,7 @@ export interface MangaUpdate {
 export interface MangaListParams {
   readonly page?: number;
   readonly limit?: number;
+  readonly language?: "georgian" | "english";
   readonly status?: MangaStatus;
   readonly translation_status?: TranslationStatus;
   readonly content_type?: ContentType;
@@ -117,4 +119,11 @@ export interface MangaListParams {
   readonly sort_by?: "created_at" | "updated_at" | "rating" | "views" | "title";
   readonly order_desc?: boolean;
   [key: string]: string | number | number[] | boolean | undefined;
+}
+
+export interface MangaSearchParams {
+  readonly q: string;
+  readonly language?: "georgian" | "english";
+  readonly page?: number;
+  readonly limit?: number;
 }

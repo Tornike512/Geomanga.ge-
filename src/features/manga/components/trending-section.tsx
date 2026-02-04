@@ -7,6 +7,7 @@ import { MangaGrid } from "./manga-grid";
 export function TrendingSection() {
   const { data, isLoading } = useMangaList({
     limit: 10,
+    language: "georgian",
     sort_by: "updated_at",
     order_desc: true,
   });

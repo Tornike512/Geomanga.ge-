@@ -152,6 +152,7 @@ export default function BrowsePage() {
 
   const { data: localData, isLoading: localLoading } = useMangaList({
     ...localFilters,
+    language: "georgian",
     genres: localFilters.genres.length > 0 ? localFilters.genres : undefined,
   });
 
