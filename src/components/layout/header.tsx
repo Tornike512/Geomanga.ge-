@@ -22,7 +22,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-[var(--border)] border-b bg-[var(--background)]/80 backdrop-blur-md">
+      <header className="sticky top-0 z-[60] w-full border-[var(--border)] border-b bg-[var(--background)]/80 backdrop-blur-md">
         <div className="container mx-auto max-w-[1920px] px-2 sm:px-6 md:px-8">
           <div className="flex h-16 items-center gap-2 sm:gap-6">
             <Link

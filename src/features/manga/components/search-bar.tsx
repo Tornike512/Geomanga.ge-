@@ -2,6 +2,7 @@
 
 import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { useDebounce } from "@/hooks";
@@ -202,18 +203,20 @@ export function SearchBar() {
         </div>
       )}
 
-      {/* Backdrop */}
-      {isOpen && (
-        <Button
-          variant="ghost"
-          className="fixed inset-0 z-40 h-auto cursor-default rounded-none p-0 hover:bg-transparent"
-          onClick={() => setIsOpen(false)}
-          onKeyDown={(e) => e.key === "Escape" && setIsOpen(false)}
-          aria-label="Close search"
-        >
-          <span className="sr-only">Close search</span>
-        </Button>
-      )}
+      {/* Backdrop - portaled to body to escape header's backdrop-blur containing block */}
+      {isOpen &&
+        createPortal(
+          <Button
+            variant="ghost"
+            className="fixed top-16 right-0 bottom-0 left-0 z-50 h-auto cursor-default rounded-none bg-black/50 p-0 hover:bg-black/50"
+            onClick={() => setIsOpen(false)}
+            onKeyDown={(e) => e.key === "Escape" && setIsOpen(false)}
+            aria-label="Close search"
+          >
+            <span className="sr-only">Close search</span>
+          </Button>,
+          document.body,
+        )}
     </div>
   );
 }
