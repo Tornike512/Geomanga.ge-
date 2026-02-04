@@ -204,9 +204,12 @@ export const getMangaDexLatest = async (): Promise<
 
 export const searchMangaDex = async (
   title: string,
+  limit = 6,
+  offset = 0,
 ): Promise<MangaDexTransformedManga[]> => {
   return getMangaDexManga({
-    limit: 20,
+    limit,
+    offset,
     title,
   });
 };

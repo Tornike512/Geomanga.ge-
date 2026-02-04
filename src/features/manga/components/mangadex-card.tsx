@@ -1,6 +1,6 @@
 "use client";
 
-import { Globe, User } from "lucide-react";
+import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/badge";
@@ -10,38 +10,6 @@ import type { MangaDexTransformedManga } from "@/types/mangadex.types";
 interface MangaDexCardProps {
   readonly manga: MangaDexTransformedManga;
 }
-
-const getStatusLabel = (status: string): string => {
-  switch (status) {
-    case "ongoing":
-      return "მიმდინარე";
-    case "completed":
-      return "დასრულებული";
-    case "hiatus":
-      return "შეჩერებული";
-    case "cancelled":
-      return "გაუქმებული";
-    default:
-      return status;
-  }
-};
-
-const getStatusVariant = (
-  status: string,
-): "default" | "success" | "warning" | "danger" => {
-  switch (status) {
-    case "ongoing":
-      return "success";
-    case "completed":
-      return "default";
-    case "hiatus":
-      return "warning";
-    case "cancelled":
-      return "danger";
-    default:
-      return "default";
-  }
-};
 
 export function MangaDexCard({ manga }: MangaDexCardProps) {
   const displayTags = manga.tags.slice(0, 3);
@@ -67,27 +35,13 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
               <span className="text-[var(--muted-foreground)]">No Cover</span>
             </div>
           )}
-          <div className="absolute top-2 right-2 flex flex-col gap-1">
-            <Badge
-              variant={getStatusVariant(manga.status)}
-              className="rounded-md"
-            >
-              {getStatusLabel(manga.status)}
-            </Badge>
-          </div>
-          <div className="absolute top-2 left-2">
-            <Badge variant="secondary" className="rounded-md text-xs">
-              <Globe className="mr-1 h-3 w-3" />
-              MangaDex
-            </Badge>
-          </div>
         </div>
-        <div className="flex flex-1 flex-col p-4">
+        <div className="flex h-[180px] flex-col p-4">
           <h3 className="mb-2 line-clamp-2 font-medium text-[var(--foreground)] text-base tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)]">
             {manga.title}
           </h3>
           {displayTags.length > 0 && (
-            <div className="mb-3 flex flex-wrap gap-1">
+            <div className="mb-3 flex max-h-[44px] flex-wrap gap-1 overflow-hidden">
               {displayTags.map((tag) => (
                 <Badge
                   key={tag.id}

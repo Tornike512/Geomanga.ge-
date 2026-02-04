@@ -26,23 +26,6 @@ const getTranslationStatusLabel = (status: TranslationStatus): string => {
 };
 
 export function MangaCard({ manga }: MangaCardProps) {
-  const getStatusVariant = (
-    status: string,
-  ): "default" | "success" | "warning" | "danger" => {
-    switch (status) {
-      case "ongoing":
-        return "success";
-      case "completed":
-        return "default";
-      case "hiatus":
-        return "warning";
-      case "cancelled":
-        return "danger";
-      default:
-        return "default";
-    }
-  };
-
   const displayGenres = manga.genres?.slice(0, 3) || [];
 
   return (
@@ -57,14 +40,6 @@ export function MangaCard({ manga }: MangaCardProps) {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
-          <div className="absolute top-2 right-2 flex flex-col gap-1">
-            <Badge
-              variant={getStatusVariant(manga.status)}
-              className="rounded-md"
-            >
-              {manga.status}
-            </Badge>
-          </div>
           {manga.translation_status && (
             <div className="absolute top-2 left-2">
               <Badge
@@ -80,12 +55,12 @@ export function MangaCard({ manga }: MangaCardProps) {
             </div>
           )}
         </div>
-        <div className="flex flex-1 flex-col p-4">
+        <div className="flex h-[180px] flex-col p-4">
           <h3 className="mb-2 line-clamp-2 font-medium text-[var(--foreground)] text-base tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)]">
             {manga.title}
           </h3>
           {displayGenres.length > 0 && (
-            <div className="mb-3 flex flex-wrap gap-1">
+            <div className="mb-3 flex max-h-[44px] flex-wrap gap-1 overflow-hidden">
               {displayGenres.map((genre) => (
                 <Badge
                   key={genre.id}

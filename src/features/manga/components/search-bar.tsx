@@ -1,11 +1,12 @@
 "use client";
 
 import { Search, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { useDebounce } from "@/hooks";
-import { useMangaDexSearch, useSearchManga } from "../hooks";
+import { useInfiniteMangaDexSearch } from "../hooks/use-infinite-mangadex-search";
+import { useInfiniteSearchManga } from "../hooks/use-infinite-search-manga";
 import { MangaCard } from "./manga-card";
 import { MangaDexCard } from "./mangadex-card";
 
@@ -16,18 +17,60 @@ export function SearchBar() {
   const [language, setLanguage] = useState<Language>("georgian");
   const [isOpen, setIsOpen] = useState(false);
   const debouncedQuery = useDebounce(query, 300);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  // Fetch from local API for Georgian manga
-  const { data: georgianResults, isLoading: georgianLoading } = useSearchManga(
-    { q: debouncedQuery, language: "georgian" },
-    debouncedQuery.length > 2 && language === "georgian",
+  // Fetch from local API for Georgian manga with infinite scroll
+  const {
+    data: georgianData,
+    isLoading: georgianLoading,
+    isFetchingNextPage: georgianFetchingMore,
+    hasNextPage: georgianHasMore,
+    fetchNextPage: georgianFetchMore,
+  } = useInfiniteSearchManga(
+    { q: debouncedQuery, language: "georgian", limit: 6 },
+    language === "georgian",
   );
 
-  // Fetch from MangaDex for English manga
-  const { data: englishResults, isLoading: englishLoading } =
-    useMangaDexSearch(debouncedQuery);
+  // Fetch from MangaDex for English manga with infinite scroll
+  const {
+    data: englishData,
+    isLoading: englishLoading,
+    isFetchingNextPage: englishFetchingMore,
+    hasNextPage: englishHasMore,
+    fetchNextPage: englishFetchMore,
+  } = useInfiniteMangaDexSearch(debouncedQuery, language === "english");
+
+  // Flatten all pages into a single array
+  const georgianResults =
+    georgianData?.pages.flatMap((page) => page.items) ?? [];
+  const englishResults = englishData?.pages.flatMap((page) => page.items) ?? [];
 
   const isLoading = language === "georgian" ? georgianLoading : englishLoading;
+  const isFetchingMore =
+    language === "georgian" ? georgianFetchingMore : englishFetchingMore;
+  const hasMore = language === "georgian" ? georgianHasMore : englishHasMore;
+  const fetchMore =
+    language === "georgian" ? georgianFetchMore : englishFetchMore;
+
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    if (!loadMoreRef.current || !isOpen) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isFetchingMore) {
+          fetchMore();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [hasMore, isFetchingMore, fetchMore, isOpen]);
+
+  const results = language === "georgian" ? georgianResults : englishResults;
 
   return (
     <div className="relative mx-auto w-full max-w-2xl">
@@ -84,52 +127,75 @@ export function SearchBar() {
           </div>
 
           {/* Results Content */}
-          <div className="max-h-[28rem] overflow-y-auto">
-            {query.length < 3 ? (
-              <div className="p-6 text-center text-[var(--muted-foreground)] text-sm">
-                მინიმუმ 3 სიმბოლო აკრიფეთ ძიებისთვის
-              </div>
-            ) : isLoading ? (
-              <div className="p-6 text-center text-[var(--muted-foreground)] text-sm">
-                ძიება...
-              </div>
-            ) : language === "georgian" ? (
-              georgianResults && georgianResults.length > 0 ? (
-                <div className="grid grid-cols-2 gap-3 p-3 sm:grid-cols-3">
-                  {georgianResults.map((manga) => (
-                    <Button
-                      key={manga.id}
-                      variant="ghost"
-                      onClick={() => setIsOpen(false)}
-                      onKeyDown={(e) => e.key === "Enter" && setIsOpen(false)}
-                      className="h-auto w-full p-0 hover:bg-transparent"
-                    >
-                      <MangaCard manga={manga} />
-                    </Button>
-                  ))}
+          <div className="max-h-[32rem] overflow-y-auto">
+            {isLoading ? (
+              <div className="flex items-center justify-center p-12">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
+                  <p className="text-[var(--muted-foreground)] text-sm">
+                    ძიება...
+                  </p>
                 </div>
-              ) : (
-                <div className="p-6 text-center text-[var(--muted-foreground)] text-sm">
-                  შედეგი არ მოიძებნა
-                </div>
-              )
-            ) : englishResults && englishResults.length > 0 ? (
-              <div className="grid grid-cols-2 gap-3 p-3 sm:grid-cols-3">
-                {englishResults.map((manga) => (
-                  <Button
-                    key={manga.id}
-                    variant="ghost"
-                    onClick={() => setIsOpen(false)}
-                    onKeyDown={(e) => e.key === "Enter" && setIsOpen(false)}
-                    className="h-auto w-full p-0 hover:bg-transparent"
-                  >
-                    <MangaDexCard manga={manga} />
-                  </Button>
-                ))}
               </div>
+            ) : results.length > 0 ? (
+              <>
+                <div className="grid auto-rows-fr grid-cols-2 gap-3 p-3 sm:grid-cols-3">
+                  {language === "georgian"
+                    ? georgianResults.map((manga) => (
+                        <Button
+                          key={manga.id}
+                          variant="ghost"
+                          onClick={() => setIsOpen(false)}
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && setIsOpen(false)
+                          }
+                          className="h-auto w-full p-0 hover:bg-transparent"
+                        >
+                          <MangaCard manga={manga} />
+                        </Button>
+                      ))
+                    : englishResults.map((manga) => (
+                        <Button
+                          key={manga.id}
+                          variant="ghost"
+                          onClick={() => setIsOpen(false)}
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && setIsOpen(false)
+                          }
+                          className="h-auto w-full p-0 hover:bg-transparent"
+                        >
+                          <MangaDexCard manga={manga} />
+                        </Button>
+                      ))}
+                </div>
+
+                {/* Load More Trigger */}
+                <div ref={loadMoreRef} className="p-4">
+                  {isFetchingMore ? (
+                    <div className="flex items-center justify-center">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
+                        <p className="text-[var(--muted-foreground)] text-xs">
+                          მეტის ჩატვირთვა...
+                        </p>
+                      </div>
+                    </div>
+                  ) : hasMore ? (
+                    <div className="text-center text-[var(--muted-foreground)] text-xs">
+                      გადაადგილდით ქვემოთ მეტის სანახავად
+                    </div>
+                  ) : (
+                    <div className="text-center text-[var(--muted-foreground)] text-xs">
+                      ყველა შედეგი ნანახია
+                    </div>
+                  )}
+                </div>
+              </>
             ) : (
-              <div className="p-6 text-center text-[var(--muted-foreground)] text-sm">
-                შედეგი არ მოიძებნა
+              <div className="flex items-center justify-center p-12">
+                <p className="text-[var(--muted-foreground)] text-sm">
+                  შედეგი არ მოიძებნა
+                </p>
               </div>
             )}
           </div>
