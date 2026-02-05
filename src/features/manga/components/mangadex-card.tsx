@@ -78,11 +78,11 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
           </h3>
           {displayTags.length > 0 && (
             <div className="mb-3 flex flex-wrap gap-1">
-              {displayTags.map((tag) => (
+              {displayTags.map((tag, index) => (
                 <Badge
                   key={tag.id}
                   variant="secondary"
-                  className="px-1.5 py-0.5 text-[10px]"
+                  className={`px-1.5 py-0.5 text-[10px] ${index >= 2 ? "hidden md:inline-flex" : ""}`}
                 >
                   {tag.name}
                 </Badge>

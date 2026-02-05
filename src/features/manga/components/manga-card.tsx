@@ -96,11 +96,11 @@ export function MangaCard({ manga }: MangaCardProps) {
           </h3>
           {displayGenres.length > 0 && (
             <div className="mb-3 flex flex-wrap gap-1">
-              {displayGenres.map((genre) => (
+              {displayGenres.map((genre, index) => (
                 <Badge
                   key={genre.id}
                   variant="secondary"
-                  className="px-1.5 py-0.5 text-[10px]"
+                  className={`px-1.5 py-0.5 text-[10px] ${index >= 2 ? "hidden md:inline-flex" : ""}`}
                 >
                   {genre.name_ka || genre.name}
                 </Badge>
