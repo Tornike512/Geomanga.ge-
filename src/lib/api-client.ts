@@ -4,6 +4,9 @@ import { ApiError, type ApiErrorResponse } from "@/types/api.types";
 import { deleteCookie, getCookie, setCookie } from "@/utils/cookies";
 import { logger } from "@/utils/logger";
 
+// Re-export ApiError for convenience
+export { ApiError };
+
 type ParamValue =
   | string
   | number

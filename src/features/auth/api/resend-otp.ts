@@ -8,6 +8,6 @@ export interface ResendOtpResponse {
 
 export async function resendOtp(email: string): Promise<ResendOtpResponse> {
   return api.post<ResendOtpResponse>(
-    `/api/v1/auth/resend-otp?email=${encodeURIComponent(email)}`,
+    `/auth/resend-otp?email=${encodeURIComponent(email)}`,
   );
 }

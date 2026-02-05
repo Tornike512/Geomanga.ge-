@@ -7,5 +7,5 @@ export interface RegisterVerifyData {
 }
 
 export async function registerVerify(data: RegisterVerifyData): Promise<User> {
-  return api.post<User>("/api/v1/auth/register-verify", data);
+  return api.post<User>("/auth/register-verify", data);
 }
