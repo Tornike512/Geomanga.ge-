@@ -3,4 +3,7 @@ export { googleAuth } from "./google-auth";
 export { login } from "./login";
 export { logout } from "./logout";
 export { register } from "./register";
+export { registerRequest } from "./register-request";
+export { registerVerify } from "./register-verify";
+export { resendOtp } from "./resend-otp";
 export { updatePassword } from "./update-password";
