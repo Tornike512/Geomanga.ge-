@@ -23,7 +23,7 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-[60] w-full overflow-x-hidden border-[var(--border)] border-b bg-[var(--background)]/80 backdrop-blur-md">
-        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 sm:px-6 md:px-8">
+        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 sm:px-4 md:px-8">
           <div className="flex h-16 w-full items-center gap-2 overflow-x-hidden sm:gap-6">
             <Link
               href="/"

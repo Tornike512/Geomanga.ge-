@@ -117,7 +117,7 @@ export default function MangaDetailPage() {
     <div className="relative w-full overflow-x-hidden">
       {/* Hero Section with Cover and Title */}
       <section className="w-full overflow-x-hidden border-[var(--border)] border-b py-8 md:py-8">
-        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-6 md:px-8">
+        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 md:px-8">
           <div className="grid gap-8 md:grid-cols-3">
             {/* Cover Image */}
             <div className="relative">
@@ -403,7 +403,7 @@ export default function MangaDetailPage() {
 
       {/* Chapters Section */}
       <section className="w-full overflow-x-hidden py-8 md:py-8">
-        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-6 md:px-8">
+        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 md:px-8">
           {/* Section Title */}
           <div className="mb-8">
             <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
@@ -548,7 +548,7 @@ export default function MangaDetailPage() {
       {/* Comments Section - only for local manga */}
       {!isMangaDex && localManga && (
         <section className="w-full overflow-x-hidden border-[var(--border)] border-t py-8 md:py-8">
-          <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-6 md:px-8">
+          <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 md:px-8">
             <MangaComments mangaId={localManga.id} />
           </div>
         </section>
