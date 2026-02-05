@@ -9,6 +9,12 @@ const nextConfig = {
         pathname: '/**',
       },
       {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '8010',
+        pathname: '/**',
+      },
+      {
         protocol: 'https',
         hostname: 'uploads.mangadex.org',
         pathname: '/covers/**',
