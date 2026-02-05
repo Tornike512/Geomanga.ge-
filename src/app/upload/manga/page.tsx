@@ -17,7 +17,6 @@ import { useCreateManga } from "@/features/manga/hooks/use-create-manga";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
 import type { MangaStatus } from "@/types/manga.types";
-import { UserRole } from "@/types/user.types";
 import {
   createImagePreview,
   formatFileSize,
@@ -420,13 +419,13 @@ export default function UploadMangaPage() {
     }
   };
 
-  // Check if user has permission
-  if (user && user.role !== UserRole.UPLOADER && user.role !== UserRole.ADMIN) {
+  // Check if user is logged in
+  if (!user) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
-        <h1 className="mb-4 font-bold text-2xl">წვდომა აკრძალულია</h1>
+        <h1 className="mb-4 font-bold text-2xl">შესვლა საჭიროა</h1>
         <p className="text-[var(--muted-foreground)]">
-          ამ გვერდზე წვდომისთვის საჭიროა ატვირთვის უფლებები
+          მანგის ასატვირთად გთხოვთ შეხვიდეთ სისტემაში
         </p>
       </div>
     );

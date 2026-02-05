@@ -28,10 +28,12 @@ export function setCookie(name: string, value: string, days = 7): void {
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
 
   // Set cookie with security flags
-  // - Secure: Only sent over HTTPS (enforced in production)
-  // - SameSite=Strict: Prevents CSRF attacks
+  // - Secure: Only sent over HTTPS (only in production, not on HTTP localhost)
+  // - SameSite=Lax: Allows cookies on same-site navigations and top-level GET requests
   // - HttpOnly: Cannot be set via JavaScript (server-only)
-  const cookieString = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict;Secure`;
+  const isSecure = window.location.protocol === "https:";
+  const secureFlag = isSecure ? ";Secure" : "";
+  const cookieString = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax${secureFlag}`;
   // biome-ignore lint/suspicious/noDocumentCookie: Client-side cookie management is required here
   document.cookie = cookieString;
 }

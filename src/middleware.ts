@@ -24,7 +24,7 @@ const protectedPaths = [
 
 // Paths that require specific roles (using UserRole enum values)
 const roleProtectedPaths: Record<string, string[]> = {
-  "/upload": ["UPLOADER", "MODERATOR", "ADMIN"],
+  "/upload": ["USER", "UPLOADER", "MODERATOR", "ADMIN"],
   "/admin": ["ADMIN"],
   "/moderate": ["MODERATOR", "ADMIN"],
 };
@@ -34,6 +34,17 @@ export function middleware(request: NextRequest) {
 
   // Get token from cookies
   const token = request.cookies.get("access_token")?.value;
+
+  // Check if this is a prefetch/background request
+  const isPrefetch =
+    request.headers.get("next-router-prefetch") === "1" ||
+    request.headers.get("purpose") === "prefetch" ||
+    (request.headers.get("rsc") === "1" &&
+      request.headers.get("next-url") !== null);
+
+  const isBackgroundRequest =
+    request.headers.get("next-url") !== null &&
+    request.headers.get("accept") === "*/*";
 
   // Check if the path is public
   const isPublicPath = publicPaths.some((path) => pathname.startsWith(path));
@@ -50,6 +61,9 @@ export function middleware(request: NextRequest) {
 
   // Redirect to login if accessing protected route without token
   if ((isProtectedPath || isRoleProtectedPath) && !token) {
+    if (isPrefetch || isBackgroundRequest) {
+      return new NextResponse(null, { status: 204 });
+    }
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
@@ -58,6 +72,9 @@ export function middleware(request: NextRequest) {
   // For routes that don't match public or explicitly protected paths,
   // also require authentication (default to protected)
   if (!isPublicPath && !token) {
+    if (isPrefetch || isBackgroundRequest) {
+      return new NextResponse(null, { status: 204 });
+    }
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
@@ -67,6 +84,9 @@ export function middleware(request: NextRequest) {
   for (const [path, roles] of Object.entries(roleProtectedPaths)) {
     if (pathname.startsWith(path)) {
       if (!token) {
+        if (isPrefetch || isBackgroundRequest) {
+          return new NextResponse(null, { status: 204 });
+        }
         const loginUrl = new URL("/login", request.url);
         loginUrl.searchParams.set("redirect", pathname);
         return NextResponse.redirect(loginUrl);
@@ -75,7 +95,9 @@ export function middleware(request: NextRequest) {
       // Check if user has required role
       const hasRole = hasRequiredRole(token, roles);
       if (!hasRole) {
-        // Redirect to home page with error message if user doesn't have required role
+        if (isPrefetch || isBackgroundRequest) {
+          return new NextResponse(null, { status: 204 });
+        }
         const unauthorizedUrl = new URL("/", request.url);
         unauthorizedUrl.searchParams.set("error", "unauthorized");
         return NextResponse.redirect(unauthorizedUrl);

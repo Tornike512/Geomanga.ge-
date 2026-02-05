@@ -8,7 +8,6 @@ import { Input } from "@/components/input";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useCreateChapter } from "@/features/upload/hooks/use-create-chapter";
-import { UserRole } from "@/types/user.types";
 import { formatFileSize, validatePageImages } from "@/utils/file-validation";
 
 function ChapterUploadContent() {
@@ -28,13 +27,13 @@ function ChapterUploadContent() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Check if user has permission
-  if (user && user.role !== UserRole.UPLOADER && user.role !== UserRole.ADMIN) {
+  // Check if user is logged in
+  if (!user) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
-        <h1 className="mb-4 font-bold text-2xl">წვდომა აკრძალულია</h1>
+        <h1 className="mb-4 font-bold text-2xl">შესვლა საჭიროა</h1>
         <p className="text-[var(--muted-foreground)]">
-          ამ გვერდზე წვდომისთვის საჭიროა ატვირთვის უფლებები
+          თავის ასატვირთად გთხოვთ შეხვიდეთ სისტემაში
         </p>
       </div>
     );

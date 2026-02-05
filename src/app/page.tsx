@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Button } from "@/components/button";
+import { UploadLink } from "@/components/upload-link";
 import {
   MangaDexSection,
   RecentUpdatesSection,
@@ -15,11 +14,7 @@ export default async function Home() {
           აღმოაჩინეთ ათასობით მანგის სერიები. წაიკითხეთ, შეაფასეთ და განიხილეთ
           თქვენი რჩეულები.
         </p>
-        <Link href="/upload/manga">
-          <Button size="lg" className="whitespace-nowrap">
-            მანგის ატვირთვა
-          </Button>
-        </Link>
+        <UploadLink />
       </section>
 
       <TrendingSection />
