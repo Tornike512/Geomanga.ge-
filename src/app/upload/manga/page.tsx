@@ -433,7 +433,7 @@ export default function UploadMangaPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-12 md:px-8 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-6 py-12 md:px-8 lg:px-12">
       <div className="mb-16">
         <h1 className="mb-6 font-bold text-[clamp(2.5rem,6vw,4.5rem)] uppercase leading-none tracking-tighter">
           მანგის ატვირთვა
@@ -507,7 +507,7 @@ export default function UploadMangaPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full cursor-pointer"
+                  className="w-full cursor-pointer whitespace-nowrap"
                   onClick={() => {
                     const input = document.getElementById(
                       "cover-upload-input",
@@ -890,7 +890,7 @@ export default function UploadMangaPage() {
                       variant="outline"
                       onClick={handleAddChapter}
                       disabled={isUploading}
-                      className="w-full border-[var(--border)] hover:bg-[var(--muted)]"
+                      className="w-full whitespace-nowrap border-[var(--border)] hover:bg-[var(--muted)]"
                     >
                       <svg
                         className="mr-2 h-4 w-4"
@@ -936,7 +936,7 @@ export default function UploadMangaPage() {
                 type="submit"
                 disabled={isUploading}
                 loading={isUploading}
-                className="flex-1 bg-[var(--accent)] text-[var(--accent-foreground)] hover:bg-[var(--accent)]/90"
+                className="flex-1 whitespace-nowrap bg-[var(--accent)] text-[var(--accent-foreground)] hover:bg-[var(--accent)]/90"
               >
                 {isUploading ? "იტვირთება..." : "მანგის შექმნა"}
               </Button>

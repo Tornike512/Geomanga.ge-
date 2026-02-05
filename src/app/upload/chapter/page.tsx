@@ -120,7 +120,7 @@ function ChapterUploadContent() {
   const totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-12 md:px-8 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-6 py-12 md:px-8 lg:px-12">
       <div className="mb-16">
         <h1 className="mb-6 font-bold text-[clamp(2.5rem,6vw,4.5rem)] uppercase leading-none tracking-tighter">
           თავის ატვირთვა
@@ -311,7 +311,7 @@ function ChapterUploadContent() {
                 type="submit"
                 disabled={isUploading || selectedFiles.length === 0}
                 loading={isUploading}
-                className="flex-1 bg-[var(--accent)] text-[var(--accent-foreground)] hover:bg-[var(--accent)]/90"
+                className="flex-1 whitespace-nowrap bg-[var(--accent)] text-[var(--accent-foreground)] hover:bg-[var(--accent)]/90"
               >
                 {isUploading ? "იტვირთება..." : "თავის ატვირთვა"}
               </Button>

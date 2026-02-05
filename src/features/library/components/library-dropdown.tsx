@@ -72,7 +72,7 @@ export const LibraryDropdown = ({
         disabled={isLoading}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        className="gap-2"
+        className="gap-2 whitespace-nowrap"
       >
         {currentCategory === "favorites" && (
           <Heart className="h-4 w-4 fill-current" />

@@ -250,7 +250,7 @@ export default function BrowsePage() {
     source === "local" ? localActiveFilterCount : mangadexActiveFilterCount;
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-12 md:px-8 md:py-12 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-6 py-12 md:px-8 md:py-12 lg:px-12">
       {/* Page Title */}
       <h1 className="mb-8 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
         მანგის ნავიგაცია
@@ -262,7 +262,7 @@ export default function BrowsePage() {
           variant={source === "local" ? "default" : "outline"}
           size="sm"
           onClick={() => setSource("local")}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 whitespace-nowrap"
         >
           <Server className="h-4 w-4" />
           ქართულად თარგმნილი
@@ -280,7 +280,7 @@ export default function BrowsePage() {
 
       {/* Filters - Local */}
       {source === "local" && (
-        <div className="mb-8 flex flex-wrap gap-3">
+        <div className="mb-8 flex w-full flex-wrap gap-3 overflow-x-hidden">
           <Dropdown
             options={STATUS_OPTIONS}
             value={localFilters.status || ""}
@@ -343,7 +343,7 @@ export default function BrowsePage() {
 
       {/* Filters - MangaDex */}
       {source === "mangadex" && (
-        <div className="mb-8 space-y-4">
+        <div className="mb-8 w-full space-y-4 overflow-x-hidden">
           {/* Search */}
           <div className="flex gap-2">
             <Input
@@ -358,7 +358,7 @@ export default function BrowsePage() {
           </div>
 
           {/* Filter row */}
-          <div className="flex flex-wrap gap-3">
+          <div className="flex w-full flex-wrap gap-3">
             <Dropdown
               options={MANGADEX_STATUS_OPTIONS}
               value={mangadexFilters.status || ""}

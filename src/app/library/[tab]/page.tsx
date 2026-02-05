@@ -91,7 +91,7 @@ export default function LibraryTabPage() {
     activeTab === "history" ? historyData : isLibraryTab ? libraryData : null;
 
   return (
-    <div className="container mx-auto box-border max-w-[1920px] overflow-hidden px-6 py-12 md:px-8 md:py-12 lg:px-12">
+    <div className="container mx-auto box-border max-w-[1920px] overflow-x-hidden px-6 py-12 md:px-8 md:py-12 lg:px-12">
       {/* Header */}
       <div className="mb-12">
         <h1 className="mb-4 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
@@ -133,7 +133,10 @@ export default function LibraryTabPage() {
           <p className="mb-4 text-red-600">
             ბიბლიოთეკის ჩატვირთვა ვერ მოხერხდა
           </p>
-          <Button onClick={() => window.location.reload()}>
+          <Button
+            onClick={() => window.location.reload()}
+            className="whitespace-nowrap"
+          >
             სცადეთ ხელახლა
           </Button>
         </div>
@@ -179,7 +182,7 @@ export default function LibraryTabPage() {
             </p>
           </div>
           <Link href="/browse">
-            <Button>მანგის ნავიგაცია</Button>
+            <Button className="whitespace-nowrap">მანგის ნავიგაცია</Button>
           </Link>
         </div>
       ) : (

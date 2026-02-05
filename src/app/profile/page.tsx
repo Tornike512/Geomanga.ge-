@@ -129,7 +129,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-12 md:px-8 md:py-12 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-6 py-12 md:px-8 md:py-12 lg:px-12">
       {/* Banner Section */}
       <div className="relative mb-8 h-64 w-full overflow-hidden rounded-lg bg-gradient-to-r from-[var(--accent)]/20 to-[var(--accent)]/10">
         {user.banner_url && (
@@ -324,7 +324,11 @@ export default function ProfilePage() {
             <div className="mb-6 flex items-center justify-between">
               <h2 className="font-semibold text-lg">პროფილის პარამეტრები</h2>
               {!isEditing && (
-                <Button onClick={() => setIsEditing(true)} variant="outline">
+                <Button
+                  onClick={() => setIsEditing(true)}
+                  variant="outline"
+                  className="whitespace-nowrap"
+                >
                   პროფილის რედაქტირება
                 </Button>
               )}
@@ -403,6 +407,7 @@ export default function ProfilePage() {
                     type="submit"
                     disabled={updateProfile.isPending}
                     loading={updateProfile.isPending}
+                    className="whitespace-nowrap"
                   >
                     ცვლილებების შენახვა
                   </Button>
@@ -433,6 +438,7 @@ export default function ProfilePage() {
                 <Button
                   onClick={() => setIsEditingPrivacy(true)}
                   variant="outline"
+                  className="whitespace-nowrap"
                 >
                   პარამეტრების რედაქტირება
                 </Button>
@@ -552,6 +558,7 @@ export default function ProfilePage() {
                     onClick={handlePrivacyUpdate}
                     disabled={updateProfile.isPending}
                     loading={updateProfile.isPending}
+                    className="whitespace-nowrap"
                   >
                     ცვლილებების შენახვა
                   </Button>
@@ -582,7 +589,9 @@ export default function ProfilePage() {
             {/* Change Password Section */}
             <div className="border-[var(--border)] border-b pb-8">
               <h3 className="mb-4 font-medium text-base">უსაფრთხოება</h3>
-              <Button variant="outline">პაროლის შეცვლა</Button>
+              <Button variant="outline" className="whitespace-nowrap">
+                პაროლის შეცვლა
+              </Button>
             </div>
 
             {/* Danger Zone */}
@@ -595,7 +604,9 @@ export default function ProfilePage() {
                   შეუქცევადი მოქმედებები, რომლებიც გავლენას ახდენენ თქვენს
                   ანგარიშზე
                 </p>
-                <Button variant="destructive">ანგარიშის წაშლა</Button>
+                <Button variant="destructive" className="whitespace-nowrap">
+                  ანგარიშის წაშლა
+                </Button>
               </div>
             )}
           </Card>

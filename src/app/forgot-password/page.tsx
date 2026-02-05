@@ -168,7 +168,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-12 md:px-8 md:py-12 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-6 py-12 md:px-8 md:py-12 lg:px-12">
       <div className="mx-auto max-w-md">
         {/* Title */}
         <h1 className="mb-8 text-center font-semibold text-3xl tracking-tight sm:text-4xl">
@@ -267,7 +267,7 @@ export default function ForgotPasswordPage() {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="w-full whitespace-nowrap"
                   disabled={forgotPasswordRequest.isPending}
                   loading={forgotPasswordRequest.isPending}
                 >
@@ -367,7 +367,7 @@ export default function ForgotPasswordPage() {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="w-full whitespace-nowrap"
                   disabled={forgotPasswordVerify.isPending}
                   loading={forgotPasswordVerify.isPending}
                 >
@@ -383,7 +383,7 @@ export default function ForgotPasswordPage() {
                       type="button"
                       onClick={handleResendOtp}
                       disabled={forgotPasswordResend.isPending}
-                      className="text-[var(--accent)] text-sm transition-colors duration-200 hover:text-[var(--foreground)] disabled:opacity-50"
+                      className="whitespace-nowrap text-[var(--accent)] text-sm transition-colors duration-200 hover:text-[var(--foreground)] disabled:opacity-50"
                     >
                       {forgotPasswordResend.isPending
                         ? "გაგზავნა..."

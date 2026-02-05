@@ -114,10 +114,10 @@ export default function MangaDetailPage() {
     : localManga?.genres || [];
 
   return (
-    <div className="relative">
+    <div className="relative w-full overflow-x-hidden">
       {/* Hero Section with Cover and Title */}
-      <section className="border-[var(--border)] border-b py-8 md:py-8">
-        <div className="container mx-auto max-w-[1920px] px-6 md:px-8">
+      <section className="w-full overflow-x-hidden border-[var(--border)] border-b py-8 md:py-8">
+        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-6 md:px-8">
           <div className="grid gap-8 md:grid-cols-3">
             {/* Cover Image */}
             <div className="relative">
@@ -203,7 +203,10 @@ export default function MangaDetailPage() {
                         <Link
                           href={`/upload/chapter?mangaId=${localManga?.id}`}
                         >
-                          <Button variant="outline">
+                          <Button
+                            variant="outline"
+                            className="whitespace-nowrap"
+                          >
                             <svg
                               className="mr-2 h-4 w-4"
                               fill="none"
@@ -231,7 +234,10 @@ export default function MangaDetailPage() {
                         <Link
                           href={`/read/${localManga.reading_progress.chapter_id}`}
                         >
-                          <Button variant="default">
+                          <Button
+                            variant="default"
+                            className="whitespace-nowrap"
+                          >
                             <BookOpen className="mr-2 h-4 w-4" />
                             თავი {localManga.reading_progress.chapter_number}{" "}
                             გაგრძელება
@@ -239,7 +245,10 @@ export default function MangaDetailPage() {
                         </Link>
                       ) : (
                         <Link href={`/read/${localChapters[0].id}`}>
-                          <Button variant="default">
+                          <Button
+                            variant="default"
+                            className="whitespace-nowrap"
+                          >
                             <Play className="mr-2 h-4 w-4" />
                             კითხვის დაწყება
                           </Button>
@@ -253,6 +262,7 @@ export default function MangaDetailPage() {
                         variant="destructive"
                         onClick={handleDeleteManga}
                         loading={deleteManga.isPending}
+                        className="whitespace-nowrap"
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
                         მანგის წაშლა
@@ -392,8 +402,8 @@ export default function MangaDetailPage() {
       )}
 
       {/* Chapters Section */}
-      <section className="py-8 md:py-8">
-        <div className="container mx-auto max-w-[1920px] px-6 md:px-8">
+      <section className="w-full overflow-x-hidden py-8 md:py-8">
+        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-6 md:px-8">
           {/* Section Title */}
           <div className="mb-8">
             <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
@@ -537,8 +547,8 @@ export default function MangaDetailPage() {
 
       {/* Comments Section - only for local manga */}
       {!isMangaDex && localManga && (
-        <section className="border-[var(--border)] border-t py-8 md:py-8">
-          <div className="container mx-auto max-w-[1920px] px-6 md:px-8">
+        <section className="w-full overflow-x-hidden border-[var(--border)] border-t py-8 md:py-8">
+          <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-6 md:px-8">
             <MangaComments mangaId={localManga.id} />
           </div>
         </section>
