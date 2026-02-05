@@ -12,7 +12,7 @@ export const registerRequestSchema = z
       ),
     email: z.string().email("გთხოვთ, შეიყვანოთ სწორი ელ-ფოსტა"),
     gender: z.enum(["male", "female"], {
-      errorMap: () => ({ message: "გთხოვთ, აირჩიოთ სქესი" }),
+      message: "გთხოვთ, აირჩიოთ სქესი",
     }),
     password: z
       .string()

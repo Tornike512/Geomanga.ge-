@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/button";
 import { Card, CardContent } from "@/components/card";
 import { GoogleSignInButton } from "@/components/google-sign-in-button";
 import { Input } from "@/components/input";
 import { useLogin } from "@/features/auth";
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const login = useLogin();
@@ -152,5 +152,21 @@ export default function LoginPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container mx-auto max-w-[1920px] px-4 py-8">
+          <div className="mx-auto max-w-md">
+            <div className="h-96 animate-pulse rounded-lg bg-[var(--muted)]/20" />
+          </div>
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   );
 }
