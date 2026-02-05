@@ -1,3 +1,11 @@
+export {
+  type ForgotPasswordRequestFormData,
+  forgotPasswordRequestSchema,
+} from "./forgot-password-request.schema";
+export {
+  type ForgotPasswordVerifyFormData,
+  forgotPasswordVerifySchema,
+} from "./forgot-password-verify.schema";
 export { type LoginFormData, loginSchema } from "./login.schema";
 export {
   type OtpVerifyFormData,

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/button";
 import { Card, CardContent } from "@/components/card";
 import { GoogleSignInButton } from "@/components/google-sign-in-button";
@@ -9,11 +10,28 @@ import { Input } from "@/components/input";
 import { useLogin } from "@/features/auth";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const login = useLogin();
   const [formData, setFormData] = useState({
     login: "",
     password: "",
   });
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  // Check for password reset success
+  useEffect(() => {
+    if (searchParams.get("reset") === "success") {
+      setShowSuccessMessage(true);
+      // Clear the query parameter from URL
+      router.replace("/login");
+      // Hide message after 5 seconds
+      const timeout = setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [searchParams, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +65,15 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Success Message */}
+            {showSuccessMessage && (
+              <div className="mb-6 rounded-lg border border-green-500/30 bg-green-500/10 p-4">
+                <p className="text-green-400 text-sm">
+                  პაროლი წარმატებით შეიცვალა! შეგიძლიათ შეხვიდეთ ახალი პაროლით.
+                </p>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label
@@ -68,12 +95,20 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label
-                  htmlFor="password"
-                  className="mb-2 block text-[var(--muted-foreground)] text-sm"
-                >
-                  პაროლი
-                </label>
+                <div className="mb-2 flex items-center justify-between">
+                  <label
+                    htmlFor="password"
+                    className="text-[var(--muted-foreground)] text-sm"
+                  >
+                    პაროლი
+                  </label>
+                  <Link
+                    href="/forgot-password"
+                    className="text-[var(--accent)] text-sm transition-colors duration-200 hover:text-[var(--foreground)]"
+                  >
+                    დაგავიწყდათ პაროლი?
+                  </Link>
+                </div>
                 <Input
                   id="password"
                   type="password"

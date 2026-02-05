@@ -1,3 +1,6 @@
+export { forgotPasswordRequest } from "./forgot-password-request";
+export { forgotPasswordResend } from "./forgot-password-resend";
+export { forgotPasswordVerify } from "./forgot-password-verify";
 export { getCurrentUser } from "./get-current-user";
 export { googleAuth } from "./google-auth";
 export { login } from "./login";

@@ -1,4 +1,7 @@
 export { useCurrentUser } from "./use-current-user";
+export { useForgotPasswordRequest } from "./use-forgot-password-request";
+export { useForgotPasswordResend } from "./use-forgot-password-resend";
+export { useForgotPasswordVerify } from "./use-forgot-password-verify";
 export { useGoogleAuth } from "./use-google-auth";
 export { useLogin } from "./use-login";
 export { useLogout } from "./use-logout";
