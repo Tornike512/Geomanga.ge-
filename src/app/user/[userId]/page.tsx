@@ -100,7 +100,7 @@ export default function PublicProfilePage() {
             </div>
 
             {/* Username */}
-            <h1 className="mb-2 font-semibold text-2xl tracking-tight">
+            <h1 className="mb-2 truncate font-semibold text-2xl tracking-tight">
               {profile.username}
             </h1>
 
