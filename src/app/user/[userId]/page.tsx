@@ -180,7 +180,7 @@ export default function PublicProfilePage() {
                                 ? "secondary"
                                 : "warning"
                           }
-                          className="max-w-full truncate bg-black/60 px-2 py-0.5 text-[10px] backdrop-blur-md"
+                          className="!text-green-400 max-w-full truncate rounded-lg border-2 border-[var(--border)] bg-[var(--muted)]/60 px-1.5 py-0.5 font-bold text-[10px] text-[var(--muted-foreground)] shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-sm"
                         >
                           {manga.status === "completed"
                             ? "დასრულებული"

@@ -64,9 +64,7 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
                       ? "warning"
                       : "danger"
               }
-              className={`rounded-lg border-2 px-1.5 py-0.5 font-bold text-[10px] shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-sm ${
-                manga.status === "completed" ? "!text-green-400" : ""
-              }`}
+              className="!text-green-400 rounded-lg border-2 border-[var(--border)] bg-[var(--muted)]/60 px-1.5 py-0.5 font-bold text-[10px] text-[var(--muted-foreground)] shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-sm"
             >
               {getMangaStatusLabel(manga.status)}
             </Badge>
