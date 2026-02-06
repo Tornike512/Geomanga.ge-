@@ -1,17 +1,19 @@
 "use client";
 
-import { ArrowLeft, ChevronLeft, ChevronRight, Globe } from "lucide-react";
+import { ArrowLeft, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
+import { Dropdown } from "@/components/dropdown";
 import { Spinner } from "@/components/spinner";
 import { API_URL } from "@/config";
 import { ChapterComments } from "@/features/comments";
 import { useMangaDexChapterPages } from "@/features/manga";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
+import { useChaptersByManga } from "@/features/reader/hooks/use-chapters-by-manga";
 import { useTrackReading } from "@/features/reader/hooks/use-track-reading";
 
 // Parse initial page ID from URL (e.g., /read/1/18 -> "18")
@@ -219,6 +221,9 @@ export default function ReaderPage() {
     error: localError,
   } = useChapterWithPages(isMangaDex ? 0 : Number(chapterId));
 
+  // All chapters for the manga (for chapter selector dropdown)
+  const { data: allChapters } = useChaptersByManga(localChapter?.manga_id ?? 0);
+
   // MangaDex chapter pages
   const {
     data: mangaDexPages,
@@ -375,31 +380,34 @@ export default function ReaderPage() {
           className={`fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
         >
           <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-2">
-            <div className="flex items-center gap-3">
-              <Link href={`/manga/${localChapter.manga?.slug}`}>
+            <div className="flex min-w-0 flex-1 items-center gap-3 overflow-hidden">
+              <Link
+                href={`/manga/${localChapter.manga?.slug}`}
+                className="shrink-0"
+              >
                 <Button variant="outline" size="sm" className="h-8 px-3">
                   <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
                   უკან
                 </Button>
               </Link>
-              <div className="text-white">
-                <h1 className="font-medium text-sm tracking-tight">
+              <div className="min-w-0 text-white">
+                <h1 className="truncate font-medium text-sm tracking-tight">
                   {localChapter.manga?.title || "უცნობი მანგა"}
                 </h1>
-                <p className="text-[var(--muted-foreground)] text-xs">
+                <p className="truncate text-[var(--muted-foreground)] text-xs">
                   თავი {localChapter.chapter_number}
                   {localChapter.title ? `: ${localChapter.title}` : ""}
                 </p>
               </div>
             </div>
-            <div className="rounded-md bg-[var(--accent)] px-2.5 py-1 font-medium text-[var(--accent-foreground)] text-xs">
+            <div className="shrink-0 rounded-md bg-[var(--accent)] px-2.5 py-1 font-medium text-[var(--accent-foreground)] text-xs">
               {localChapter.pages.length} გვერდი
             </div>
           </div>
         </div>
 
         {/* Reader Content */}
-        <div className="py-4">
+        <div className="px-1 py-4">
           <div className="mx-auto flex max-w-4xl flex-col gap-2">
             {localChapter.pages.map((page) => (
               <div
@@ -424,49 +432,38 @@ export default function ReaderPage() {
           </div>
         </div>
 
+        {/* Chapter Selector */}
+        <div className="flex items-center justify-center border-[var(--border)] border-t bg-[var(--background)] px-2 py-3">
+          <Dropdown
+            value={String(localChapter.id)}
+            onChange={(val) => router.push(`/read/${val}`)}
+            options={
+              allChapters?.map((ch) => ({
+                value: String(ch.id),
+                label: `თავი ${ch.chapter_number}${ch.title ? ` - ${ch.title}` : ""}`,
+              })) ?? []
+            }
+            placeholder="აირჩიეთ თავი"
+            aria-label="აირჩიეთ თავი"
+            className="w-full max-w-sm"
+          />
+        </div>
+
         {/* Comments Section */}
-        <div className="border-[var(--border)] border-t bg-[var(--background)] pb-20">
+        <div className="border-[var(--border)] border-t bg-[var(--background)] px-2 pb-20">
           <ChapterComments chapterId={localChapter.id} />
         </div>
 
-        {/* Chapter Navigation */}
+        {/* Bottom Bar */}
         <div
           className={`fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
         >
-          <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-2">
-            {localChapter.previous_chapter_id ? (
-              <Link href={`/read/${localChapter.previous_chapter_id}`}>
-                <Button size="sm" className="h-8 px-3">
-                  <ChevronLeft className="mr-1 h-3.5 w-3.5" />
-                  წინა
-                </Button>
-              </Link>
-            ) : (
-              <Button size="sm" className="h-8 px-3" disabled>
-                <ChevronLeft className="mr-1 h-3.5 w-3.5" />
-                წინა
-              </Button>
-            )}
-
+          <div className="mx-auto flex max-w-[1920px] items-center justify-center px-4 py-2">
             <div className="text-[var(--muted-foreground)] text-xs">
               {currentPageNumber
                 ? `${currentPageNumber} / ${localChapter.pages.length}`
                 : `თავი ${localChapter.chapter_number}`}
             </div>
-
-            {localChapter.next_chapter_id ? (
-              <Link href={`/read/${localChapter.next_chapter_id}`}>
-                <Button size="sm" className="h-8 px-3">
-                  შემდეგი
-                  <ChevronRight className="ml-1 h-3.5 w-3.5" />
-                </Button>
-              </Link>
-            ) : (
-              <Button size="sm" className="h-8 px-3" disabled>
-                შემდეგი
-                <ChevronRight className="ml-1 h-3.5 w-3.5" />
-              </Button>
-            )}
           </div>
         </div>
       </div>
@@ -522,7 +519,7 @@ export default function ReaderPage() {
       </div>
 
       {/* Reader Content */}
-      <div className="py-4">
+      <div className="px-1 py-4">
         <div className="mx-auto flex max-w-4xl flex-col gap-2">
           {mangaDexPages?.map((pageUrl, index) => {
             const pageId = `md-${index + 1}`;
