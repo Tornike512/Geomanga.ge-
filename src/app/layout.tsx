@@ -17,7 +17,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full overflow-x-hidden")}>
+    <html lang="en" className={cn("h-full")}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -47,12 +47,12 @@ export default async function RootLayout({
           href="/genfavicon-64.png"
         />
       </head>
-      <body className={cn("min-h-screen overflow-x-hidden antialiased")}>
+      <body className={cn("min-h-screen antialiased")}>
         <NoiseTexture />
         <AppProviders>
-          <div className="mx-auto flex min-h-screen w-full max-w-[1920px] flex-col overflow-x-hidden">
+          <div className="mx-auto flex min-h-screen w-full max-w-[1920px] flex-col">
             <Header />
-            <main className="flex-1 overflow-x-hidden">{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
           </div>
         </AppProviders>
