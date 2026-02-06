@@ -83,132 +83,113 @@ export function Header() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsMobileMenuOpen(true)}
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
               className="ml-auto h-auto shrink-0 p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] sm:hidden"
-              aria-label="Open menu"
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
-              <Menu className="h-6 w-6" />
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </Button>
           </div>
         </div>
       </header>
 
-      {/* Mobile sidebar overlay */}
-      {isMobileMenuOpen && (
-        <Button
-          variant="ghost"
-          className="fixed inset-0 z-50 h-auto cursor-default rounded-none bg-black/50 p-0 hover:bg-black/50 sm:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-          aria-label="Close menu"
-        >
-          <span className="sr-only">Close menu</span>
-        </Button>
-      )}
-
-      {/* Mobile sidebar */}
+      {/* Mobile dropdown menu */}
       <div
-        className={`fixed top-0 left-0 z-50 h-full w-72 transform bg-[var(--background)] shadow-xl transition-transform duration-300 ease-in-out sm:hidden ${
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-16 right-0 left-0 z-[59] origin-top transform border-[var(--border)] border-b bg-[var(--background)] shadow-lg transition-all duration-300 ease-in-out sm:hidden ${
+          isMobileMenuOpen
+            ? "scale-y-100 opacity-100"
+            : "pointer-events-none scale-y-0 opacity-0"
         }`}
       >
-        <div className="flex h-full flex-col">
-          {/* Sidebar header */}
-          <div className="flex items-center justify-between border-[var(--border)] border-b p-4">
-            <Image
-              src="/images/geomanga-logo.png"
-              alt="Geomanga"
-              width={100}
-              height={32}
-              className="h-8 w-auto"
-            />
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="h-auto p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-              aria-label="Close menu"
-            >
-              <X className="h-6 w-6" />
-            </Button>
+        {/* User section */}
+        {!isLoading && user && (
+          <div className="border-[var(--border)] border-b px-4 py-3">
+            <div className="flex items-center gap-3">
+              <Avatar src={user.avatar_url} alt={user.username} size="md" />
+              <span className="font-medium">{user.username}</span>
+            </div>
           </div>
+        )}
 
-          {/* User section */}
-          {!isLoading && user && (
-            <div className="border-[var(--border)] border-b p-4">
-              <div className="flex items-center gap-3">
-                <Avatar src={user.avatar_url} alt={user.username} size="md" />
-                <span className="font-medium">{user.username}</span>
-              </div>
-            </div>
-          )}
-
-          {/* Navigation links */}
-          <nav className="flex-1 overflow-y-auto p-4">
-            <div className="space-y-1">
-              <Link
-                href="/"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
-              >
-                მთავარი
-              </Link>
-              <Link
-                href="/browse"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
-              >
-                ნავიგაცია
-              </Link>
-              {user && (
-                <>
-                  <Link
-                    href="/library"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
-                  >
-                    ბიბლიოთეკა
-                  </Link>
-                  <Link
-                    href="/profile"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
-                  >
-                    პროფილი
-                  </Link>
-                </>
-              )}
-            </div>
-          </nav>
-
-          {/* Bottom section - Auth */}
-          <div className="border-[var(--border)] border-t p-4">
-            {isLoading ? (
-              <div className="h-10 animate-pulse rounded-lg bg-[var(--muted)]/40" />
-            ) : user ? (
-              <MobileLogoutButton onLogout={() => setIsMobileMenuOpen(false)} />
-            ) : (
-              <div className="space-y-2">
+        {/* Navigation links */}
+        <nav className="px-4 py-2">
+          <div className="space-y-1">
+            <Link
+              href="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
+            >
+              მთავარი
+            </Link>
+            <Link
+              href="/browse"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
+            >
+              ნავიგაცია
+            </Link>
+            {user && (
+              <>
                 <Link
-                  href="/login"
+                  href="/library"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block"
+                  className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
                 >
-                  <Button variant="outline" className="w-full">
-                    შესვლა
-                  </Button>
+                  ბიბლიოთეკა
                 </Link>
                 <Link
-                  href="/register"
+                  href="/profile"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block"
+                  className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
                 >
-                  <Button className="w-full">რეგისტრაცია</Button>
+                  პროფილი
                 </Link>
-              </div>
+              </>
             )}
           </div>
+        </nav>
+
+        {/* Auth section */}
+        <div className="border-[var(--border)] border-t px-4 py-3">
+          {isLoading ? (
+            <div className="h-10 animate-pulse rounded-lg bg-[var(--muted)]/40" />
+          ) : user ? (
+            <MobileLogoutButton onLogout={() => setIsMobileMenuOpen(false)} />
+          ) : (
+            <div className="flex gap-2">
+              <Link
+                href="/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex-1"
+              >
+                <Button variant="outline" className="w-full">
+                  შესვლა
+                </Button>
+              </Link>
+              <Link
+                href="/register"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex-1"
+              >
+                <Button className="w-full">რეგისტრაცია</Button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Mobile menu backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-[58] bg-black/30 sm:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
     </>
   );
 }
