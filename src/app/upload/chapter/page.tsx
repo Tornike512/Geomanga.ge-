@@ -30,7 +30,7 @@ function ChapterUploadContent() {
   // Check if user is logged in
   if (!user) {
     return (
-      <div className="container mx-auto px-4 py-12 text-center">
+      <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-12 text-center">
         <h1 className="mb-4 font-bold text-2xl">შესვლა საჭიროა</h1>
         <p className="text-[var(--muted-foreground)]">
           თავის ასატვირთად გთხოვთ შეხვიდეთ სისტემაში
@@ -41,7 +41,7 @@ function ChapterUploadContent() {
 
   if (!mangaId) {
     return (
-      <div className="container mx-auto px-4 py-12 text-center">
+      <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-12 text-center">
         <h1 className="mb-4 font-bold text-2xl">შეცდომა</h1>
         <p className="text-[var(--muted-foreground)]">
           მანგის ID არ არის მითითებული
@@ -335,7 +335,7 @@ export default function ChapterUploadPage() {
   return (
     <Suspense
       fallback={
-        <div className="container mx-auto px-4 py-12 text-center">
+        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-12 text-center">
           იტვირთება...
         </div>
       }

@@ -149,7 +149,7 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="container mx-auto px-4 py-12 text-center">
+      <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-12 text-center">
         <h1 className="mb-4 font-bold text-2xl">
           გთხოვთ შეხვიდეთ სისტემაში პროფილის სანახავად
         </h1>

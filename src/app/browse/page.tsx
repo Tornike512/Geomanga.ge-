@@ -528,7 +528,7 @@ export default function BrowsePage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="filter-modal-title"
-            className={`relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--card-solid)] p-6 shadow-2xl transition-all duration-300 ${
+            className={`relative mx-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--card-solid)] p-6 shadow-2xl transition-all duration-300 ${
               isFilterModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
             }`}
             onClick={(e) => e.stopPropagation()}
@@ -685,7 +685,7 @@ export default function BrowsePage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="mangadex-filter-modal-title"
-            className={`relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--card-solid)] p-6 shadow-2xl transition-all duration-300 ${
+            className={`relative mx-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--card-solid)] p-6 shadow-2xl transition-all duration-300 ${
               isFilterModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
             }`}
             onClick={(e) => e.stopPropagation()}

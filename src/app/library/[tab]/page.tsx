@@ -91,7 +91,7 @@ export default function LibraryTabPage() {
     activeTab === "history" ? historyData : isLibraryTab ? libraryData : null;
 
   return (
-    <div className="container mx-auto box-border max-w-[1920px] overflow-x-hidden px-6 py-12 md:px-8 md:py-12 lg:px-12">
+    <div className="container mx-auto box-border max-w-[1920px] overflow-x-hidden px-4 py-12 sm:px-6 md:px-8 md:py-12 lg:px-12">
       {/* Header */}
       <div className="mb-12">
         <h1 className="mb-4 font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
@@ -103,24 +103,26 @@ export default function LibraryTabPage() {
       </div>
 
       {/* Tabs - Glass effect tabs */}
-      <div className="mb-8 flex flex-col gap-1 rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm md:flex-row">
-        {(Object.keys(TABS) as Tab[]).map((tabKey) => (
-          <Link
-            key={tabKey}
-            href={`/library/${tabKey}`}
-            onClick={() => setCurrentPage(1)}
-            className={`min-w-0 flex-1 rounded-md px-4 py-3 text-center font-medium text-sm transition-all duration-200 sm:px-6 ${
-              activeTab === tabKey
-                ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
-                : "text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]"
-            }`}
-          >
-            {TABS[tabKey]}
-            {tabCounts[tabKey] != null && tabCounts[tabKey] > 0 && (
-              <span className="ml-2 opacity-70">({tabCounts[tabKey]})</span>
-            )}
-          </Link>
-        ))}
+      <div className="mb-8 overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm">
+        <div className="flex min-w-max gap-1 md:min-w-0">
+          {(Object.keys(TABS) as Tab[]).map((tabKey) => (
+            <Link
+              key={tabKey}
+              href={`/library/${tabKey}`}
+              onClick={() => setCurrentPage(1)}
+              className={`min-w-0 flex-1 whitespace-nowrap rounded-md px-4 py-3 text-center font-medium text-sm transition-all duration-200 sm:px-6 ${
+                activeTab === tabKey
+                  ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
+                  : "text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]"
+              }`}
+            >
+              {TABS[tabKey]}
+              {tabCounts[tabKey] != null && tabCounts[tabKey] > 0 && (
+                <span className="ml-2 opacity-70">({tabCounts[tabKey]})</span>
+              )}
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Content */}

@@ -60,7 +60,7 @@ export default function PublicProfilePage() {
 
   if (error || !profile) {
     return (
-      <div className="container mx-auto max-w-[1920px] px-6 py-12 text-center md:px-8">
+      <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-12 text-center sm:px-6 md:px-8">
         <h1 className="font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
           მომხმარებელი ვერ მოიძებნა
         </h1>
@@ -72,7 +72,7 @@ export default function PublicProfilePage() {
   }
 
   return (
-    <div className="container mx-auto max-w-[1920px] px-6 py-12 md:px-8">
+    <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-12 sm:px-6 md:px-8">
       {/* Banner Section */}
       <div className="relative mb-8 h-64 w-full overflow-hidden rounded-lg bg-gradient-to-r from-[var(--accent)]/20 to-[var(--accent)]/10">
         {profile.banner_url && (

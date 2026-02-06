@@ -92,7 +92,7 @@ export default function MangaDetailPage() {
 
   if (!manga) {
     return (
-      <div className="container mx-auto max-w-[1920px] px-6 py-12 text-center md:px-8">
+      <div className="container mx-auto max-w-[1920px] px-4 py-12 text-center md:px-8">
         <h1 className="font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
           მანგა ვერ მოიძებნა
         </h1>
@@ -173,7 +173,7 @@ export default function MangaDetailPage() {
                 </div>
 
                 {/* Uploader & Action Buttons */}
-                <div className="flex flex-col items-end gap-3">
+                <div className="flex flex-col items-start gap-3 md:items-end">
                   {/* Uploader Info */}
                   {!isMangaDex && localManga?.uploader && (
                     <Link
@@ -195,7 +195,7 @@ export default function MangaDetailPage() {
                   )}
 
                   {/* Action Buttons */}
-                  <div className="flex flex-col gap-2 sm:flex-row">
+                  <div className="flex flex-wrap gap-2">
                     {!isMangaDex &&
                       user &&
                       (user.role === UserRole.UPLOADER ||
