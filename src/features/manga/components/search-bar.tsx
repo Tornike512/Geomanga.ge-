@@ -22,6 +22,7 @@ export function SearchBar() {
   const debouncedQuery = useDebounce(query, 300);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const inputWrapperRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
   // Handle mount/unmount animation
@@ -36,6 +37,22 @@ export function SearchBar() {
       const timeout = setTimeout(() => setIsMounted(false), 200);
       return () => clearTimeout(timeout);
     }
+  }, [isOpen]);
+
+  // Close dropdown when clicking outside (e.g. hamburger icon in header)
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleMouseDown = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (
+        inputWrapperRef.current?.contains(target) ||
+        dropdownRef.current?.contains(target)
+      )
+        return;
+      setIsOpen(false);
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+    return () => document.removeEventListener("mousedown", handleMouseDown);
   }, [isOpen]);
 
   const updateDropdownPosition = useCallback(() => {
@@ -161,6 +178,7 @@ export function SearchBar() {
       {isMounted &&
         createPortal(
           <div
+            ref={dropdownRef}
             style={dropdownStyle}
             className={`z-[61] origin-top rounded-lg border border-[var(--border)] bg-[var(--background)]/95 shadow-xl backdrop-blur-md transition-all duration-200 ease-out ${
               isVisible
