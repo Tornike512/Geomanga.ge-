@@ -103,8 +103,8 @@ export default function LibraryTabPage() {
       </div>
 
       {/* Tabs - Glass effect tabs */}
-      <div className="mb-8 overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm">
-        <div className="flex min-w-max gap-1 md:min-w-0">
+      <div className="mb-8 rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm">
+        <div className="flex flex-col gap-1 sm:flex-row">
           {(Object.keys(TABS) as Tab[]).map((tabKey) => (
             <Link
               key={tabKey}
