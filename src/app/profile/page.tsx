@@ -240,7 +240,7 @@ export default function ProfilePage() {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Left Column - Profile Info */}
         <div className="lg:col-span-1">
-          <Card className="p-8 text-center">
+          <Card className="p-4 text-center sm:p-6 lg:p-8">
             {/* Avatar */}
             <div className="-mt-20 relative mb-6 inline-block">
               <Avatar
@@ -313,8 +313,10 @@ export default function ProfilePage() {
               />
             </div>
 
-            <h1 className="mb-1 font-semibold text-xl">{user.username}</h1>
-            <p className="mb-4 text-[var(--muted-foreground)] text-sm">
+            <h1 className="mb-1 truncate font-semibold text-xl">
+              {user.username}
+            </h1>
+            <p className="mb-4 truncate text-[var(--muted-foreground)] text-sm">
               {user.email}
             </p>
 
@@ -335,13 +337,13 @@ export default function ProfilePage() {
         {/* Right Column - Edit Profile */}
         <div className="lg:col-span-2">
           <Card className="mb-6 p-6">
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div className="mb-6 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
               <h2 className="font-semibold text-lg">პროფილის პარამეტრები</h2>
               {!isEditing && (
                 <Button
                   onClick={() => setIsEditing(true)}
                   variant="outline"
-                  className="whitespace-nowrap"
+                  className="w-full whitespace-nowrap sm:w-auto"
                 >
                   პროფილის რედაქტირება
                 </Button>
@@ -416,7 +418,7 @@ export default function ProfilePage() {
 
               {/* Action Buttons */}
               {isEditing && (
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     type="submit"
                     disabled={updateProfile.isPending}
@@ -446,13 +448,13 @@ export default function ProfilePage() {
 
           {/* Privacy Settings */}
           <Card className="mb-6 p-6">
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div className="mb-6 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
               <h2 className="font-semibold text-lg">კონფიდენციალურობა</h2>
               {!isEditingPrivacy && (
                 <Button
                   onClick={() => setIsEditingPrivacy(true)}
                   variant="outline"
-                  className="whitespace-nowrap"
+                  className="w-full whitespace-nowrap text-sm sm:w-auto sm:text-base"
                 >
                   პარამეტრების რედაქტირება
                 </Button>
@@ -461,8 +463,8 @@ export default function ProfilePage() {
 
             <div className="space-y-4">
               {/* Profile Visibility */}
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
                   <p className="font-medium text-sm">პროფილის ხილვადობა</p>
                   <p className="text-[var(--muted-foreground)] text-xs">
                     თქვენი პროფილის საჯაროობა
@@ -479,7 +481,7 @@ export default function ProfilePage() {
                     }))
                   }
                   disabled={!isEditingPrivacy}
-                  className="rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] text-sm focus:border-[var(--accent)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                  className="shrink-0 rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] text-sm focus:border-[var(--accent)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <option value="public">საჯარო</option>
                   <option value="private">კერძო</option>
@@ -487,14 +489,14 @@ export default function ProfilePage() {
               </div>
 
               {/* Show Comments */}
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
                   <p className="font-medium text-sm">კომენტარების ჩვენება</p>
                   <p className="text-[var(--muted-foreground)] text-xs">
                     თქვენი კომენტარების ხილვადობა
                   </p>
                 </div>
-                <label className="relative inline-flex cursor-pointer items-center">
+                <label className="relative inline-flex shrink-0 cursor-pointer items-center">
                   <input
                     type="checkbox"
                     checked={privacySettings.show_comments}
@@ -512,8 +514,8 @@ export default function ProfilePage() {
               </div>
 
               {/* Show Uploaded Manga */}
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
                   <p className="font-medium text-sm">
                     ატვირთული მანგის ჩვენება
                   </p>
@@ -521,7 +523,7 @@ export default function ProfilePage() {
                     თქვენი ატვირთული მანგების ხილვადობა
                   </p>
                 </div>
-                <label className="relative inline-flex cursor-pointer items-center">
+                <label className="relative inline-flex shrink-0 cursor-pointer items-center">
                   <input
                     type="checkbox"
                     checked={privacySettings.show_uploaded_manga}
@@ -539,8 +541,8 @@ export default function ProfilePage() {
               </div>
 
               {/* Show Reading Progress */}
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
                   <p className="font-medium text-sm">
                     კითხვის პროგრესის ჩვენება
                   </p>
@@ -548,7 +550,7 @@ export default function ProfilePage() {
                     თქვენი კითხვის ისტორიის ხილვადობა
                   </p>
                 </div>
-                <label className="relative inline-flex cursor-pointer items-center">
+                <label className="relative inline-flex shrink-0 cursor-pointer items-center">
                   <input
                     type="checkbox"
                     checked={privacySettings.show_reading_progress}
@@ -567,7 +569,7 @@ export default function ProfilePage() {
 
               {/* Action Buttons */}
               {isEditingPrivacy && (
-                <div className="flex gap-2 pt-4">
+                <div className="flex flex-wrap gap-2 pt-4">
                   <Button
                     onClick={handlePrivacyUpdate}
                     disabled={updateProfile.isPending}
@@ -693,7 +695,7 @@ export default function ProfilePage() {
                       პაროლი წარმატებით შეიცვალა
                     </p>
                   )}
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button
                       type="submit"
                       disabled={updatePassword.isPending}
