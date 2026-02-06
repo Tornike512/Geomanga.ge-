@@ -107,12 +107,16 @@ export function Header() {
       >
         {/* User section */}
         {!isLoading && user && (
-          <div className="border-[var(--border)] border-b px-4 py-3">
+          <Link
+            href="/profile"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="block border-[var(--border)] border-b px-4 py-3 transition-colors hover:bg-[var(--accent)]/10"
+          >
             <div className="flex items-center gap-3">
               <Avatar src={user.avatar_url} alt={user.username} size="md" />
               <span className="font-medium">{user.username}</span>
             </div>
-          </div>
+          </Link>
         )}
 
         {/* Navigation links */}
