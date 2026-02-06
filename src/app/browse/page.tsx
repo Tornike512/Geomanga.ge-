@@ -257,7 +257,7 @@ export default function BrowsePage() {
       </h1>
 
       {/* Source Toggle */}
-      <div className="mb-6 flex gap-2">
+      <div className="mb-6 flex flex-wrap gap-2">
         <Button
           variant={source === "local" ? "default" : "outline"}
           size="sm"
@@ -280,7 +280,7 @@ export default function BrowsePage() {
 
       {/* Filters - Local */}
       {source === "local" && (
-        <div className="mb-8 flex w-full flex-wrap gap-3 overflow-x-hidden">
+        <div className="mb-8 flex w-full flex-wrap gap-3">
           <Dropdown
             options={STATUS_OPTIONS}
             value={localFilters.status || ""}
@@ -343,7 +343,7 @@ export default function BrowsePage() {
 
       {/* Filters - MangaDex */}
       {source === "mangadex" && (
-        <div className="mb-8 w-full space-y-4 overflow-x-hidden">
+        <div className="mb-8 w-full space-y-4">
           {/* Search */}
           <div className="flex gap-2">
             <Input
@@ -354,7 +354,9 @@ export default function BrowsePage() {
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               className="max-w-md"
             />
-            <Button onClick={handleSearch}>ძებნა</Button>
+            <Button onClick={handleSearch} className="h-10 sm:h-11">
+              ძებნა
+            </Button>
           </div>
 
           {/* Filter row */}

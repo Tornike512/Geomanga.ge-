@@ -92,15 +92,15 @@ export function MangaCard({ manga, compact }: MangaCardProps) {
           </div>
         </div>
         <div
-          className={`flex flex-col ${compact ? "h-auto p-2" : "h-[180px] p-4"}`}
+          className={`flex min-w-0 flex-col ${compact ? "h-auto p-2" : "h-[180px] p-4"}`}
         >
           <h3
-            className={`mb-2 font-medium text-[var(--foreground)] tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)] ${compact ? "truncate text-sm" : "line-clamp-2 text-base"}`}
+            className={`mb-2 truncate font-medium text-[var(--foreground)] tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)] ${compact ? "text-sm" : "text-base"}`}
           >
             {manga.title}
           </h3>
           {!compact && displayGenres.length > 0 && (
-            <div className="mb-3 flex flex-wrap gap-1">
+            <div className="mb-1 flex flex-wrap gap-1">
               {displayGenres.map((genre, index) => (
                 <Badge
                   key={genre.id}
