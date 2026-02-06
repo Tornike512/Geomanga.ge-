@@ -1,6 +1,7 @@
 import { api } from "@/lib/api-client";
-import type { Manga } from "@/types/manga.types";
+import type { Manga, MangaListResponse } from "@/types/manga.types";
 
 export const getRecentManga = async (): Promise<Manga[]> => {
-  return api.get<Manga[]>("/manga/recent");
+  const response = await api.get<MangaListResponse>("/manga/recent");
+  return response.items;
 };
