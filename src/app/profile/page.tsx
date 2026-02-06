@@ -161,7 +161,7 @@ export default function ProfilePage() {
   return (
     <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-8 md:px-8 md:py-12 lg:px-12">
       {/* Banner Section */}
-      <div className="relative mb-8 h-64 w-full overflow-hidden rounded-lg bg-gradient-to-r from-[var(--accent)]/20 to-[var(--accent)]/10">
+      <div className="relative mb-8 aspect-[3/1] w-full overflow-hidden rounded-lg bg-gradient-to-r from-[var(--accent)]/20 to-[var(--accent)]/10">
         {user.banner_url && (
           <Image
             src={user.banner_url}

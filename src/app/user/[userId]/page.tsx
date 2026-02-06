@@ -74,7 +74,7 @@ export default function PublicProfilePage() {
   return (
     <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-12 sm:px-6 md:px-8">
       {/* Banner Section */}
-      <div className="relative mb-8 h-64 w-full overflow-hidden rounded-lg bg-gradient-to-r from-[var(--accent)]/20 to-[var(--accent)]/10">
+      <div className="relative mb-8 aspect-[3/1] w-full overflow-hidden rounded-lg bg-gradient-to-r from-[var(--accent)]/20 to-[var(--accent)]/10">
         {profile.banner_url && (
           <Image
             src={profile.banner_url}

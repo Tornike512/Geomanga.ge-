@@ -11,7 +11,7 @@ import ReactCrop, {
 import "react-image-crop/dist/ReactCrop.css";
 import { Button } from "@/components/button";
 
-const ASPECT_RATIO = 16 / 3;
+const ASPECT_RATIO = 3 / 1;
 
 interface BannerCropModalProps {
   imageSrc: string;
