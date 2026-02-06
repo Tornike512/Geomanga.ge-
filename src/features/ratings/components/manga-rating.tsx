@@ -39,7 +39,7 @@ export function MangaRating({ mangaId }: MangaRatingProps) {
   };
 
   return (
-    <Card className="p-6">
+    <Card className="p-3 sm:p-6">
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h3 className="font-medium text-lg">შეაფასე მანგა</h3>
@@ -63,12 +63,12 @@ export function MangaRating({ mangaId }: MangaRatingProps) {
 
         {user ? (
           <>
-            <div className="flex flex-wrap items-center gap-1">
+            <div className="flex items-center gap-0.5 sm:gap-1">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((score) => (
                 <Button
                   key={score}
                   variant="unstyled"
-                  className="cursor-pointer p-0.5 transition-transform hover:scale-110"
+                  className="cursor-pointer p-0 transition-transform hover:scale-110 sm:p-0.5"
                   onMouseEnter={() => setHoveredScore(score)}
                   onMouseLeave={() => setHoveredScore(null)}
                   onClick={() => handleRate(score)}
@@ -76,7 +76,7 @@ export function MangaRating({ mangaId }: MangaRatingProps) {
                   aria-label={`შეაფასე ${score} ვარსკვლავით`}
                 >
                   <Star
-                    className={`h-6 w-6 transition-colors ${
+                    className={`h-5 w-5 transition-colors sm:h-6 sm:w-6 ${
                       score <= displayScore
                         ? "fill-[var(--accent)] text-[var(--accent)]"
                         : "text-[var(--muted-foreground)]"

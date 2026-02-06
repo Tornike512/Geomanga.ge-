@@ -5,6 +5,7 @@ export const useChaptersByManga = (mangaId: number) => {
   return useQuery({
     queryKey: ["chapters", "manga", mangaId],
     queryFn: () => getChaptersByManga(mangaId),
+    enabled: mangaId > 0,
     staleTime: 5 * 60 * 1000, // 5 minutes
     select: (data) =>
       [...data].sort((a, b) => a.chapter_number - b.chapter_number),
