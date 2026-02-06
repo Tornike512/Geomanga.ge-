@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Avatar } from "@/components/avatar";
 import { Badge } from "@/components/badge";
+import { BannerCropModal } from "@/components/banner-crop-modal";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
@@ -22,6 +23,8 @@ export default function ProfilePage() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPrivacy, setIsEditingPrivacy] = useState(false);
+  const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     username: user?.username || "",
     email: user?.email || "",
@@ -99,15 +102,23 @@ export default function ProfilePage() {
   const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      uploadBanner.mutate(file, {
-        onSuccess: (_data) => {
-          // TODO: Add toast notification
-        },
-        onError: (_error) => {
-          // TODO: Add toast notification
-        },
-      });
+      const reader = new FileReader();
+      reader.onload = () => {
+        setCropImageSrc(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
+  };
+
+  const handleBannerCrop = (croppedFile: File) => {
+    setCropImageSrc(null);
+    if (bannerInputRef.current) bannerInputRef.current.value = "";
+    uploadBanner.mutate(croppedFile);
+  };
+
+  const handleBannerCropCancel = () => {
+    setCropImageSrc(null);
+    if (bannerInputRef.current) bannerInputRef.current.value = "";
   };
 
   if (isLoading) {
@@ -189,6 +200,7 @@ export default function ProfilePage() {
           )}
         </label>
         <input
+          ref={bannerInputRef}
           id="banner-upload"
           type="file"
           accept="image/*"
@@ -197,6 +209,15 @@ export default function ProfilePage() {
           disabled={uploadBanner.isPending}
         />
       </div>
+
+      {/* Banner Crop Modal */}
+      {cropImageSrc && (
+        <BannerCropModal
+          imageSrc={cropImageSrc}
+          onCrop={handleBannerCrop}
+          onCancel={handleBannerCropCancel}
+        />
+      )}
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Left Column - Profile Info */}
