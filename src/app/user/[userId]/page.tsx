@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, MessageSquare, Star } from "lucide-react";
+import { BookOpen, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -30,15 +30,6 @@ const formatMemberSince = (dateString: string) => {
   const month = date.toLocaleString("ka-GE", { month: "long" });
   const year = date.getFullYear();
   return `${month} ${year}`;
-};
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("ka-GE", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
 };
 
 export default function PublicProfilePage() {
@@ -128,17 +119,6 @@ export default function PublicProfilePage() {
 
             {/* Stats Section */}
             <div className="mt-6 grid grid-cols-1 gap-4 border-[var(--border)] border-t pt-6">
-              {/* Comments Stat */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[var(--muted-foreground)]">
-                  <MessageSquare className="h-4 w-4" />
-                  <span className="text-sm">კომენტარები</span>
-                </div>
-                <span className="font-semibold text-[var(--accent)]">
-                  {profile.comment_count}
-                </span>
-              </div>
-
               {/* Ratings Stat */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-[var(--muted-foreground)]">
@@ -174,7 +154,7 @@ export default function PublicProfilePage() {
                 {profile.uploaded_manga.map((manga) => (
                   <Link
                     key={manga.id}
-                    href={`/manga/${manga.id}`}
+                    href={`/manga/${manga.slug}`}
                     className="group"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden rounded-lg border border-[var(--border)] transition-all group-hover:border-[var(--accent)]">
@@ -219,43 +199,14 @@ export default function PublicProfilePage() {
             </Card>
           )}
 
-          {/* Recent Comments Section */}
-          {profile.recent_comments.length > 0 && (
-            <Card className="p-6">
-              <h2 className="mb-4 font-semibold text-lg">ბოლო კომენტარები</h2>
-              <div className="space-y-4">
-                {profile.recent_comments.map((comment) => (
-                  <div
-                    key={comment.id}
-                    className="border-[var(--border)] border-b pb-4 last:border-b-0 last:pb-0"
-                  >
-                    <Link
-                      href={`/manga/${comment.manga_id}`}
-                      className="mb-2 block font-medium text-[var(--accent)] text-sm hover:underline"
-                    >
-                      {comment.manga_title}
-                    </Link>
-                    <p className="mb-2 text-[var(--foreground)] text-sm">
-                      {comment.content}
-                    </p>
-                    <p className="text-[var(--muted-foreground)] text-xs">
-                      {formatDate(comment.created_at)}
-                    </p>
-                  </div>
-                ))}
-              </div>
+          {/* Empty State */}
+          {profile.uploaded_manga.length === 0 && (
+            <Card className="p-12 text-center">
+              <p className="text-[var(--muted-foreground)]">
+                მომხმარებელს ჯერ არ აქვს აქტივობა
+              </p>
             </Card>
           )}
-
-          {/* Empty State */}
-          {profile.uploaded_manga.length === 0 &&
-            profile.recent_comments.length === 0 && (
-              <Card className="p-12 text-center">
-                <p className="text-[var(--muted-foreground)]">
-                  მომხმარებელს ჯერ არ აქვს აქტივობა
-                </p>
-              </Card>
-            )}
         </div>
       </div>
     </div>

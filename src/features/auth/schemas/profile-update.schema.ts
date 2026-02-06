@@ -29,7 +29,6 @@ export const profileUpdateSchema = z.object({
 });
 
 export const privacySettingsSchema = z.object({
-  show_comments: z.boolean(),
   show_uploaded_manga: z.boolean(),
   show_reading_progress: z.boolean(),
   profile_visibility: z.enum(["public", "private"]),

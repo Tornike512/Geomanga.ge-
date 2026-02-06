@@ -51,7 +51,6 @@ export default function ProfilePage() {
   });
 
   const [privacySettings, setPrivacySettings] = useState<PrivacySettings>({
-    show_comments: user?.privacy_settings?.show_comments ?? true,
     show_uploaded_manga: user?.privacy_settings?.show_uploaded_manga ?? true,
     show_reading_progress:
       user?.privacy_settings?.show_reading_progress ?? true,
@@ -67,7 +66,6 @@ export default function ProfilePage() {
         bio: user.bio || "",
       });
       setPrivacySettings({
-        show_comments: user.privacy_settings?.show_comments ?? true,
         show_uploaded_manga: user.privacy_settings?.show_uploaded_manga ?? true,
         show_reading_progress:
           user.privacy_settings?.show_reading_progress ?? true,
@@ -488,31 +486,6 @@ export default function ProfilePage() {
                 />
               </div>
 
-              {/* Show Comments */}
-              <div className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="font-medium text-sm">კომენტარების ჩვენება</p>
-                  <p className="text-[var(--muted-foreground)] text-xs">
-                    თქვენი კომენტარების ხილვადობა
-                  </p>
-                </div>
-                <label className="relative inline-flex shrink-0 cursor-pointer items-center">
-                  <input
-                    type="checkbox"
-                    checked={privacySettings.show_comments}
-                    onChange={(e) =>
-                      setPrivacySettings((prev) => ({
-                        ...prev,
-                        show_comments: e.target.checked,
-                      }))
-                    }
-                    disabled={!isEditingPrivacy}
-                    className="peer sr-only"
-                  />
-                  <div className="peer h-6 w-11 rounded-full bg-[var(--muted)] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-[var(--border)] after:bg-white after:transition-all after:content-[''] peer-checked:bg-[var(--accent)] peer-checked:after:translate-x-full peer-checked:after:border-white peer-disabled:cursor-not-allowed peer-disabled:opacity-50"></div>
-                </label>
-              </div>
-
               {/* Show Uploaded Manga */}
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
@@ -583,8 +556,6 @@ export default function ProfilePage() {
                     onClick={() => {
                       setIsEditingPrivacy(false);
                       setPrivacySettings({
-                        show_comments:
-                          user.privacy_settings?.show_comments ?? true,
                         show_uploaded_manga:
                           user.privacy_settings?.show_uploaded_manga ?? true,
                         show_reading_progress:
