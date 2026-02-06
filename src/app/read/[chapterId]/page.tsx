@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Spinner } from "@/components/spinner";
+import { API_URL } from "@/config";
 import { ChapterComments } from "@/features/comments";
 import { useMangaDexChapterPages } from "@/features/manga";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
@@ -399,7 +400,7 @@ export default function ReaderPage() {
 
         {/* Reader Content */}
         <div className="py-4">
-          <div className="mx-auto max-w-4xl">
+          <div className="mx-auto flex max-w-4xl flex-col gap-2">
             {localChapter.pages.map((page) => (
               <div
                 key={page.id}
@@ -410,7 +411,7 @@ export default function ReaderPage() {
                 className="w-full"
               >
                 <Image
-                  src={page.image_url}
+                  src={`${API_URL}/images/pages/${page.chapter_id}/${page.page_number}`}
                   alt={`გვერდი ${page.page_number}`}
                   width={1200}
                   height={1800}
@@ -522,7 +523,7 @@ export default function ReaderPage() {
 
       {/* Reader Content */}
       <div className="py-4">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto flex max-w-4xl flex-col gap-2">
           {mangaDexPages?.map((pageUrl, index) => {
             const pageId = `md-${index + 1}`;
             return (
