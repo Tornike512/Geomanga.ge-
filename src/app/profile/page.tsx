@@ -1,16 +1,22 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Avatar } from "@/components/avatar";
-import { Badge } from "@/components/badge";
 import { BannerCropModal } from "@/components/banner-crop-modal";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
 import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
+import { useUpdatePassword } from "@/features/auth/hooks/use-update-password";
 import { useUpdateProfile } from "@/features/auth/hooks/use-update-profile";
+import {
+  type PasswordUpdateFormData,
+  passwordUpdateSchema,
+} from "@/features/auth/schemas/password-update.schema";
 import { useUploadAvatar } from "@/features/upload/hooks/use-upload-avatar";
 import { useUploadBanner } from "@/features/upload/hooks/use-upload-banner";
 import { type PrivacySettings, UserRole } from "@/types/user.types";
@@ -21,8 +27,20 @@ export default function ProfilePage() {
   const uploadAvatar = useUploadAvatar();
   const uploadBanner = useUploadBanner();
 
+  const updatePassword = useUpdatePassword();
+
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPrivacy, setIsEditingPrivacy] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  const passwordForm = useForm<PasswordUpdateFormData>({
+    resolver: zodResolver(passwordUpdateSchema),
+    defaultValues: {
+      current_password: "",
+      new_password: "",
+      confirm_password: "",
+    },
+  });
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
@@ -307,31 +325,6 @@ export default function ProfilePage() {
               </p>
             )}
 
-            {/* Role Badge */}
-            <Badge
-              variant={
-                user.role === UserRole.ADMIN
-                  ? "default"
-                  : user.role === UserRole.UPLOADER
-                    ? "secondary"
-                    : "default"
-              }
-            >
-              {user.role}
-            </Badge>
-
-            {/* Stats */}
-            <div className="mt-6 grid grid-cols-1 gap-4 border-[var(--border)] border-t pt-6">
-              <div>
-                <div className="font-medium text-[var(--accent)] text-lg">
-                  {user.role}
-                </div>
-                <div className="text-[var(--muted-foreground)] text-sm">
-                  როლი
-                </div>
-              </div>
-            </div>
-
             {/* Member Since */}
             <div className="mt-6 border-[var(--border)] border-t pt-6 text-[var(--muted-foreground)] text-sm">
               წევრი {new Date(user.created_at).toLocaleDateString()}-დან
@@ -342,7 +335,7 @@ export default function ProfilePage() {
         {/* Right Column - Edit Profile */}
         <div className="lg:col-span-2">
           <Card className="mb-6 p-6">
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <h2 className="font-semibold text-lg">პროფილის პარამეტრები</h2>
               {!isEditing && (
                 <Button
@@ -453,7 +446,7 @@ export default function ProfilePage() {
 
           {/* Privacy Settings */}
           <Card className="mb-6 p-6">
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <h2 className="font-semibold text-lg">კონფიდენციალურობა</h2>
               {!isEditingPrivacy && (
                 <Button
@@ -610,9 +603,119 @@ export default function ProfilePage() {
             {/* Change Password Section */}
             <div className="border-[var(--border)] border-b pb-8">
               <h3 className="mb-4 font-medium text-base">უსაფრთხოება</h3>
-              <Button variant="outline" className="whitespace-nowrap">
-                პაროლის შეცვლა
-              </Button>
+              {!isChangingPassword ? (
+                <Button
+                  variant="outline"
+                  className="whitespace-nowrap"
+                  onClick={() => setIsChangingPassword(true)}
+                >
+                  პაროლის შეცვლა
+                </Button>
+              ) : (
+                <form
+                  onSubmit={passwordForm.handleSubmit((data) => {
+                    updatePassword.mutate(
+                      {
+                        current_password: data.current_password,
+                        new_password: data.new_password,
+                      },
+                      {
+                        onSuccess: () => {
+                          setIsChangingPassword(false);
+                          passwordForm.reset();
+                        },
+                      },
+                    );
+                  })}
+                  className="space-y-4"
+                >
+                  <div>
+                    <label
+                      htmlFor="current_password"
+                      className="mb-1 block font-medium text-sm"
+                    >
+                      მიმდინარე პაროლი
+                    </label>
+                    <Input
+                      id="current_password"
+                      type="password"
+                      {...passwordForm.register("current_password")}
+                    />
+                    {passwordForm.formState.errors.current_password && (
+                      <p className="mt-1 text-red-400 text-xs">
+                        {passwordForm.formState.errors.current_password.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="new_password"
+                      className="mb-1 block font-medium text-sm"
+                    >
+                      ახალი პაროლი
+                    </label>
+                    <Input
+                      id="new_password"
+                      type="password"
+                      {...passwordForm.register("new_password")}
+                    />
+                    {passwordForm.formState.errors.new_password && (
+                      <p className="mt-1 text-red-400 text-xs">
+                        {passwordForm.formState.errors.new_password.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="confirm_password"
+                      className="mb-1 block font-medium text-sm"
+                    >
+                      პაროლის დადასტურება
+                    </label>
+                    <Input
+                      id="confirm_password"
+                      type="password"
+                      {...passwordForm.register("confirm_password")}
+                    />
+                    {passwordForm.formState.errors.confirm_password && (
+                      <p className="mt-1 text-red-400 text-xs">
+                        {passwordForm.formState.errors.confirm_password.message}
+                      </p>
+                    )}
+                  </div>
+                  {updatePassword.isError && (
+                    <p className="text-red-400 text-sm">
+                      პაროლის შეცვლა ვერ მოხერხდა
+                    </p>
+                  )}
+                  {updatePassword.isSuccess && (
+                    <p className="text-green-400 text-sm">
+                      პაროლი წარმატებით შეიცვალა
+                    </p>
+                  )}
+                  <div className="flex gap-2">
+                    <Button
+                      type="submit"
+                      disabled={updatePassword.isPending}
+                      loading={updatePassword.isPending}
+                      className="whitespace-nowrap"
+                    >
+                      პაროლის შეცვლა
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setIsChangingPassword(false);
+                        passwordForm.reset();
+                        updatePassword.reset();
+                      }}
+                    >
+                      გაუქმება
+                    </Button>
+                  </div>
+                </form>
+              )}
             </div>
 
             {/* Danger Zone */}
