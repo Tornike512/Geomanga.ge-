@@ -8,6 +8,7 @@ import { Avatar } from "@/components/avatar";
 import { BannerCropModal } from "@/components/banner-crop-modal";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
+import { Dropdown } from "@/components/dropdown";
 import { Input } from "@/components/input";
 import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
@@ -470,22 +471,21 @@ export default function ProfilePage() {
                     თქვენი პროფილის საჯაროობა
                   </p>
                 </div>
-                <select
+                <Dropdown
                   value={privacySettings.profile_visibility}
-                  onChange={(e) =>
+                  onChange={(val) =>
                     setPrivacySettings((prev) => ({
                       ...prev,
-                      profile_visibility: e.target.value as
-                        | "public"
-                        | "private",
+                      profile_visibility: val as "public" | "private",
                     }))
                   }
                   disabled={!isEditingPrivacy}
-                  className="shrink-0 rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] text-sm focus:border-[var(--accent)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <option value="public">საჯარო</option>
-                  <option value="private">კერძო</option>
-                </select>
+                  options={[
+                    { value: "public", label: "საჯარო" },
+                    { value: "private", label: "კერძო" },
+                  ]}
+                  className="shrink-0"
+                />
               </div>
 
               {/* Show Comments */}
