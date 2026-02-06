@@ -7,6 +7,9 @@ export const getImageUrl = (path: string | undefined): string => {
   // If path is already a full URL, return it
   if (path.startsWith("http")) return path;
 
+  // Proxied MangaDex cover images
+  if (path.startsWith("/mangadex-covers/")) return path;
+
   // If path starts with /api/ or /uploads/, use base URL directly
   if (path.startsWith("/api/") || path.startsWith("/uploads/")) {
     return `${staticUrl}${path}`;

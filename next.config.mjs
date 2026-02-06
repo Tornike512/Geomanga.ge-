@@ -32,6 +32,10 @@ const nextConfig = {
         source: '/api/mangadex/:path*',
         destination: 'https://api.mangadex.org/:path*',
       },
+      {
+        source: '/mangadex-covers/:path*',
+        destination: 'https://uploads.mangadex.org/covers/:path*',
+      },
     ];
   },
 };
