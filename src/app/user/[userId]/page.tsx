@@ -171,7 +171,7 @@ export default function PublicProfilePage() {
                         </div>
                       )}
                       {/* Status Badge */}
-                      <div className="absolute top-2 right-2">
+                      <div className="absolute inset-x-0 top-0 flex justify-center p-1.5">
                         <Badge
                           variant={
                             manga.status === "completed"
@@ -180,7 +180,7 @@ export default function PublicProfilePage() {
                                 ? "secondary"
                                 : "warning"
                           }
-                          className="text-xs"
+                          className="max-w-full truncate bg-black/60 px-2 py-0.5 text-[10px] backdrop-blur-md"
                         >
                           {manga.status === "completed"
                             ? "დასრულებული"
