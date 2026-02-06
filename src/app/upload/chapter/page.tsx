@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
@@ -27,7 +28,21 @@ function ChapterUploadContent() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Check if user is logged in
+  const previewUrls = useMemo(
+    () => selectedFiles.map((file) => URL.createObjectURL(file)),
+    [selectedFiles],
+  );
+
+  useEffect(() => {
+    return () => {
+      for (const url of previewUrls) {
+        URL.revokeObjectURL(url);
+      }
+    };
+  }, [previewUrls]);
+
+  const totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
+
   if (!user) {
     return (
       <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-12 text-center">
@@ -53,7 +68,6 @@ function ChapterUploadContent() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
-    // Validate files
     const validation = validatePageImages(files);
     if (!validation.valid) {
       alert(validation.error);
@@ -115,8 +129,6 @@ function ChapterUploadContent() {
       setUploadProgress(0);
     }
   };
-
-  const totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
 
   return (
     <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-8 md:px-8 lg:px-12">
@@ -266,21 +278,30 @@ function ChapterUploadContent() {
                       სულ: {formatFileSize(totalSize)}
                     </p>
                   </div>
-                  <div className="max-h-60 space-y-2 overflow-y-auto rounded-sm border border-[var(--border)] bg-[var(--muted)] p-3">
+                  <div className="grid grid-cols-2 gap-3 rounded-sm border border-[var(--border)] bg-[var(--muted)] p-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                     {selectedFiles.map((file, index) => (
                       <div
                         key={`${file.name}-${index}`}
-                        className="flex items-center justify-between rounded bg-[var(--background)] px-3 py-8"
+                        className="overflow-hidden rounded bg-[var(--background)]"
                       >
-                        <div className="flex items-center gap-3">
-                          <span className="font-mono text-[var(--muted-foreground)] text-xs">
+                        <div className="relative aspect-[2/3]">
+                          <Image
+                            src={previewUrls[index]}
+                            alt={`გვერდი ${index + 1}`}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                          <span className="absolute top-1 left-1 rounded bg-black/60 px-1.5 py-0.5 font-mono text-white text-xs">
                             {String(index + 1).padStart(3, "0")}
                           </span>
-                          <span className="truncate text-sm">{file.name}</span>
                         </div>
-                        <span className="text-[var(--muted-foreground)] text-xs">
-                          {formatFileSize(file.size)}
-                        </span>
+                        <div className="px-2 py-1.5">
+                          <p className="truncate text-xs">{file.name}</p>
+                          <p className="text-[var(--muted-foreground)] text-xs">
+                            {formatFileSize(file.size)}
+                          </p>
+                        </div>
                       </div>
                     ))}
                   </div>
