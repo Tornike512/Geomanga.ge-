@@ -45,7 +45,7 @@ export function MangaCard({ manga, compact }: MangaCardProps) {
   const displayGenres = manga.genres?.slice(0, 3) || [];
 
   return (
-    <Link href={`/manga/${manga.slug}`}>
+    <Link href={`/manga/${manga.slug}`} className="block h-full">
       <Card className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] p-0 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:border-[var(--border-hover)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)]">
         <div className="relative aspect-[3/4] overflow-hidden bg-[var(--muted)]/40">
           <Image
