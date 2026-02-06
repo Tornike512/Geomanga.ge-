@@ -41,15 +41,15 @@ function LoginContent() {
   };
 
   return (
-    <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-8 md:px-8 md:py-12 lg:px-12">
-      <div className="mx-auto max-w-md">
+    <div className="container mx-auto flex max-w-[1920px] flex-1 items-center justify-center overflow-x-hidden px-4 py-4 md:px-8 lg:px-12">
+      <div className="mx-auto w-full max-w-md">
         {/* Minimalist Dark Title */}
         <h1 className="mb-8 text-center font-semibold text-3xl tracking-tight sm:text-4xl">
           კეთილდგებობით
         </h1>
 
-        <Card>
-          <CardContent className="p-8">
+        <Card className="p-0">
+          <CardContent className="p-4 sm:p-8">
             {/* Google Sign-In Button */}
             <GoogleSignInButton className="mb-6 w-full" />
 
@@ -159,8 +159,8 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="container mx-auto max-w-[1920px] px-4 py-8">
-          <div className="mx-auto max-w-md">
+        <div className="container mx-auto flex max-w-[1920px] flex-1 items-center justify-center px-4 py-4">
+          <div className="mx-auto w-full max-w-md">
             <div className="h-96 animate-pulse rounded-lg bg-[var(--muted)]/20" />
           </div>
         </div>

@@ -52,7 +52,7 @@ export default async function RootLayout({
         <AppProviders>
           <div className="mx-auto flex min-h-screen w-full max-w-[1920px] flex-col">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex flex-1 flex-col">{children}</main>
             <Footer />
           </div>
         </AppProviders>

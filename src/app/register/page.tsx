@@ -176,14 +176,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-8 md:px-8 md:py-12 lg:px-12">
-      <div className="mx-auto max-w-md">
+    <div className="container mx-auto flex max-w-[1920px] flex-1 items-center justify-center overflow-x-hidden px-4 py-4 md:px-8 lg:px-12">
+      <div className="mx-auto w-full max-w-md">
         {/* Title */}
         <h1 className="mb-8 text-center font-semibold text-3xl tracking-tight sm:text-4xl">
           {step === "register" ? "შექმენით ანგარიში" : "დაადასტურეთ იმეილი"}
         </h1>
 
-        <Card className="p-8">
+        <Card className="p-4 sm:p-8">
           {step === "register" ? (
             <>
               {/* Google Sign-In Button */}
