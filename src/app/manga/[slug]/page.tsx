@@ -92,7 +92,7 @@ export default function MangaDetailPage() {
 
   if (!manga) {
     return (
-      <div className="container mx-auto max-w-[1920px] px-4 py-12 text-center md:px-8">
+      <div className="flex flex-1 flex-col items-center justify-center px-4 py-12 text-center">
         <h1 className="font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
           მანგა ვერ მოიძებნა
         </h1>
@@ -116,8 +116,8 @@ export default function MangaDetailPage() {
   return (
     <div className="relative w-full overflow-x-hidden">
       {/* Hero Section with Cover and Title */}
-      <section className="w-full overflow-x-hidden border-[var(--border)] border-b py-8 md:py-8">
-        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 md:px-8">
+      <section className="w-full overflow-x-hidden border-[var(--border)] border-b">
+        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-8 md:px-8 md:py-12 lg:px-12 lg:py-12">
           <div className="grid gap-8 md:grid-cols-3">
             {/* Cover Image */}
             <div className="relative">
@@ -402,8 +402,8 @@ export default function MangaDetailPage() {
       )}
 
       {/* Chapters Section */}
-      <section className="w-full overflow-x-hidden py-8 md:py-8">
-        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 md:px-8">
+      <section className="w-full overflow-x-hidden">
+        <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-8 md:px-8 md:py-12 lg:px-12 lg:py-12">
           {/* Section Title */}
           <div className="mb-8">
             <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
@@ -547,8 +547,8 @@ export default function MangaDetailPage() {
 
       {/* Comments Section - only for local manga */}
       {!isMangaDex && localManga && (
-        <section className="w-full overflow-x-hidden border-[var(--border)] border-t py-8 md:py-8">
-          <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 md:px-8">
+        <section className="w-full overflow-x-hidden border-[var(--border)] border-t">
+          <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-8 md:px-8 md:py-12 lg:px-12 lg:py-12">
             <MangaComments mangaId={localManga.id} />
           </div>
         </section>
