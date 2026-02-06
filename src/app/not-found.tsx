@@ -3,7 +3,7 @@ import { Button } from "@/components/button";
 
 export default function NotFound() {
   return (
-    <div className="mx-auto flex w-full flex-1 flex-col items-center justify-center px-4 py-20 text-center">
+    <div className="mx-auto flex w-full flex-1 flex-col items-center justify-center px-2 py-20 text-center sm:px-4 md:px-8">
       <h1 className="font-bold text-[8rem] text-[var(--accent)] leading-none sm:text-[10rem]">
         404
       </h1>

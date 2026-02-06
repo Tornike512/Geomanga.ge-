@@ -422,7 +422,7 @@ export default function UploadMangaPage() {
   // Check if user is logged in
   if (!user) {
     return (
-      <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-12 text-center">
+      <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 py-12 text-center sm:px-4 md:px-8">
         <h1 className="mb-4 font-bold text-2xl">შესვლა საჭიროა</h1>
         <p className="text-[var(--muted-foreground)]">
           მანგის ასატვირთად გთხოვთ შეხვიდეთ სისტემაში
@@ -432,7 +432,7 @@ export default function UploadMangaPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-8 md:px-8 lg:px-12">
+    <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 py-8 sm:px-4 md:px-8">
       <div className="mb-16">
         <h1 className="mb-6 font-bold text-[clamp(2.5rem,6vw,4.5rem)] uppercase leading-none tracking-tighter">
           მანგის ატვირთვა

@@ -14,7 +14,7 @@ export function Footer() {
 
   return (
     <footer className="w-full overflow-x-hidden border-[var(--border)] border-t bg-[var(--background)]">
-      <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 pt-6 pb-2 md:px-8">
+      <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 pt-6 pb-2 sm:px-4 md:px-8">
         <div className="grid w-full grid-cols-1 gap-10 md:grid-cols-4">
           <div>
             <div className="mb-4">
