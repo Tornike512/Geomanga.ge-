@@ -40,7 +40,7 @@ const fetchMangaDex = async (limit = 10): Promise<TransformedManga[]> => {
   });
   params.append("includes[]", "author");
 
-  const response = await fetch(`https://api.mangadex.org/manga?${params}`);
+  const response = await fetch(`/api/mangadex/manga?${params}`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch from MangaDex");

@@ -12,7 +12,8 @@ import type {
   MangaDexTransformedManga,
 } from "@/types/mangadex.types";
 
-const MANGADEX_API_URL = "https://api.mangadex.org";
+const MANGADEX_API_URL =
+  typeof window === "undefined" ? "https://api.mangadex.org" : "/api/mangadex";
 
 const buildMangaDexUrl = (params: MangaDexListParams): string => {
   const searchParams = new URLSearchParams();
@@ -280,7 +281,7 @@ export const browseMangaDex = async (
   const sortOrder = params.orderDesc === false ? "asc" : "desc";
   searchParams.set(`order[${sortField}]`, sortOrder);
 
-  const url = `https://api.mangadex.org/manga?${searchParams.toString()}`;
+  const url = `${MANGADEX_API_URL}/manga?${searchParams.toString()}`;
 
   const response = await fetch(url, {
     headers: {
@@ -318,7 +319,7 @@ export const browseMangaDex = async (
 export const getMangaDexTags = async (): Promise<
   { id: string; name: string; group: string }[]
 > => {
-  const response = await fetch("https://api.mangadex.org/manga/tag", {
+  const response = await fetch(`${MANGADEX_API_URL}/manga/tag`, {
     headers: {
       Accept: "application/json",
     },
@@ -355,7 +356,7 @@ export const getMangaDexTags = async (): Promise<
 export const getMangaDexMangaById = async (
   mangaId: string,
 ): Promise<MangaDexTransformedManga> => {
-  const url = `https://api.mangadex.org/manga/${mangaId}?includes[]=cover_art&includes[]=author&includes[]=artist`;
+  const url = `${MANGADEX_API_URL}/manga/${mangaId}?includes[]=cover_art&includes[]=author&includes[]=artist`;
 
   const response = await fetch(url, {
     headers: {
@@ -390,7 +391,7 @@ export const getMangaDexChapters = async (
   let hasMore = true;
 
   while (hasMore) {
-    const url = `https://api.mangadex.org/manga/${mangaId}/feed?limit=${limit}&offset=${offset}&translatedLanguage[]=${language}&order[chapter]=asc&includes[]=scanlation_group`;
+    const url = `${MANGADEX_API_URL}/manga/${mangaId}/feed?limit=${limit}&offset=${offset}&translatedLanguage[]=${language}&order[chapter]=asc&includes[]=scanlation_group`;
 
     const response = await fetch(url, {
       headers: {
@@ -447,7 +448,7 @@ export const getMangaDexChapters = async (
 export const getMangaDexChapterPages = async (
   chapterId: string,
 ): Promise<string[]> => {
-  const url = `https://api.mangadex.org/at-home/server/${chapterId}`;
+  const url = `${MANGADEX_API_URL}/at-home/server/${chapterId}`;
 
   const response = await fetch(url, {
     headers: {
