@@ -12,6 +12,7 @@ import { getCoverUrl } from "@/utils/image-urls";
 
 interface MangaCardProps {
   readonly manga: Manga;
+  readonly compact?: boolean;
 }
 
 const getTranslationStatusLabel = (status: TranslationStatus): string => {
@@ -40,7 +41,7 @@ const getMangaStatusLabel = (status: MangaStatus): string => {
   }
 };
 
-export function MangaCard({ manga }: MangaCardProps) {
+export function MangaCard({ manga, compact }: MangaCardProps) {
   const displayGenres = manga.genres?.slice(0, 3) || [];
 
   return (
@@ -56,7 +57,7 @@ export function MangaCard({ manga }: MangaCardProps) {
             loading="lazy"
           />
           {/* Translation Status Badge - Top Left */}
-          {manga.translation_status && (
+          {!compact && manga.translation_status && (
             <div className="absolute top-2 left-2">
               <Badge
                 variant={
@@ -90,11 +91,15 @@ export function MangaCard({ manga }: MangaCardProps) {
             </Badge>
           </div>
         </div>
-        <div className="flex h-[180px] flex-col p-4">
-          <h3 className="mb-2 line-clamp-2 font-medium text-[var(--foreground)] text-base tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)]">
+        <div
+          className={`flex flex-col ${compact ? "h-auto p-2" : "h-[180px] p-4"}`}
+        >
+          <h3
+            className={`mb-2 font-medium text-[var(--foreground)] tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)] ${compact ? "truncate text-sm" : "line-clamp-2 text-base"}`}
+          >
             {manga.title}
           </h3>
-          {displayGenres.length > 0 && (
+          {!compact && displayGenres.length > 0 && (
             <div className="mb-3 flex flex-wrap gap-1">
               {displayGenres.map((genre, index) => (
                 <Badge
@@ -107,13 +112,21 @@ export function MangaCard({ manga }: MangaCardProps) {
               ))}
             </div>
           )}
-          <div className="mt-auto flex items-center justify-between border-[var(--border)] border-t pt-3 text-[var(--muted-foreground)]">
-            <div className="flex items-center gap-1.5 text-sm">
-              <Star className="h-4 w-4 fill-[var(--accent)] text-[var(--accent)]" />
+          <div
+            className={`mt-auto flex items-center justify-between border-[var(--border)] border-t text-[var(--muted-foreground)] ${compact ? "pt-2" : "pt-3"}`}
+          >
+            <div
+              className={`flex items-center gap-1.5 ${compact ? "text-xs" : "text-sm"}`}
+            >
+              <Star
+                className={`fill-[var(--accent)] text-[var(--accent)] ${compact ? "h-3 w-3" : "h-4 w-4"}`}
+              />
               <span>{formatRating(manga.rating)}</span>
             </div>
-            <div className="flex items-center gap-1.5 text-xs">
-              <Eye className="h-4 w-4" />
+            <div
+              className={`flex items-center gap-1.5 ${compact ? "text-[10px]" : "text-xs"}`}
+            >
+              <Eye className={compact ? "h-3 w-3" : "h-4 w-4"} />
               <span>{manga.total_views.toLocaleString()}</span>
             </div>
           </div>

@@ -17,24 +17,53 @@ export function SearchBar() {
   const [query, setQuery] = useState("");
   const [language, setLanguage] = useState<Language>("georgian");
   const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const debouncedQuery = useDebounce(query, 300);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const inputWrapperRef = useRef<HTMLDivElement>(null);
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
+  // Handle mount/unmount animation
+  useEffect(() => {
+    if (isOpen) {
+      setIsMounted(true);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setIsVisible(true));
+      });
+    } else {
+      setIsVisible(false);
+      const timeout = setTimeout(() => setIsMounted(false), 200);
+      return () => clearTimeout(timeout);
+    }
+  }, [isOpen]);
+
   const updateDropdownPosition = useCallback(() => {
     if (!inputWrapperRef.current) return;
     const rect = inputWrapperRef.current.getBoundingClientRect();
-    setDropdownStyle({
-      position: "fixed",
-      top: rect.bottom + 8,
-      left: rect.left,
-      width: rect.width,
-    });
+    const screenWidth = window.innerWidth;
+    const padding = 8;
+
+    // On small screens, stretch to full screen width with padding
+    if (screenWidth < 640) {
+      setDropdownStyle({
+        position: "fixed",
+        top: rect.bottom + 8,
+        left: padding,
+        right: padding,
+      });
+    } else {
+      setDropdownStyle({
+        position: "fixed",
+        top: rect.bottom + 8,
+        left: rect.left,
+        width: rect.width,
+      });
+    }
   }, []);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isMounted) return;
     updateDropdownPosition();
     window.addEventListener("scroll", updateDropdownPosition, true);
     window.addEventListener("resize", updateDropdownPosition);
@@ -42,7 +71,7 @@ export function SearchBar() {
       window.removeEventListener("scroll", updateDropdownPosition, true);
       window.removeEventListener("resize", updateDropdownPosition);
     };
-  }, [isOpen, updateDropdownPosition]);
+  }, [isMounted, updateDropdownPosition]);
 
   // Fetch from local API for Georgian manga with infinite scroll
   const {
@@ -129,11 +158,15 @@ export function SearchBar() {
       </div>
 
       {/* Search Results Modal - portaled to body to escape header overflow */}
-      {isOpen &&
+      {isMounted &&
         createPortal(
           <div
             style={dropdownStyle}
-            className="z-[61] rounded-lg border border-[var(--border)] bg-[var(--background)]/95 shadow-xl backdrop-blur-md"
+            className={`z-[61] origin-top rounded-lg border border-[var(--border)] bg-[var(--background)]/95 shadow-xl backdrop-blur-md transition-all duration-200 ease-out ${
+              isVisible
+                ? "scale-100 opacity-100"
+                : "pointer-events-none scale-95 opacity-0"
+            }`}
           >
             {/* Language Tabs */}
             <div className="flex gap-2 border-[var(--border)] border-b p-3">
@@ -141,7 +174,7 @@ export function SearchBar() {
                 variant={language === "georgian" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setLanguage("georgian")}
-                className="flex-1"
+                className="h-auto flex-1 py-1.5 text-xs sm:text-sm"
               >
                 ქართულად თარგმნილი
               </Button>
@@ -149,7 +182,7 @@ export function SearchBar() {
                 variant={language === "english" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setLanguage("english")}
-                className="flex-1"
+                className="h-auto flex-1 py-1.5 text-xs sm:text-sm"
               >
                 ინგლისურად თარგმნილი
               </Button>
@@ -180,7 +213,7 @@ export function SearchBar() {
                             }
                             className="h-auto w-full p-0 hover:bg-transparent"
                           >
-                            <MangaCard manga={manga} />
+                            <MangaCard manga={manga} compact />
                           </Button>
                         ))
                       : englishResults.map((manga) => (
@@ -233,11 +266,15 @@ export function SearchBar() {
         )}
 
       {/* Backdrop - portaled to body to escape header's backdrop-blur containing block */}
-      {isOpen &&
+      {isMounted &&
         createPortal(
           <Button
             variant="ghost"
-            className="fixed top-16 right-0 bottom-0 left-0 z-50 h-auto cursor-default rounded-none bg-black/50 p-0 hover:bg-black/50"
+            className={`fixed top-16 right-0 bottom-0 left-0 z-50 h-auto cursor-default rounded-none p-0 transition-colors duration-200 ${
+              isVisible
+                ? "bg-black/50 hover:bg-black/50"
+                : "pointer-events-none bg-transparent"
+            }`}
             onClick={() => setIsOpen(false)}
             onKeyDown={(e) => e.key === "Escape" && setIsOpen(false)}
             aria-label="Close search"
