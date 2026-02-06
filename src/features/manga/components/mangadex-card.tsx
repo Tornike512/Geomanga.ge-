@@ -34,7 +34,7 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
   const localUrl = `/manga/md-${manga.mangadex_id}`;
 
   return (
-    <Link href={localUrl} className="block">
+    <Link href={localUrl} className="block h-full">
       <Card className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] p-0 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:border-[var(--border-hover)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)]">
         <div className="relative aspect-[3/4] overflow-hidden bg-[var(--muted)]/40">
           {manga.cover_image_url ? (
@@ -64,7 +64,7 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
                       ? "warning"
                       : "danger"
               }
-              className={`rounded-lg border-2 px-3 py-1.5 font-bold text-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md ${
+              className={`rounded-lg border-2 px-1.5 py-0.5 font-bold text-[10px] shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-sm ${
                 manga.status === "completed" ? "!text-green-400" : ""
               }`}
             >
@@ -72,7 +72,7 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
             </Badge>
           </div>
         </div>
-        <div className="flex h-[180px] flex-col p-4">
+        <div className="flex flex-1 flex-col p-2.5 sm:p-4">
           <h3 className="mb-2 line-clamp-2 font-medium text-[var(--foreground)] text-base tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)]">
             {manga.title}
           </h3>

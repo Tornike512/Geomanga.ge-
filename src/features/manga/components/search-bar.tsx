@@ -211,7 +211,7 @@ export function SearchBar() {
                             onKeyDown={(e) =>
                               e.key === "Enter" && setIsOpen(false)
                             }
-                            className="h-auto w-full p-0 hover:bg-transparent"
+                            className="h-full w-full p-0 hover:bg-transparent"
                           >
                             <MangaCard manga={manga} compact />
                           </Button>
@@ -224,7 +224,7 @@ export function SearchBar() {
                             onKeyDown={(e) =>
                               e.key === "Enter" && setIsOpen(false)
                             }
-                            className="h-auto w-full p-0 hover:bg-transparent"
+                            className="h-full w-full p-0 hover:bg-transparent"
                           >
                             <MangaDexCard manga={manga} />
                           </Button>
