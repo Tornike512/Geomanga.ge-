@@ -7,6 +7,7 @@ import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
+import { getMangaDetail } from "@/features/manga/api/get-manga-detail";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useCreateChapter } from "@/features/upload/hooks/use-create-chapter";
 import { formatFileSize, validatePageImages } from "@/utils/file-validation";
@@ -118,8 +119,10 @@ function ChapterUploadContent() {
 
       setUploadProgress(100);
 
+      const manga = await getMangaDetail(Number(mangaId));
+
       alert(`თავი ${chapter.chapter_number} წარმატებით აიტვირთა!`);
-      router.push(`/manga/${mangaId}`);
+      router.push(`/manga/${manga.slug}`);
     } catch (error) {
       alert(
         error instanceof Error ? error.message : "თავის ატვირთვა ვერ მოხერხდა",
