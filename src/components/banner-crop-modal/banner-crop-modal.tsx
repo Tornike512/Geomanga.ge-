@@ -123,11 +123,10 @@ export function BannerCropModal({
       }`}
     >
       {/* Backdrop */}
-      <div
+      <button
+        type="button"
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={handleClose}
-        onKeyDown={(e) => e.key === "Escape" && handleClose()}
-        role="button"
         tabIndex={-1}
         aria-label="Close crop modal"
       />
@@ -157,6 +156,7 @@ export function BannerCropModal({
             aspect={ASPECT_RATIO}
             className="max-h-full max-w-full"
           >
+            {/* biome-ignore lint/performance/noImgElement: react-image-crop requires native img with ref */}
             <img
               ref={imgRef}
               src={imageSrc}
