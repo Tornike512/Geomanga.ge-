@@ -65,7 +65,7 @@ const getCoverImageUrl = (manga: MangaDexManga): string | undefined => {
   if (coverRelationship?.attributes) {
     const coverAttrs =
       coverRelationship.attributes as MangaDexCoverArtAttributes;
-    return `/mangadex-covers/${manga.id}/${coverAttrs.fileName}.256.jpg`;
+    return `/mangadex-covers/${manga.id}/${coverAttrs.fileName}`;
   }
   return undefined;
 };
