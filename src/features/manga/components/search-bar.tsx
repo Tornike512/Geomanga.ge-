@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { useDebounce } from "@/hooks";
+import { BLOCKED_MANGA_IDS } from "../constants/blocked-manga";
 import { useInfiniteMangaDexSearch } from "../hooks/use-infinite-mangadex-search";
 import { useInfiniteSearchManga } from "../hooks/use-infinite-search-manga";
 import { MangaCard } from "./manga-card";
@@ -114,7 +115,10 @@ export function SearchBar() {
   // Flatten all pages into a single array
   const georgianResults =
     georgianData?.pages.flatMap((page) => page.items) ?? [];
-  const englishResults = englishData?.pages.flatMap((page) => page.items) ?? [];
+  const englishResults =
+    englishData?.pages
+      .flatMap((page) => page.items)
+      .filter((manga) => !BLOCKED_MANGA_IDS.includes(manga.id)) ?? [];
 
   const isLoading = language === "georgian" ? georgianLoading : englishLoading;
   const isFetchingMore =

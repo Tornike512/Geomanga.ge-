@@ -12,6 +12,7 @@ import {
   useMangaList,
 } from "@/features/manga";
 import { MangaDexGrid, MangaGrid } from "@/features/manga/components";
+import { BLOCKED_MANGA_IDS } from "@/features/manga/constants/blocked-manga";
 import type { MangaListParams, MangaStatus } from "@/types/manga.types";
 import { AgeRating, ContentType, TranslationStatus } from "@/types/manga.types";
 import type { MangaDexBrowseParams } from "@/types/mangadex.types";
@@ -171,6 +172,16 @@ export default function BrowsePage() {
         : undefined,
     availableTranslatedLanguage: "en", // English only
   });
+
+  // Filter out problematic manga
+  const filteredMangadexData = mangadexData
+    ? {
+        ...mangadexData,
+        items: mangadexData.items.filter(
+          (manga) => !BLOCKED_MANGA_IDS.includes(manga.id),
+        ),
+      }
+    : mangadexData;
 
   // Filter by tag group for MangaDex
   const genreTags =
@@ -429,7 +440,7 @@ export default function BrowsePage() {
         <MangaGrid manga={localData?.items || []} isLoading={localLoading} />
       ) : (
         <MangaDexGrid
-          manga={mangadexData?.items || []}
+          manga={filteredMangadexData?.items || []}
           isLoading={mangadexLoading}
         />
       )}
@@ -468,43 +479,47 @@ export default function BrowsePage() {
       )}
 
       {/* Pagination - MangaDex */}
-      {source === "mangadex" && mangadexData && mangadexData.pages > 1 && (
-        <div className="mt-12 flex items-center justify-center gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              setMangadexFilters({
-                ...mangadexFilters,
-                page: mangadexFilters.page - 1,
-              })
-            }
-            disabled={mangadexFilters.page === 1}
-          >
-            წინა
-          </Button>
-          <span className="font-medium text-sm">
-            <span className="text-[var(--accent)]">{mangadexFilters.page}</span>
-            <span className="mx-2 text-[var(--muted-foreground)]">/</span>
-            <span className="text-[var(--muted-foreground)]">
-              {mangadexData.pages}
+      {source === "mangadex" &&
+        filteredMangadexData &&
+        filteredMangadexData.pages > 1 && (
+          <div className="mt-12 flex items-center justify-center gap-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                setMangadexFilters({
+                  ...mangadexFilters,
+                  page: mangadexFilters.page - 1,
+                })
+              }
+              disabled={mangadexFilters.page === 1}
+            >
+              წინა
+            </Button>
+            <span className="font-medium text-sm">
+              <span className="text-[var(--accent)]">
+                {mangadexFilters.page}
+              </span>
+              <span className="mx-2 text-[var(--muted-foreground)]">/</span>
+              <span className="text-[var(--muted-foreground)]">
+                {filteredMangadexData.pages}
+              </span>
             </span>
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              setMangadexFilters({
-                ...mangadexFilters,
-                page: mangadexFilters.page + 1,
-              })
-            }
-            disabled={mangadexFilters.page >= mangadexData.pages}
-          >
-            შემდეგი
-          </Button>
-        </div>
-      )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                setMangadexFilters({
+                  ...mangadexFilters,
+                  page: mangadexFilters.page + 1,
+                })
+              }
+              disabled={mangadexFilters.page >= filteredMangadexData.pages}
+            >
+              შემდეგი
+            </Button>
+          </div>
+        )}
 
       {/* Filter Modal - Local */}
       {source === "local" && (

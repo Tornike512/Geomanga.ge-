@@ -2,11 +2,17 @@
 
 import { Globe } from "lucide-react";
 import { Spinner } from "@/components/spinner";
+import { BLOCKED_MANGA_IDS } from "../constants/blocked-manga";
 import { useMangaDexPopular } from "../hooks/use-mangadex-manga";
 import { MangaDexCard } from "./mangadex-card";
 
 export function MangaDexSection() {
   const { data: mangaList, isLoading, error } = useMangaDexPopular();
+
+  // Filter out problematic manga
+  const filteredMangaList = mangaList?.filter(
+    (manga) => !BLOCKED_MANGA_IDS.includes(manga.id),
+  );
 
   if (error) {
     return (
@@ -45,7 +51,7 @@ export function MangaDexSection() {
         <div className="flex min-h-[400px] items-center justify-center">
           <Spinner size="lg" />
         </div>
-      ) : !mangaList || mangaList.length === 0 ? (
+      ) : !filteredMangaList || filteredMangaList.length === 0 ? (
         <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] backdrop-blur-sm">
           <p className="text-[var(--muted-foreground)] text-lg">
             მანგა არ მოიძებნა
@@ -53,7 +59,7 @@ export function MangaDexSection() {
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {mangaList.map((manga) => (
+          {filteredMangaList.map((manga) => (
             <MangaDexCard key={manga.id} manga={manga} />
           ))}
         </div>

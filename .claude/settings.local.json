@@ -11,7 +11,8 @@
       "Bash(npx tsc:*)",
       "mcp__ide__getDiagnostics",
       "WebFetch(domain:vercel.link)",
-      "WebFetch(domain:vercel.com)"
+      "WebFetch(domain:vercel.com)",
+      "Bash(git commit:*)"
     ]
   }
 }
