@@ -39,6 +39,7 @@ const fetchMangaDex = async (limit = 10): Promise<TransformedManga[]> => {
     "order[followedCount]": "desc",
   });
   params.append("includes[]", "author");
+  params.append("availableTranslatedLanguage[]", "en"); // Only show manga with English translations
 
   const response = await fetch(`/api/mangadex/manga?${params}`);
 

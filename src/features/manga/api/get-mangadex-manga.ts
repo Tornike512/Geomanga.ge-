@@ -156,6 +156,7 @@ export const getMangaDexManga = async (
     includes: ["cover_art", "author", "artist"],
     contentRating: ["safe", "suggestive"],
     order: { followedCount: "desc" },
+    availableTranslatedLanguage: ["en"], // Only show manga with English translations
     ...params,
   };
 
@@ -212,6 +213,7 @@ export const searchMangaDex = async (
     limit,
     offset,
     title,
+    availableTranslatedLanguage: ["en"], // Only show manga with English translations
   });
 };
 
@@ -262,12 +264,9 @@ export const browseMangaDex = async (
   }
 
   // Available translated language (filter manga that have chapters in this language)
-  if (params.availableTranslatedLanguage) {
-    searchParams.append(
-      "availableTranslatedLanguage[]",
-      params.availableTranslatedLanguage,
-    );
-  }
+  // Default to English only
+  const translatedLanguage = params.availableTranslatedLanguage || "en";
+  searchParams.append("availableTranslatedLanguage[]", translatedLanguage);
 
   // Tags
   if (params.includedTags && params.includedTags.length > 0) {
