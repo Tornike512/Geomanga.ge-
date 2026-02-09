@@ -62,7 +62,7 @@ const fetchMangaDex = async (limit = 10): Promise<TransformedManga[]> => {
 
     const coverRel = manga.relationships.find((r) => r.type === "cover_art");
     const coverUrl = coverRel?.attributes?.fileName
-      ? `/mangadex-covers/${manga.id}/${coverRel.attributes.fileName}.256.jpg`
+      ? `/api/mangadex-cover/${manga.id}/${coverRel.attributes.fileName}`
       : null;
 
     const authorRel = manga.relationships.find((r) => r.type === "author");
