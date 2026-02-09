@@ -156,7 +156,6 @@ export const getMangaDexManga = async (
     includes: ["cover_art", "author", "artist"],
     contentRating: ["safe", "suggestive"],
     order: { followedCount: "desc" },
-    availableTranslatedLanguage: ["en"], // Only show manga with English translations
     ...params,
   };
 
@@ -184,23 +183,23 @@ export const getMangaDexManga = async (
   return data.data.map(transformMangaDexManga);
 };
 
-export const getMangaDexPopular = async (): Promise<
-  MangaDexTransformedManga[]
-> => {
+export const getMangaDexPopular = async (
+  language?: string,
+): Promise<MangaDexTransformedManga[]> => {
   return getMangaDexManga({
     limit: 10,
     order: { followedCount: "desc" },
-    availableTranslatedLanguage: ["en"], // Only show manga with English translations
+    ...(language && { availableTranslatedLanguage: [language] }),
   });
 };
 
-export const getMangaDexLatest = async (): Promise<
-  MangaDexTransformedManga[]
-> => {
+export const getMangaDexLatest = async (
+  language?: string,
+): Promise<MangaDexTransformedManga[]> => {
   return getMangaDexManga({
     limit: 10,
     order: { latestUploadedChapter: "desc" },
-    availableTranslatedLanguage: ["en"], // Only show manga with English translations
+    ...(language && { availableTranslatedLanguage: [language] }),
   });
 };
 

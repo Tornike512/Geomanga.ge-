@@ -23,18 +23,18 @@ export const useMangaDexManga = (params: MangaDexListParams = {}) => {
   });
 };
 
-export const useMangaDexPopular = () => {
+export const useMangaDexPopular = (language?: string) => {
   return useQuery({
-    queryKey: ["mangadex", "popular"],
-    queryFn: getMangaDexPopular,
+    queryKey: ["mangadex", "popular", language],
+    queryFn: () => getMangaDexPopular(language),
     staleTime: 60 * 60 * 1000, // 1 hour
   });
 };
 
-export const useMangaDexLatest = () => {
+export const useMangaDexLatest = (language?: string) => {
   return useQuery({
-    queryKey: ["mangadex", "latest"],
-    queryFn: getMangaDexLatest,
+    queryKey: ["mangadex", "latest", language],
+    queryFn: () => getMangaDexLatest(language),
     staleTime: 30 * 60 * 1000, // 30 minutes
   });
 };

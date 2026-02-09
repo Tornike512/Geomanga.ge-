@@ -1,18 +1,33 @@
 "use client";
 
 import { Globe } from "lucide-react";
+import { useState } from "react";
+import { Dropdown } from "@/components/dropdown";
 import { Spinner } from "@/components/spinner";
-import { BLOCKED_MANGA_IDS } from "../constants/blocked-manga";
 import { useMangaDexPopular } from "../hooks/use-mangadex-manga";
 import { MangaDexCard } from "./mangadex-card";
 
-export function MangaDexSection() {
-  const { data: mangaList, isLoading, error } = useMangaDexPopular();
+const LANGUAGE_OPTIONS = [
+  { value: "", label: "ყველა ენა" },
+  { value: "en", label: "ინგლისური" },
+  { value: "es", label: "ესპანური" },
+  { value: "fr", label: "ფრანგული" },
+  { value: "de", label: "გერმანული" },
+  { value: "it", label: "იტალიური" },
+  { value: "pt-br", label: "პორტუგალიური (ბრაზილია)" },
+  { value: "ru", label: "რუსული" },
+  { value: "ja", label: "იაპონური" },
+  { value: "ko", label: "კორეული" },
+  { value: "zh", label: "ჩინური" },
+] as const;
 
-  // Filter out problematic manga
-  const filteredMangaList = mangaList?.filter(
-    (manga) => !BLOCKED_MANGA_IDS.includes(manga.id),
-  );
+export function MangaDexSection() {
+  const [language, setLanguage] = useState<string>("");
+  const {
+    data: mangaList,
+    isLoading,
+    error,
+  } = useMangaDexPopular(language || undefined);
 
   if (error) {
     return (
@@ -38,20 +53,34 @@ export function MangaDexSection() {
   return (
     <section className="mb-16 border-[var(--border)] border-b pb-16">
       <div className="mb-8">
-        <h2 className="mb-3 flex items-center gap-3 font-semibold text-2xl tracking-tight sm:text-3xl">
-          <Globe className="h-7 w-7 text-[var(--accent)]" strokeWidth={1.5} />
-          MangaDex-დან
-        </h2>
-        <p className="text-[var(--muted-foreground)] text-base">
-          პოპულარული მანგა MangaDex-დან
-        </p>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="mb-3 flex items-center gap-3 font-semibold text-2xl tracking-tight sm:text-3xl">
+              <Globe
+                className="h-7 w-7 text-[var(--accent)]"
+                strokeWidth={1.5}
+              />
+              MangaDex-დან
+            </h2>
+            <p className="text-[var(--muted-foreground)] text-base">
+              პოპულარული მანგა MangaDex-დან
+            </p>
+          </div>
+          <Dropdown
+            options={LANGUAGE_OPTIONS}
+            value={language}
+            onChange={(value) => setLanguage(value)}
+            aria-label="Select language"
+            className="min-w-[180px]"
+          />
+        </div>
       </div>
 
       {isLoading ? (
         <div className="flex min-h-[400px] items-center justify-center">
           <Spinner size="lg" />
         </div>
-      ) : !filteredMangaList || filteredMangaList.length === 0 ? (
+      ) : !mangaList || mangaList.length === 0 ? (
         <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] backdrop-blur-sm">
           <p className="text-[var(--muted-foreground)] text-lg">
             მანგა არ მოიძებნა
@@ -59,7 +88,7 @@ export function MangaDexSection() {
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {filteredMangaList.map((manga) => (
+          {mangaList.map((manga) => (
             <MangaDexCard key={manga.id} manga={manga} />
           ))}
         </div>

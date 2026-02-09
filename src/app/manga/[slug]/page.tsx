@@ -103,27 +103,6 @@ export default function MangaDetailPage() {
     );
   }
 
-  // Check if MangaDex manga has English translations
-  // Also check if it has actual chapters (not just metadata claim)
-  if (isMangaDex && mangaDexManga && !chaptersLoading) {
-    const hasEnglishInMetadata =
-      mangaDexManga.available_languages.includes("en");
-    const hasNoChapters = !mangaDexChapters || mangaDexChapters.length === 0;
-
-    if (!hasEnglishInMetadata || hasNoChapters) {
-      return (
-        <div className="flex flex-1 flex-col items-center justify-center px-4 py-12 text-center">
-          <h1 className="font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
-            მანგა არ არის ხელმისაწვდომი
-          </h1>
-          <p className="mt-4 text-[var(--muted-foreground)] text-lg">
-            ეს მანგა არ არის ხელმისაწვდომი ინგლისურ თარგმანში.
-          </p>
-        </div>
-      );
-    }
-  }
-
   // Get cover URL based on source
   const coverUrl = isMangaDex
     ? mangaDexManga?.cover_image_url
