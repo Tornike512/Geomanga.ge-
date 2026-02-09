@@ -11,11 +11,13 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
 import { Avatar } from "@/components/avatar";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
+import { Dropdown } from "@/components/dropdown";
 import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth";
 import { MangaComments } from "@/features/comments";
@@ -23,6 +25,7 @@ import { LibraryDropdown } from "@/features/library";
 import {
   useDeleteManga,
   useMangaBySlug,
+  useMangaDexAvailableLanguages,
   useMangaDexChapters,
   useMangaDexMangaById,
 } from "@/features/manga";
@@ -31,6 +34,19 @@ import { useChaptersByManga, useDeleteChapter } from "@/features/reader";
 import { UserRole } from "@/types/user.types";
 import { formatDate, formatNumber, formatRating } from "@/utils/formatters";
 import { getCoverUrl } from "@/utils/image-urls";
+
+const LANGUAGE_OPTIONS = [
+  { value: "en", label: "ინგლისური" },
+  { value: "ja", label: "იაპონური" },
+  { value: "es", label: "ესპანური" },
+  { value: "fr", label: "ფრანგული" },
+  { value: "de", label: "გერმანული" },
+  { value: "it", label: "იტალიური" },
+  { value: "pt-br", label: "პორტუგალიური (ბრაზილია)" },
+  { value: "ru", label: "რუსული" },
+  { value: "ko", label: "კორეული" },
+  { value: "zh", label: "ჩინური" },
+] as const;
 
 export default function MangaDetailPage() {
   const params = useParams();
@@ -41,15 +57,31 @@ export default function MangaDetailPage() {
   const isMangaDex = slug.startsWith("md-");
   const mangaDexId = isMangaDex ? slug.slice(3) : null;
 
+  // Language state for MangaDex chapters
+  const [language, setLanguage] = useState<string>("en");
+
   // Local manga data
   const { data: localManga, isLoading: localLoading } = useMangaBySlug(slug);
   const { data: localChapters } = useChaptersByManga(localManga?.id || 0);
 
-  // MangaDex manga data - English only
+  // MangaDex manga data
   const { data: mangaDexManga, isLoading: mangaDexLoading } =
     useMangaDexMangaById(mangaDexId || "");
   const { data: mangaDexChapters, isLoading: chaptersLoading } =
-    useMangaDexChapters(mangaDexId || "", "en");
+    useMangaDexChapters(mangaDexId || "", language);
+  const { data: availableLanguages, isLoading: languagesLoading } =
+    useMangaDexAvailableLanguages(mangaDexId || "");
+
+  // Set initial language based on available languages (only once when languages load)
+  useEffect(() => {
+    if (isMangaDex && availableLanguages && availableLanguages.length > 0) {
+      // If current language is not available, switch to first available
+      if (!availableLanguages.includes(language)) {
+        setLanguage(availableLanguages[0]);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMangaDex, availableLanguages, language]);
 
   const { data: user } = useCurrentUser();
   const deleteManga = useDeleteManga();
@@ -406,11 +438,26 @@ export default function MangaDetailPage() {
         <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 py-8 sm:px-4 md:px-8 md:py-12">
           {/* Section Title */}
           <div className="mb-8">
-            <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-              თავები
-            </h2>
-            <div className="text-[var(--muted-foreground)] text-sm">
-              სულ {chapters?.length || 0}
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
+                  თავები
+                </h2>
+                <div className="text-[var(--muted-foreground)] text-sm">
+                  სულ {chapters?.length || 0}
+                </div>
+              </div>
+              {isMangaDex && !languagesLoading && availableLanguages && (
+                <Dropdown
+                  options={LANGUAGE_OPTIONS.filter((option) =>
+                    availableLanguages.includes(option.value),
+                  )}
+                  value={language}
+                  onChange={(value) => setLanguage(value)}
+                  aria-label="Select language"
+                  className="min-w-[180px]"
+                />
+              )}
             </div>
           </div>
 

@@ -378,6 +378,76 @@ export const getMangaDexMangaById = async (
   return transformMangaDexManga(data.data);
 };
 
+// Fetch available languages with chapters for a manga
+export const getMangaDexAvailableLanguages = async (
+  mangaId: string,
+): Promise<string[]> => {
+  const url = `${MANGADEX_API_URL}/manga/${mangaId}/aggregate?translatedLanguage[]=en&translatedLanguage[]=ja&translatedLanguage[]=es&translatedLanguage[]=fr&translatedLanguage[]=de&translatedLanguage[]=it&translatedLanguage[]=pt-br&translatedLanguage[]=ru&translatedLanguage[]=ko&translatedLanguage[]=zh`;
+
+  const response = await fetch(url, {
+    headers: {
+      Accept: "application/json",
+    },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error(`MangaDex API error: ${response.status}`);
+  }
+
+  const data = (await response.json()) as {
+    result: string;
+    volumes: Record<
+      string,
+      {
+        volume: string;
+        chapters: Record<string, { chapter: string; id: string }>;
+      }
+    >;
+  };
+
+  if (data.result !== "ok") {
+    throw new Error("MangaDex API returned an error");
+  }
+
+  // Fetch chapter feed for each language with limit=1 to check if chapters exist
+  const languagesToCheck = [
+    "en",
+    "ja",
+    "es",
+    "fr",
+    "de",
+    "it",
+    "pt-br",
+    "ru",
+    "ko",
+    "zh",
+  ];
+
+  const checks = await Promise.all(
+    languagesToCheck.map(async (lang) => {
+      try {
+        const checkUrl = `${MANGADEX_API_URL}/manga/${mangaId}/feed?limit=1&translatedLanguage[]=${lang}`;
+        const checkResponse = await fetch(checkUrl, {
+          headers: { Accept: "application/json" },
+          cache: "no-store",
+        });
+
+        if (!checkResponse.ok) return null;
+
+        const checkData = (await checkResponse.json()) as MangaDexResponse<
+          MangaDexChapter[]
+        >;
+        return checkData.data.length > 0 ? lang : null;
+      } catch {
+        return null;
+      }
+    }),
+  );
+
+  return checks.filter((lang): lang is string => lang !== null);
+};
+
 // Fetch chapters for a manga
 export const getMangaDexChapters = async (
   mangaId: string,

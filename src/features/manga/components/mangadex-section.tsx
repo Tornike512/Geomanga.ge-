@@ -1,33 +1,12 @@
 "use client";
 
 import { Globe } from "lucide-react";
-import { useState } from "react";
-import { Dropdown } from "@/components/dropdown";
 import { Spinner } from "@/components/spinner";
 import { useMangaDexPopular } from "../hooks/use-mangadex-manga";
 import { MangaDexCard } from "./mangadex-card";
 
-const LANGUAGE_OPTIONS = [
-  { value: "", label: "ყველა ენა" },
-  { value: "en", label: "ინგლისური" },
-  { value: "es", label: "ესპანური" },
-  { value: "fr", label: "ფრანგული" },
-  { value: "de", label: "გერმანული" },
-  { value: "it", label: "იტალიური" },
-  { value: "pt-br", label: "პორტუგალიური (ბრაზილია)" },
-  { value: "ru", label: "რუსული" },
-  { value: "ja", label: "იაპონური" },
-  { value: "ko", label: "კორეული" },
-  { value: "zh", label: "ჩინური" },
-] as const;
-
 export function MangaDexSection() {
-  const [language, setLanguage] = useState<string>("");
-  const {
-    data: mangaList,
-    isLoading,
-    error,
-  } = useMangaDexPopular(language || undefined);
+  const { data: mangaList, isLoading, error } = useMangaDexPopular();
 
   if (error) {
     return (
@@ -53,27 +32,13 @@ export function MangaDexSection() {
   return (
     <section className="mb-16 border-[var(--border)] border-b pb-16">
       <div className="mb-8">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h2 className="mb-3 flex items-center gap-3 font-semibold text-2xl tracking-tight sm:text-3xl">
-              <Globe
-                className="h-7 w-7 text-[var(--accent)]"
-                strokeWidth={1.5}
-              />
-              MangaDex-დან
-            </h2>
-            <p className="text-[var(--muted-foreground)] text-base">
-              პოპულარული მანგა MangaDex-დან
-            </p>
-          </div>
-          <Dropdown
-            options={LANGUAGE_OPTIONS}
-            value={language}
-            onChange={(value) => setLanguage(value)}
-            aria-label="Select language"
-            className="min-w-[180px]"
-          />
-        </div>
+        <h2 className="mb-3 flex items-center gap-3 font-semibold text-2xl tracking-tight sm:text-3xl">
+          <Globe className="h-7 w-7 text-[var(--accent)]" strokeWidth={1.5} />
+          MangaDex-დან
+        </h2>
+        <p className="text-[var(--muted-foreground)] text-base">
+          პოპულარული მანგა MangaDex-დან
+        </p>
       </div>
 
       {isLoading ? (

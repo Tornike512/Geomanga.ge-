@@ -5,6 +5,7 @@ export { useMangaBySlug } from "./use-manga-by-slug";
 export { useMangaDetail } from "./use-manga-detail";
 export { useMangaList } from "./use-manga-list";
 export {
+  useMangaDexAvailableLanguages,
   useMangaDexBrowse,
   useMangaDexChapterPages,
   useMangaDexChapters,
