@@ -26,11 +26,12 @@ const nextConfig = {
       },
     ],
   },
-  async rewrites() {
+ async rewrites() {
+    const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, '') || 'http://localhost:8010';
     return [
       {
         source: '/api/v1/:path*',
-        destination: 'http://localhost:8010/api/v1/:path*',
+        destination: `${apiBase}/api/v1/:path*`,
       },
       {
         source: '/api/mangadex/:path*',
@@ -38,6 +39,7 @@ const nextConfig = {
       },
     ];
   },
+
 };
 
 export default nextConfig;
