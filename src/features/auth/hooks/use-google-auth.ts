@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { signOut as nextAuthSignOut, signIn } from "next-auth/react";
+import { setTokens } from "@/lib/api-client";
 import { googleAuth } from "../api/google-auth";
 
 export const useGoogleAuth = () => {
@@ -9,7 +10,9 @@ export const useGoogleAuth = () => {
 
   const backendAuthMutation = useMutation({
     mutationFn: googleAuth,
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      // Store tokens in cookies so subsequent requests include Bearer token
+      setTokens(data.access_token, data.refresh_token);
       // Clear Next-Auth session after backend auth succeeds
       await nextAuthSignOut({ redirect: false });
       // Invalidate user query to refresh with backend data
