@@ -29,6 +29,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/api/v1/:path*',
+        destination: 'http://localhost:8010/api/v1/:path*',
+      },
+      {
         source: '/api/mangadex/:path*',
         destination: 'https://api.mangadex.org/:path*',
       },
