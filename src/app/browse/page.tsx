@@ -2,7 +2,7 @@
 
 import { Filter, Globe, Server, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/button";
 import { Dropdown } from "@/components/dropdown";
 import { Input } from "@/components/input";
@@ -131,6 +131,14 @@ interface MangaDexModalDraft {
 }
 
 export default function BrowsePage() {
+  return (
+    <Suspense>
+      <BrowseContent />
+    </Suspense>
+  );
+}
+
+function BrowseContent() {
   const searchParams = useSearchParams();
 
   // Read initial values from URL
