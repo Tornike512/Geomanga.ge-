@@ -377,7 +377,7 @@ export default function MangaDetailPage() {
                       ავტორი
                     </div>
                     <Link
-                      href={`/browse?author=${encodeURIComponent(manga.author)}`}
+                      href={`/browse?author=${encodeURIComponent(manga.author)}${isMangaDex ? "&source=mangadex" : ""}`}
                       className="font-medium text-sm transition-colors hover:text-[var(--accent)]"
                     >
                       {manga.author}
@@ -390,7 +390,7 @@ export default function MangaDetailPage() {
                       მხატვარი
                     </div>
                     <Link
-                      href={`/browse?author=${encodeURIComponent(manga.artist)}`}
+                      href={`/browse?author=${encodeURIComponent(manga.artist)}${isMangaDex ? "&source=mangadex" : ""}`}
                       className="font-medium text-sm transition-colors hover:text-[var(--accent)]"
                     >
                       {manga.artist}
