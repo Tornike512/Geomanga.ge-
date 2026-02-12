@@ -1,4 +1,5 @@
 import { API_URL } from "@/config";
+import { getCookie } from "@/utils/cookies";
 
 interface UploadChapterPagesParams {
   readonly mangaId: number;
@@ -78,6 +79,10 @@ export const uploadChapterPagesWithProgress = ({
       `${API_URL}/upload/pages?manga_id=${mangaId}&chapter_id=${chapterId}`,
     );
     xhr.withCredentials = true;
+    const token = getCookie("access_token");
+    if (token) {
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+    }
     xhr.send(formData);
   });
 };

@@ -17,6 +17,7 @@ import { useCreateManga } from "@/features/manga/hooks/use-create-manga";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
 import type { MangaStatus } from "@/types/manga.types";
+import { getCookie } from "@/utils/cookies";
 import {
   createImagePreview,
   formatFileSize,
@@ -373,11 +374,18 @@ export default function UploadMangaPage() {
           setCurrentStep(`თავის ${chapter.chapterNumber} ატვირთვა...`);
 
           // Create chapter
+          const token = getCookie("access_token");
+          const chapterHeaders: Record<string, string> = {
+            "Content-Type": "application/json",
+          };
+          if (token) {
+            chapterHeaders.Authorization = `Bearer ${token}`;
+          }
           const response = await fetch(
             `${API_URL}/manga/${manga.id}/chapters`,
             {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: chapterHeaders,
               credentials: "include",
               body: JSON.stringify({
                 chapter_number: Number(chapter.chapterNumber),

@@ -1,5 +1,5 @@
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+import { API_URL } from "@/config";
+import { getCookie } from "@/utils/cookies";
 
 export const uploadBanner = async (
   file: File,
@@ -19,8 +19,15 @@ export const uploadBanner = async (
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await fetch(`${API_BASE_URL}/upload/banner`, {
+  const token = getCookie("access_token");
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_URL}/upload/banner`, {
     method: "POST",
+    headers,
     body: formData,
     credentials: "include",
   });

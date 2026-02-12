@@ -1,4 +1,5 @@
 import { API_URL } from "@/config";
+import { getCookie } from "@/utils/cookies";
 
 interface UploadChapterPagesParams {
   readonly mangaId: number;
@@ -22,10 +23,17 @@ export const uploadChapterPages = async ({
     formData.append("files", file);
   }
 
+  const token = getCookie("access_token");
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const response = await fetch(
     `${API_URL}/upload/pages?manga_id=${mangaId}&chapter_id=${chapterId}`,
     {
       method: "POST",
+      headers,
       body: formData,
       credentials: "include",
     },
