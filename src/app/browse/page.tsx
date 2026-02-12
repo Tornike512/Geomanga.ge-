@@ -14,6 +14,7 @@ import {
 } from "@/features/manga";
 import { MangaDexGrid, MangaGrid } from "@/features/manga/components";
 import { BLOCKED_MANGA_IDS } from "@/features/manga/constants/blocked-manga";
+import { useAuthors } from "@/features/manga/hooks/use-authors";
 import type { MangaListParams, MangaStatus } from "@/types/manga.types";
 import { AgeRating, ContentType, TranslationStatus } from "@/types/manga.types";
 import type { MangaDexBrowseParams } from "@/types/mangadex.types";
@@ -235,6 +236,13 @@ export default function BrowsePage() {
   const { data: genres } = useGenres();
   const { data: mangadexTags } = useMangaDexTags();
 
+  // Resolve author name → MangaDex UUIDs
+  const { data: authorResults } = useAuthors(authorFilter);
+  const authorIds =
+    authorResults && authorResults.length > 0
+      ? authorResults.map((a) => a.id)
+      : undefined;
+
   const { data: localData, isLoading: localLoading } = useMangaList({
     ...localFilters,
     language: "georgian",
@@ -256,7 +264,7 @@ export default function BrowsePage() {
         ? mangadexFilters.includedTags
         : undefined,
     availableTranslatedLanguage: "en",
-    authorOrArtist: authorFilter || undefined,
+    authorIds: authorFilter ? authorIds : undefined,
   });
 
   // Filter out problematic manga

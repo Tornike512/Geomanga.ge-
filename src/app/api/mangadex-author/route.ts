@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 interface MangaDexAuthor {
+  id: string;
   attributes: {
     name: string;
   };
@@ -32,7 +33,10 @@ export async function GET(request: NextRequest) {
     }
 
     const json = (await res.json()) as MangaDexAuthorResponse;
-    const authors = json.data.map((author) => author.attributes.name);
+    const authors = json.data.map((author) => ({
+      id: author.id,
+      name: author.attributes.name,
+    }));
 
     return NextResponse.json(authors);
   } catch {

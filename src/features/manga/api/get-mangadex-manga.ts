@@ -267,9 +267,11 @@ export const browseMangaDex = async (
   const translatedLanguage = params.availableTranslatedLanguage || "en";
   searchParams.append("availableTranslatedLanguage[]", translatedLanguage);
 
-  // Author or Artist name search
-  if (params.authorOrArtist) {
-    searchParams.set("authorOrArtist", params.authorOrArtist);
+  // Author IDs
+  if (params.authorIds && params.authorIds.length > 0) {
+    for (const id of params.authorIds) {
+      searchParams.append("authors[]", id);
+    }
   }
 
   // Tags

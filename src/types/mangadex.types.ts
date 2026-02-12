@@ -218,5 +218,5 @@ export interface MangaDexBrowseParams {
   readonly includedTags?: string[];
   readonly originalLanguage?: string;
   readonly availableTranslatedLanguage?: string;
-  readonly authorOrArtist?: string;
+  readonly authorIds?: string[];
 }

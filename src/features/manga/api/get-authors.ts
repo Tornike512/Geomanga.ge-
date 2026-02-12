@@ -1,4 +1,9 @@
-export const getAuthors = async (query: string): Promise<string[]> => {
+export interface AuthorResult {
+  id: string;
+  name: string;
+}
+
+export const getAuthors = async (query: string): Promise<AuthorResult[]> => {
   if (!query.trim()) return [];
 
   const res = await fetch(
@@ -7,5 +12,5 @@ export const getAuthors = async (query: string): Promise<string[]> => {
 
   if (!res.ok) return [];
 
-  return (await res.json()) as string[];
+  return (await res.json()) as AuthorResult[];
 };

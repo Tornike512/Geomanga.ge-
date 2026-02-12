@@ -31,7 +31,8 @@ export const AuthorSearchInput = ({
   const listboxRef = useRef<HTMLDivElement>(null);
 
   const debouncedQuery = useDebounce(value, 300);
-  const { data: authors = [] } = useAuthors(debouncedQuery);
+  const { data: authorResults = [] } = useAuthors(debouncedQuery);
+  const authors = authorResults.map((a) => a.name);
 
   // Close on outside click
   useEffect(() => {
