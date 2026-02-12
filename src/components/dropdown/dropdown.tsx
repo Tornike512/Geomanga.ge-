@@ -149,7 +149,7 @@ export const Dropdown = ({
         onKeyDown={handleKeyDown}
         className={cn(
           // Base styles
-          "inline-flex w-full cursor-pointer items-center justify-between gap-2 font-medium text-sm tracking-normal",
+          "inline-flex w-full cursor-pointer items-center justify-between gap-2 font-medium text-base tracking-normal",
           "rounded-lg border px-4 py-2.5",
           "transition-all duration-200 ease-out",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
@@ -239,7 +239,7 @@ export const Dropdown = ({
               onMouseLeave={() => setHighlightedIndex(-1)}
               className={cn(
                 // Base styles
-                "flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm",
+                "flex cursor-pointer items-center justify-between px-4 py-2.5 text-base",
                 "transition-all duration-150 ease-out",
                 // Default state
                 "text-[var(--foreground)]",

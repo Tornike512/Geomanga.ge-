@@ -596,7 +596,7 @@ export default function UploadMangaPage() {
                     }
                     required
                     rows={6}
-                    className="w-full rounded-sm border border-[var(--border)] bg-[var(--muted)] px-4 py-8 text-[var(--foreground)] transition-colors focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+                    className="w-full rounded-sm border border-[var(--border)] bg-[var(--muted)] px-4 py-8 text-[var(--foreground)] text-base transition-colors focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                     placeholder="შეიყვანეთ მანგის აღწერა..."
                   />
                 </div>

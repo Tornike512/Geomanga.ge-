@@ -407,7 +407,7 @@ export default function ProfilePage() {
                   disabled={!isEditing}
                   maxLength={500}
                   rows={4}
-                  className="w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] text-sm placeholder:text-[var(--muted-foreground)] focus:border-[var(--accent)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] text-base placeholder:text-[var(--muted-foreground)] focus:border-[var(--accent)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                   placeholder="მოგვიყევით თქვენს შესახებ..."
                 />
                 <p className="mt-1 text-[var(--muted-foreground)] text-xs">
