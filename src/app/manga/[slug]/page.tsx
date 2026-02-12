@@ -35,6 +35,13 @@ import { UserRole } from "@/types/user.types";
 import { formatDate, formatNumber, formatRating } from "@/utils/formatters";
 import { getCoverUrl } from "@/utils/image-urls";
 
+const STATUS_LABELS: Record<string, string> = {
+  ongoing: "გრძელდება",
+  completed: "დასრულებული",
+  hiatus: "პაუზაზე",
+  cancelled: "გაუქმებული",
+};
+
 const LANGUAGE_OPTIONS = [
   { value: "en", label: "ინგლისური" },
   { value: "ja", label: "იაპონური" },
@@ -175,8 +182,19 @@ export default function MangaDetailPage() {
                   </div>
                 )}
               </div>
-              <Badge variant="secondary" className="absolute top-3 left-3">
-                {manga.status}
+              <Badge
+                variant={
+                  manga.status === "completed"
+                    ? "default"
+                    : manga.status === "ongoing"
+                      ? "success"
+                      : manga.status === "hiatus"
+                        ? "warning"
+                        : "danger"
+                }
+                className="!text-green-400 absolute top-3 left-3 rounded-lg border-2 border-[var(--border)] bg-[var(--muted)]/60 px-1.5 py-0.5 font-bold text-[10px] text-[var(--muted-foreground)] shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-sm"
+              >
+                {STATUS_LABELS[manga.status] || manga.status}
               </Badge>
             </div>
 
