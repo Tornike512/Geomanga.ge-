@@ -287,12 +287,6 @@ export default function ForgotPasswordPage() {
                   </Link>
                 </div>
               </form>
-
-              {/* Security Note */}
-              <div className="mt-6 border-[var(--border)] border-t pt-6 text-center text-[var(--muted-foreground)] text-xs">
-                უსაფრთხოების მიზნით, კოდი გაიგზავნება მითითებულ მისამართზე,
-                მიუხედავად იმისა, რეგისტრირებულია თუ არა იმეილი სისტემაში.
-              </div>
             </>
           ) : (
             <>
@@ -406,6 +400,10 @@ function getRequestErrorMessage(error: ApiError): string {
 
   if (message.includes("oauth") || message.includes("google")) {
     return "ეს ანგარიში იყენებს Google-ით შესვლას. გთხოვთ, შეხვიდეთ Google-ით.";
+  }
+
+  if (message.includes("not found")) {
+    return "ამ იმეილით მომხმარებელი ვერ მოიძებნა.";
   }
 
   if (message.includes("email") && message.includes("invalid")) {
