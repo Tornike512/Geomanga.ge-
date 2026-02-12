@@ -87,7 +87,10 @@ export default function MangaDetailPage() {
   const deleteManga = useDeleteManga();
   const deleteChapter = useDeleteChapter();
 
-  const canDeleteManga = user?.role === UserRole.ADMIN;
+  const canDeleteManga =
+    user?.id === localManga?.uploader?.id ||
+    user?.role === UserRole.MODERATOR ||
+    user?.role === UserRole.ADMIN;
   const canDeleteChapter =
     user?.role === UserRole.MODERATOR || user?.role === UserRole.ADMIN;
 
