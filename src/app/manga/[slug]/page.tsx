@@ -208,7 +208,7 @@ export default function MangaDetailPage() {
                 </div>
 
                 {/* Uploader & Action Buttons */}
-                <div className="flex flex-col items-start gap-3 md:items-end">
+                <div className="flex w-full flex-col items-start gap-3 md:w-auto md:items-end">
                   {/* Uploader Info */}
                   {!isMangaDex && localManga?.uploader && (
                     <Link
@@ -230,7 +230,7 @@ export default function MangaDetailPage() {
                   )}
 
                   {/* Action Buttons */}
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap justify-end gap-2">
                     {!isMangaDex &&
                       user &&
                       (user.role === UserRole.UPLOADER ||
