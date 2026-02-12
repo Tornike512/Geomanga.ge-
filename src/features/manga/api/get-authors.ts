@@ -17,6 +17,6 @@ export const getAuthors = async (query: string): Promise<string[]> => {
 
   if (!res.ok) return [];
 
-  const json: MangaDexAuthorResponse = await res.json();
+  const json = (await res.json()) as MangaDexAuthorResponse;
   return json.data.map((author) => author.attributes.name);
 };

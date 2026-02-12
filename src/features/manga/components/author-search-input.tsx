@@ -103,6 +103,7 @@ export const AuthorSearchInput = ({
 
   return (
     <div ref={containerRef} className="relative">
+      {/* biome-ignore lint/a11y/useSemanticElements: Input with combobox role provides better UX than select for autocomplete */}
       <Input
         id={id}
         type="text"
