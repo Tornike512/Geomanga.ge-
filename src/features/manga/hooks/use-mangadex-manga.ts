@@ -49,11 +49,15 @@ export const useMangaDexSearch = (title: string) => {
   });
 };
 
-export const useMangaDexBrowse = (params: MangaDexBrowseParams = {}) => {
+export const useMangaDexBrowse = (
+  params: MangaDexBrowseParams = {},
+  enabled = true,
+) => {
   return useQuery({
     queryKey: ["mangadex", "browse", params],
     queryFn: () => browseMangaDex(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled,
   });
 };
 

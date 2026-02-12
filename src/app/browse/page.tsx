@@ -245,11 +245,15 @@ function BrowseContent() {
   const { data: mangadexTags } = useMangaDexTags();
 
   // Resolve author name → MangaDex UUIDs
-  const { data: authorResults } = useAuthors(authorFilter);
+  const { data: authorResults, isLoading: authorLoading } =
+    useAuthors(authorFilter);
   const authorIds =
     authorResults && authorResults.length > 0
       ? authorResults.map((a) => a.id)
       : undefined;
+
+  // Don't fetch MangaDex if author filter is set but couldn't be resolved to IDs
+  const mangadexAuthorReady = !authorFilter || !!authorIds;
 
   const { data: localData, isLoading: localLoading } = useMangaList({
     ...localFilters,
@@ -258,22 +262,25 @@ function BrowseContent() {
     author: authorFilter || undefined,
   });
 
-  const { data: mangadexData, isLoading: mangadexLoading } = useMangaDexBrowse({
-    page: mangadexFilters.page,
-    limit: mangadexFilters.limit,
-    title: mangadexFilters.title || undefined,
-    status: mangadexFilters.status,
-    contentRating: mangadexFilters.contentRating,
-    demographic: mangadexFilters.demographic,
-    sortBy: mangadexFilters.sortBy,
-    orderDesc: mangadexFilters.orderDesc,
-    includedTags:
-      mangadexFilters.includedTags.length > 0
-        ? mangadexFilters.includedTags
-        : undefined,
-    availableTranslatedLanguage: "en",
-    authorIds: authorFilter ? authorIds : undefined,
-  });
+  const { data: mangadexData, isLoading: mangadexLoading } = useMangaDexBrowse(
+    {
+      page: mangadexFilters.page,
+      limit: mangadexFilters.limit,
+      title: mangadexFilters.title || undefined,
+      status: mangadexFilters.status,
+      contentRating: mangadexFilters.contentRating,
+      demographic: mangadexFilters.demographic,
+      sortBy: mangadexFilters.sortBy,
+      orderDesc: mangadexFilters.orderDesc,
+      includedTags:
+        mangadexFilters.includedTags.length > 0
+          ? mangadexFilters.includedTags
+          : undefined,
+      availableTranslatedLanguage: "en",
+      authorIds: authorFilter ? authorIds : undefined,
+    },
+    mangadexAuthorReady,
+  );
 
   // Filter out problematic manga
   const filteredMangadexData = mangadexData
@@ -631,7 +638,7 @@ function BrowseContent() {
       ) : (
         <MangaDexGrid
           manga={filteredMangadexData?.items || []}
-          isLoading={mangadexLoading}
+          isLoading={mangadexLoading || (!!authorFilter && authorLoading)}
         />
       )}
 
