@@ -356,7 +356,12 @@ export default function MangaDetailPage() {
                     <div className="text-[var(--muted-foreground)] text-xs">
                       ავტორი
                     </div>
-                    <div className="font-medium text-sm">{manga.author}</div>
+                    <Link
+                      href={`/browse?author=${encodeURIComponent(manga.author)}`}
+                      className="font-medium text-sm transition-colors hover:text-[var(--accent)]"
+                    >
+                      {manga.author}
+                    </Link>
                   </div>
                 )}
                 {manga.artist && (
@@ -364,7 +369,12 @@ export default function MangaDetailPage() {
                     <div className="text-[var(--muted-foreground)] text-xs">
                       მხატვარი
                     </div>
-                    <div className="font-medium text-sm">{manga.artist}</div>
+                    <Link
+                      href={`/browse?author=${encodeURIComponent(manga.artist)}`}
+                      className="font-medium text-sm transition-colors hover:text-[var(--accent)]"
+                    >
+                      {manga.artist}
+                    </Link>
                   </div>
                 )}
                 {isMangaDex && mangaDexManga?.year && (

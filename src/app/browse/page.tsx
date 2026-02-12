@@ -1,6 +1,7 @@
 "use client";
 
 import { Filter, Globe, Server, X } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/button";
 import { Dropdown } from "@/components/dropdown";
@@ -116,7 +117,11 @@ interface MangaDexFilterState {
 }
 
 export default function BrowsePage() {
+  const searchParams = useSearchParams();
+  const authorParam = searchParams.get("author") || "";
+
   const [source, setSource] = useState<DataSource>("local");
+  const [authorFilter, setAuthorFilter] = useState(authorParam);
 
   // Local filters
   const [localFilters, setLocalFilters] = useState<LocalFilterState>({
@@ -155,6 +160,7 @@ export default function BrowsePage() {
     ...localFilters,
     language: "georgian",
     genres: localFilters.genres.length > 0 ? localFilters.genres : undefined,
+    author: authorFilter || undefined,
   });
 
   const { data: mangadexData, isLoading: mangadexLoading } = useMangaDexBrowse({
@@ -171,6 +177,7 @@ export default function BrowsePage() {
         ? mangadexFilters.includedTags
         : undefined,
     availableTranslatedLanguage: "en", // English only
+    authorOrArtist: authorFilter || undefined,
   });
 
   // Filter out problematic manga
@@ -288,6 +295,29 @@ export default function BrowsePage() {
           MangaDex
         </Button>
       </div>
+
+      {/* Active Author Filter */}
+      {authorFilter && (
+        <div className="mb-4 flex items-center gap-2">
+          <span className="text-[var(--muted-foreground)] text-sm">
+            ავტორი:
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--accent)]/50 bg-[var(--accent)]/10 px-3 py-1.5 font-medium text-[var(--accent)] text-sm">
+            {authorFilter}
+            <button
+              type="button"
+              onClick={() => {
+                setAuthorFilter("");
+                window.history.replaceState(null, "", "/browse");
+              }}
+              className="ml-1 rounded-full p-0.5 transition-colors hover:bg-[var(--accent)]/20"
+              aria-label="ავტორის ფილტრის წაშლა"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </span>
+        </div>
+      )}
 
       {/* Filters - Local */}
       {source === "local" && (
