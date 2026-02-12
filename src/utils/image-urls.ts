@@ -10,8 +10,11 @@ export const getImageUrl = (path: string | undefined): string => {
   // Proxied MangaDex cover images via API route
   if (path.startsWith("/api/mangadex-cover/")) return path;
 
-  // If path starts with /api/ or /uploads/, use base URL directly
-  if (path.startsWith("/api/") || path.startsWith("/uploads/")) {
+  // If path starts with /api/, use as-is (goes through Vercel proxy)
+  if (path.startsWith("/api/")) return path;
+
+  // If path starts with /uploads/, use base URL directly
+  if (path.startsWith("/uploads/")) {
     return `${staticUrl}${path}`;
   }
 
