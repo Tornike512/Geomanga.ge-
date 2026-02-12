@@ -1,3 +1,4 @@
+export { useAuthors } from "./use-authors";
 export { useCreateManga } from "./use-create-manga";
 export { useDeleteManga } from "./use-delete-manga";
 export { useFetchMangaDex } from "./use-fetch-mangadex";

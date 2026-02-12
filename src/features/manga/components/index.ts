@@ -1,3 +1,4 @@
+export { AuthorSearchInput } from "./author-search-input";
 export { MangaCard } from "./manga-card";
 export { MangaGrid } from "./manga-grid";
 export { MangaDexCard } from "./mangadex-card";

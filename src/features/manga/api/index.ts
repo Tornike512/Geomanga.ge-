@@ -1,5 +1,6 @@
 export { createManga } from "./create-manga";
 export { deleteManga } from "./delete-manga";
+export { getAuthors } from "./get-authors";
 export { getMangaBySlug } from "./get-manga-by-slug";
 export { getMangaDetail } from "./get-manga-detail";
 export { getMangaList } from "./get-manga-list";

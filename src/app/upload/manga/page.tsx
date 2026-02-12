@@ -13,6 +13,7 @@ import { Input } from "@/components/input";
 import { API_URL } from "@/config";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { useGenres } from "@/features/genres/hooks/use-genres";
+import { AuthorSearchInput } from "@/features/manga/components/author-search-input";
 import { useCreateManga } from "@/features/manga/hooks/use-create-manga";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
@@ -618,14 +619,13 @@ export default function UploadMangaPage() {
                     >
                       ავტორი *
                     </label>
-                    <Input
+                    <AuthorSearchInput
                       id="author"
-                      type="text"
                       value={formData.author}
-                      onChange={(e) =>
+                      onChange={(value) =>
                         setFormData((prev) => ({
                           ...prev,
-                          author: e.target.value,
+                          author: value,
                         }))
                       }
                       required
