@@ -1,7 +1,22 @@
-import { api } from "@/lib/api-client";
+interface MangaDexAuthor {
+  attributes: {
+    name: string;
+  };
+}
 
-export const getAuthors = async (query?: string): Promise<string[]> => {
-  return api.get<string[]>("/manga/authors", {
-    params: { q: query || undefined, limit: 20 },
-  });
+interface MangaDexAuthorResponse {
+  data: MangaDexAuthor[];
+}
+
+export const getAuthors = async (query: string): Promise<string[]> => {
+  if (!query.trim()) return [];
+
+  const res = await fetch(
+    `https://api.mangadex.org/author?name=${encodeURIComponent(query)}&limit=10`,
+  );
+
+  if (!res.ok) return [];
+
+  const json: MangaDexAuthorResponse = await res.json();
+  return json.data.map((author) => author.attributes.name);
 };
