@@ -2,7 +2,7 @@
 
 import { Filter, Globe, Server, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/button";
 import { Dropdown } from "@/components/dropdown";
 import { Input } from "@/components/input";
@@ -116,41 +116,120 @@ interface MangaDexFilterState {
   includedTags: string[];
 }
 
+interface LocalModalDraft {
+  age_rating: AgeRating | undefined;
+  content_type: ContentType | undefined;
+  translation_status: TranslationStatus | undefined;
+  genres: number[];
+}
+
+interface MangaDexModalDraft {
+  contentRating: MangaDexBrowseParams["contentRating"];
+  demographic: MangaDexBrowseParams["demographic"];
+  includedTags: string[];
+}
+
 export default function BrowsePage() {
   const searchParams = useSearchParams();
-  const authorParam = searchParams.get("author") || "";
 
-  const [source, setSource] = useState<DataSource>("local");
-  const [authorFilter, setAuthorFilter] = useState(authorParam);
+  // Read initial values from URL
+  const initialSource = (searchParams.get("source") as DataSource) || "local";
+  const initialAuthor = searchParams.get("author") || "";
 
-  // Local filters
-  const [localFilters, setLocalFilters] = useState<LocalFilterState>({
+  const [source, setSource] = useState<DataSource>(initialSource);
+  const [authorFilter, setAuthorFilter] = useState(initialAuthor);
+
+  // Local filters - initialized from URL
+  const [localFilters, setLocalFilters] = useState<LocalFilterState>(() => ({
     page: 1,
     limit: 20,
-    status: undefined,
-    translation_status: undefined,
-    content_type: undefined,
-    age_rating: undefined,
-    genres: [],
-    sort_by: "rating",
-    order_desc: true,
+    status:
+      initialSource === "local"
+        ? (searchParams.get("status") as MangaStatus) || undefined
+        : undefined,
+    sort_by:
+      initialSource === "local"
+        ? (searchParams.get("sort") as MangaListParams["sort_by"]) || "rating"
+        : "rating",
+    order_desc:
+      initialSource === "local" ? searchParams.get("order") !== "asc" : true,
+    age_rating:
+      initialSource === "local"
+        ? (searchParams.get("age_rating") as AgeRating) || undefined
+        : undefined,
+    content_type:
+      initialSource === "local"
+        ? (searchParams.get("content_type") as ContentType) || undefined
+        : undefined,
+    translation_status:
+      initialSource === "local"
+        ? (searchParams.get("translation_status") as TranslationStatus) ||
+          undefined
+        : undefined,
+    genres:
+      initialSource === "local"
+        ? searchParams.get("genres")?.split(",").map(Number).filter(Boolean) ||
+          []
+        : [],
+  }));
+
+  // MangaDex filters - initialized from URL
+  const [mangadexFilters, setMangadexFilters] = useState<MangaDexFilterState>(
+    () => ({
+      page: 1,
+      limit: 20,
+      title: initialSource === "mangadex" ? searchParams.get("q") || "" : "",
+      status:
+        initialSource === "mangadex"
+          ? (searchParams.get("status") as MangaDexBrowseParams["status"]) ||
+            undefined
+          : undefined,
+      sortBy:
+        initialSource === "mangadex"
+          ? (searchParams.get("sort") as MangaDexBrowseParams["sortBy"]) ||
+            "followedCount"
+          : "followedCount",
+      orderDesc:
+        initialSource === "mangadex"
+          ? searchParams.get("order") !== "asc"
+          : true,
+      contentRating:
+        initialSource === "mangadex"
+          ? (searchParams.get(
+              "content_rating",
+            ) as MangaDexBrowseParams["contentRating"]) || undefined
+          : undefined,
+      demographic:
+        initialSource === "mangadex"
+          ? (searchParams.get(
+              "demographic",
+            ) as MangaDexBrowseParams["demographic"]) || undefined
+          : undefined,
+      includedTags:
+        initialSource === "mangadex"
+          ? searchParams.get("tags")?.split(",").filter(Boolean) || []
+          : [],
+    }),
+  );
+
+  // Draft state for modal filters (only applied on "გამოყენება" click)
+  const [localDraft, setLocalDraft] = useState<LocalModalDraft>({
+    age_rating: localFilters.age_rating,
+    content_type: localFilters.content_type,
+    translation_status: localFilters.translation_status,
+    genres: [...localFilters.genres],
   });
 
-  // MangaDex filters - English only
-  const [mangadexFilters, setMangadexFilters] = useState<MangaDexFilterState>({
-    page: 1,
-    limit: 20,
-    title: "",
-    status: undefined,
-    contentRating: undefined,
-    demographic: undefined,
-    sortBy: "followedCount",
-    orderDesc: true,
-    includedTags: [],
+  const [mangadexDraft, setMangadexDraft] = useState<MangaDexModalDraft>({
+    contentRating: mangadexFilters.contentRating,
+    demographic: mangadexFilters.demographic,
+    includedTags: [...mangadexFilters.includedTags],
   });
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState(
+    initialSource === "mangadex" ? searchParams.get("q") || "" : "",
+  );
 
   // Data fetching
   const { data: genres } = useGenres();
@@ -176,7 +255,7 @@ export default function BrowsePage() {
       mangadexFilters.includedTags.length > 0
         ? mangadexFilters.includedTags
         : undefined,
-    availableTranslatedLanguage: "en", // English only
+    availableTranslatedLanguage: "en",
     authorOrArtist: authorFilter || undefined,
   });
 
@@ -194,53 +273,121 @@ export default function BrowsePage() {
   const genreTags =
     mangadexTags?.filter((tag) => tag.group === "genre").slice(0, 20) || [];
 
-  const toggleLocalGenre = (genreId: number) => {
+  // URL sync - update URL whenever applied filters change
+  const updateUrl = useCallback(() => {
+    const params = new URLSearchParams();
+
+    if (authorFilter) params.set("author", authorFilter);
+    if (source !== "local") params.set("source", source);
+
+    if (source === "local") {
+      if (localFilters.status) params.set("status", localFilters.status);
+      if (localFilters.sort_by && localFilters.sort_by !== "rating")
+        params.set("sort", localFilters.sort_by);
+      if (!localFilters.order_desc) params.set("order", "asc");
+      if (localFilters.age_rating)
+        params.set("age_rating", localFilters.age_rating);
+      if (localFilters.content_type)
+        params.set("content_type", localFilters.content_type);
+      if (localFilters.translation_status)
+        params.set("translation_status", localFilters.translation_status);
+      if (localFilters.genres.length > 0)
+        params.set("genres", localFilters.genres.join(","));
+    } else {
+      if (mangadexFilters.status) params.set("status", mangadexFilters.status);
+      if (mangadexFilters.sortBy && mangadexFilters.sortBy !== "followedCount")
+        params.set("sort", mangadexFilters.sortBy);
+      if (!mangadexFilters.orderDesc) params.set("order", "asc");
+      if (mangadexFilters.contentRating)
+        params.set("content_rating", mangadexFilters.contentRating);
+      if (mangadexFilters.demographic)
+        params.set("demographic", mangadexFilters.demographic);
+      if (mangadexFilters.includedTags.length > 0)
+        params.set("tags", mangadexFilters.includedTags.join(","));
+      if (mangadexFilters.title) params.set("q", mangadexFilters.title);
+    }
+
+    const qs = params.toString();
+    window.history.replaceState(null, "", qs ? `/browse?${qs}` : "/browse");
+  }, [source, authorFilter, localFilters, mangadexFilters]);
+
+  useEffect(() => {
+    updateUrl();
+  }, [updateUrl]);
+
+  // Open modal and snapshot current filters into draft
+  const openFilterModal = () => {
+    if (source === "local") {
+      setLocalDraft({
+        age_rating: localFilters.age_rating,
+        content_type: localFilters.content_type,
+        translation_status: localFilters.translation_status,
+        genres: [...localFilters.genres],
+      });
+    } else {
+      setMangadexDraft({
+        contentRating: mangadexFilters.contentRating,
+        demographic: mangadexFilters.demographic,
+        includedTags: [...mangadexFilters.includedTags],
+      });
+    }
+    setIsFilterModalOpen(true);
+  };
+
+  // Apply draft → actual filters
+  const applyLocalModalFilters = () => {
     setLocalFilters((prev) => ({
+      ...prev,
+      ...localDraft,
+      page: 1,
+    }));
+    setIsFilterModalOpen(false);
+  };
+
+  const applyMangadexModalFilters = () => {
+    setMangadexFilters((prev) => ({
+      ...prev,
+      ...mangadexDraft,
+      page: 1,
+    }));
+    setIsFilterModalOpen(false);
+  };
+
+  // Clear draft (inside modal)
+  const clearLocalDraft = () => {
+    setLocalDraft({
+      age_rating: undefined,
+      content_type: undefined,
+      translation_status: undefined,
+      genres: [],
+    });
+  };
+
+  const clearMangadexDraft = () => {
+    setMangadexDraft({
+      contentRating: undefined,
+      demographic: undefined,
+      includedTags: [],
+    });
+  };
+
+  // Toggle genre/tag in draft
+  const toggleLocalDraftGenre = (genreId: number) => {
+    setLocalDraft((prev) => ({
       ...prev,
       genres: prev.genres.includes(genreId)
         ? prev.genres.filter((id) => id !== genreId)
         : [...prev.genres, genreId],
-      page: 1,
     }));
   };
 
-  const toggleMangadexTag = (tagId: string) => {
-    setMangadexFilters((prev) => ({
+  const toggleMangadexDraftTag = (tagId: string) => {
+    setMangadexDraft((prev) => ({
       ...prev,
       includedTags: prev.includedTags.includes(tagId)
         ? prev.includedTags.filter((id) => id !== tagId)
         : [...prev.includedTags, tagId],
-      page: 1,
     }));
-  };
-
-  const clearLocalFilters = () => {
-    setLocalFilters({
-      page: 1,
-      limit: 20,
-      status: undefined,
-      translation_status: undefined,
-      content_type: undefined,
-      age_rating: undefined,
-      genres: [],
-      sort_by: "rating",
-      order_desc: true,
-    });
-  };
-
-  const clearMangadexFilters = () => {
-    setMangadexFilters({
-      page: 1,
-      limit: 20,
-      title: "",
-      status: undefined,
-      contentRating: undefined,
-      demographic: undefined,
-      sortBy: "followedCount",
-      orderDesc: true,
-      includedTags: [],
-    });
-    setSearchInput("");
   };
 
   const handleSearch = () => {
@@ -306,10 +453,7 @@ export default function BrowsePage() {
             {authorFilter}
             <button
               type="button"
-              onClick={() => {
-                setAuthorFilter("");
-                window.history.replaceState(null, "", "/browse");
-              }}
+              onClick={() => setAuthorFilter("")}
               className="ml-1 rounded-full p-0.5 transition-colors hover:bg-[var(--accent)]/20"
               aria-label="ავტორის ფილტრის წაშლა"
             >
@@ -368,7 +512,7 @@ export default function BrowsePage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setIsFilterModalOpen(true)}
+            onClick={openFilterModal}
             className="relative h-auto min-w-[140px] px-4 py-2.5"
           >
             <Filter className="mr-2 h-4 w-4" />
@@ -450,7 +594,7 @@ export default function BrowsePage() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setIsFilterModalOpen(true)}
+              onClick={openFilterModal}
               className="relative h-auto min-w-[140px] px-4 py-2.5"
             >
               <Filter className="mr-2 h-4 w-4" />
@@ -603,12 +747,11 @@ export default function BrowsePage() {
               </h3>
               <Dropdown
                 options={AGE_RATING_OPTIONS}
-                value={localFilters.age_rating || ""}
+                value={localDraft.age_rating || ""}
                 onChange={(value) =>
-                  setLocalFilters({
-                    ...localFilters,
+                  setLocalDraft({
+                    ...localDraft,
                     age_rating: value ? (value as AgeRating) : undefined,
-                    page: 1,
                   })
                 }
                 aria-label="Filter by age rating"
@@ -623,12 +766,11 @@ export default function BrowsePage() {
               </h3>
               <Dropdown
                 options={CONTENT_TYPE_OPTIONS}
-                value={localFilters.content_type || ""}
+                value={localDraft.content_type || ""}
                 onChange={(value) =>
-                  setLocalFilters({
-                    ...localFilters,
+                  setLocalDraft({
+                    ...localDraft,
                     content_type: value ? (value as ContentType) : undefined,
-                    page: 1,
                   })
                 }
                 aria-label="Filter by content type"
@@ -643,14 +785,13 @@ export default function BrowsePage() {
               </h3>
               <Dropdown
                 options={TRANSLATION_STATUS_OPTIONS}
-                value={localFilters.translation_status || ""}
+                value={localDraft.translation_status || ""}
                 onChange={(value) =>
-                  setLocalFilters({
-                    ...localFilters,
+                  setLocalDraft({
+                    ...localDraft,
                     translation_status: value
                       ? (value as TranslationStatus)
                       : undefined,
-                    page: 1,
                   })
                 }
                 aria-label="Filter by translation status"
@@ -669,14 +810,14 @@ export default function BrowsePage() {
                     key={genre.id}
                     type="button"
                     variant={
-                      localFilters.genres.includes(genre.id)
+                      localDraft.genres.includes(genre.id)
                         ? "default"
                         : "outline"
                     }
                     size="sm"
-                    onClick={() => toggleLocalGenre(genre.id)}
+                    onClick={() => toggleLocalDraftGenre(genre.id)}
                     className={`rounded-lg px-3 py-1.5 text-sm ${
-                      localFilters.genres.includes(genre.id)
+                      localDraft.genres.includes(genre.id)
                         ? ""
                         : "hover:border-[var(--border-hover)]"
                     }`}
@@ -691,14 +832,14 @@ export default function BrowsePage() {
             <div className="flex gap-3 border-[var(--border)] border-t pt-4">
               <Button
                 variant="outline"
-                onClick={clearLocalFilters}
+                onClick={clearLocalDraft}
                 className="flex-1"
               >
                 გასუფთავება
               </Button>
               <Button
                 variant="default"
-                onClick={() => setIsFilterModalOpen(false)}
+                onClick={applyLocalModalFilters}
                 className="flex-1"
               >
                 გამოყენება
@@ -763,14 +904,13 @@ export default function BrowsePage() {
               </h3>
               <Dropdown
                 options={MANGADEX_CONTENT_RATING_OPTIONS}
-                value={mangadexFilters.contentRating || ""}
+                value={mangadexDraft.contentRating || ""}
                 onChange={(value) =>
-                  setMangadexFilters({
-                    ...mangadexFilters,
+                  setMangadexDraft({
+                    ...mangadexDraft,
                     contentRating: value
                       ? (value as MangaDexBrowseParams["contentRating"])
                       : undefined,
-                    page: 1,
                   })
                 }
                 aria-label="Filter by content rating"
@@ -785,14 +925,13 @@ export default function BrowsePage() {
               </h3>
               <Dropdown
                 options={MANGADEX_DEMOGRAPHIC_OPTIONS}
-                value={mangadexFilters.demographic || ""}
+                value={mangadexDraft.demographic || ""}
                 onChange={(value) =>
-                  setMangadexFilters({
-                    ...mangadexFilters,
+                  setMangadexDraft({
+                    ...mangadexDraft,
                     demographic: value
                       ? (value as MangaDexBrowseParams["demographic"])
                       : undefined,
-                    page: 1,
                   })
                 }
                 aria-label="Filter by demographic"
@@ -811,14 +950,14 @@ export default function BrowsePage() {
                     key={tag.id}
                     type="button"
                     variant={
-                      mangadexFilters.includedTags.includes(tag.id)
+                      mangadexDraft.includedTags.includes(tag.id)
                         ? "default"
                         : "outline"
                     }
                     size="sm"
-                    onClick={() => toggleMangadexTag(tag.id)}
+                    onClick={() => toggleMangadexDraftTag(tag.id)}
                     className={`rounded-lg px-3 py-1.5 text-sm ${
-                      mangadexFilters.includedTags.includes(tag.id)
+                      mangadexDraft.includedTags.includes(tag.id)
                         ? ""
                         : "hover:border-[var(--border-hover)]"
                     }`}
@@ -833,14 +972,14 @@ export default function BrowsePage() {
             <div className="flex gap-3 border-[var(--border)] border-t pt-4">
               <Button
                 variant="outline"
-                onClick={clearMangadexFilters}
+                onClick={clearMangadexDraft}
                 className="flex-1"
               >
                 გასუფთავება
               </Button>
               <Button
                 variant="default"
-                onClick={() => setIsFilterModalOpen(false)}
+                onClick={applyMangadexModalFilters}
                 className="flex-1"
               >
                 გამოყენება
