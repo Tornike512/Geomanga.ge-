@@ -315,13 +315,13 @@ export default function ProfilePage() {
               <h1 className="mb-1 truncate font-semibold text-xl">
                 {user.username}
               </h1>
-              <p className="mb-4 truncate text-[var(--muted-foreground)] text-sm">
+              <p className="mb-4 truncate text-[var(--muted-foreground)] text-xl">
                 {user.email}
               </p>
 
               {/* Bio */}
               {user.bio && (
-                <p className="mb-4 text-[var(--foreground)] text-sm">
+                <p className="mb-4 text-[var(--foreground)] text-xl">
                   {user.bio}
                 </p>
               )}
