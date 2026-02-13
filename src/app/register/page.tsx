@@ -385,13 +385,13 @@ export default function RegisterPage() {
                 <p className="mb-4 font-medium text-[var(--foreground)]">
                   {registeredEmail}
                 </p>
-                <button
-                  type="button"
+                <Button
+                  variant="unstyled"
                   onClick={handleEditEmail}
                   className="text-[var(--accent)] text-sm transition-colors duration-200 hover:text-[var(--foreground)]"
                 >
                   იმეილის შეცვლა
-                </button>
+                </Button>
               </div>
 
               {/* Timer */}
@@ -457,8 +457,8 @@ export default function RegisterPage() {
                 {/* Resend OTP Button */}
                 {canResend && (
                   <div className="text-center">
-                    <button
-                      type="button"
+                    <Button
+                      variant="unstyled"
                       onClick={handleResendOtp}
                       disabled={resendOtp.isPending}
                       className="text-[var(--accent)] text-sm transition-colors duration-200 hover:text-[var(--foreground)] disabled:opacity-50"
@@ -466,7 +466,7 @@ export default function RegisterPage() {
                       {resendOtp.isPending
                         ? "გაგზავნა..."
                         : "კოდის ხელახალი გაგზავნა"}
-                    </button>
+                    </Button>
                   </div>
                 )}
               </form>

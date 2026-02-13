@@ -117,8 +117,8 @@ export const LibraryDropdown = ({
 
             return (
               // biome-ignore lint/a11y/useSemanticElements: Custom radio option in dropdown requires button with role=option
-              <button
-                type="button"
+              <Button
+                variant="unstyled"
                 key={category}
                 role="option"
                 aria-selected={isSelected}
@@ -143,7 +143,7 @@ export const LibraryDropdown = ({
                 >
                   {isSelected && <Check className="h-3 w-3" />}
                 </div>
-              </button>
+              </Button>
             );
           },
         )}

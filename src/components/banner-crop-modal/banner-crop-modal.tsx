@@ -123,13 +123,15 @@ export function BannerCropModal({
       }`}
     >
       {/* Backdrop */}
-      <button
-        type="button"
+      <Button
+        variant="unstyled"
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={handleClose}
         tabIndex={-1}
         aria-label="Close crop modal"
-      />
+      >
+        <span className="sr-only">Close</span>
+      </Button>
 
       {/* Modal */}
       <div

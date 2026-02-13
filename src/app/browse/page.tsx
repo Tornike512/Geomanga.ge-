@@ -596,14 +596,14 @@ function BrowseContent() {
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--accent)]/50 bg-[var(--accent)]/10 px-3 py-1.5 font-medium text-[var(--accent)] text-sm">
             {authorFilter}
-            <button
-              type="button"
+            <Button
+              variant="unstyled"
               onClick={() => setAuthorFilter("")}
               className="ml-1 rounded-full p-0.5 transition-colors hover:bg-[var(--accent)]/20"
               aria-label="ავტორის ფილტრის წაშლა"
             >
               <X className="h-3.5 w-3.5" />
-            </button>
+            </Button>
           </span>
         </div>
       )}
@@ -614,8 +614,8 @@ function BrowseContent() {
           <span className="text-[var(--muted-foreground)] text-sm">ჟანრი:</span>
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--accent)]/50 bg-[var(--accent)]/10 px-3 py-1.5 font-medium text-[var(--accent)] text-sm">
             {genreNameFilter}
-            <button
-              type="button"
+            <Button
+              variant="unstyled"
               onClick={() => {
                 setGenreNameFilter("");
                 setLocalFilters((prev) => ({ ...prev, genres: [], page: 1 }));
@@ -636,7 +636,7 @@ function BrowseContent() {
               aria-label="ჟანრის ფილტრის წაშლა"
             >
               <X className="h-3.5 w-3.5" />
-            </button>
+            </Button>
           </span>
         </div>
       )}
