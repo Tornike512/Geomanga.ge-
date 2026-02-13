@@ -93,6 +93,8 @@ const MANGADEX_DEMOGRAPHIC_OPTIONS = [
   { value: "josei", label: "ჯოსეი" },
 ] as const;
 
+const DEMOGRAPHICS = ["shounen", "shoujo", "seinen", "josei"] as const;
+
 interface LocalFilterState {
   page: number;
   limit: number;
@@ -247,7 +249,9 @@ function BrowseContent() {
   const { data: mangadexTags } = useMangaDexTags();
 
   // Resolve genre name → source-specific IDs when data loads or source changes
-  const DEMOGRAPHICS = ["shounen", "shoujo", "seinen", "josei"] as const;
+  const localGenreIds = localFilters.genres;
+  const mangadexTagIds = mangadexFilters.includedTags;
+  const mangadexDemographic = mangadexFilters.demographic;
 
   useEffect(() => {
     if (!genreNameFilter) return;
@@ -255,7 +259,7 @@ function BrowseContent() {
 
     if (source === "local" && genres) {
       const match = genres.find((g) => g.name.toLowerCase() === nameLower);
-      if (match && !localFilters.genres.includes(match.id)) {
+      if (match && !localGenreIds.includes(match.id)) {
         setLocalFilters((prev) => ({
           ...prev,
           genres: [match.id],
@@ -271,7 +275,7 @@ function BrowseContent() {
       const tagMatch = mangadexTags.find(
         (t) => t.name.toLowerCase() === nameLower,
       );
-      if (tagMatch && !mangadexFilters.includedTags.includes(tagMatch.id)) {
+      if (tagMatch && !mangadexTagIds.includes(tagMatch.id)) {
         setMangadexFilters((prev) => ({
           ...prev,
           includedTags: [tagMatch.id],
@@ -286,10 +290,7 @@ function BrowseContent() {
 
       // Check if it matches a MangaDex demographic
       const demographicMatch = DEMOGRAPHICS.find((d) => d === nameLower);
-      if (
-        demographicMatch &&
-        mangadexFilters.demographic !== demographicMatch
-      ) {
+      if (demographicMatch && mangadexDemographic !== demographicMatch) {
         setMangadexFilters((prev) => ({
           ...prev,
           demographic: demographicMatch,
@@ -306,10 +307,9 @@ function BrowseContent() {
     source,
     genres,
     mangadexTags,
-    DEMOGRAPHICS.find,
-    localFilters.genres.includes,
-    mangadexFilters.demographic,
-    mangadexFilters.includedTags.includes,
+    localGenreIds,
+    mangadexTagIds,
+    mangadexDemographic,
   ]);
 
   // Resolve author name → MangaDex UUIDs
