@@ -17,6 +17,7 @@ import { AuthorSearchInput } from "@/features/manga/components/author-search-inp
 import { useCreateManga } from "@/features/manga/hooks/use-create-manga";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
+import { useAlertModal } from "@/hooks/use-alert-modal";
 import type { MangaStatus } from "@/types/manga.types";
 import { getCookie } from "@/utils/cookies";
 import {
@@ -157,22 +158,26 @@ export default function UploadMangaPage() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const { showAlert, AlertModalComponent } = useAlertModal();
 
-  const processCoverFile = useCallback((file: File) => {
-    // Validate cover image
-    const validation = validateCoverImage(file);
-    if (!validation.valid) {
-      alert(validation.error);
-      return;
-    }
+  const processCoverFile = useCallback(
+    (file: File) => {
+      // Validate cover image
+      const validation = validateCoverImage(file);
+      if (!validation.valid) {
+        showAlert(validation.error!, "error");
+        return;
+      }
 
-    setCoverFile(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setCoverPreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-  }, []);
+      setCoverFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    },
+    [showAlert],
+  );
 
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -245,7 +250,7 @@ export default function UploadMangaPage() {
       // Validate files
       const validation = validatePageImages(acceptedFiles);
       if (!validation.valid) {
-        alert(validation.error);
+        showAlert(validation.error!, "error");
         return;
       }
 
@@ -253,7 +258,7 @@ export default function UploadMangaPage() {
         prev.map((c) => (c.id === id ? { ...c, files: acceptedFiles } : c)),
       );
     },
-    [],
+    [showAlert],
   );
 
   const onBulkDrop = useCallback(
@@ -266,7 +271,7 @@ export default function UploadMangaPage() {
       const validation = validatePageImages(acceptedFiles);
 
       if (!validation.valid) {
-        alert(validation.error);
+        showAlert(validation.error!, "error");
         return;
       }
 
@@ -282,7 +287,7 @@ export default function UploadMangaPage() {
 
       setChapters((prev) => [...prev, newChapter]);
     },
-    [chapters.length],
+    [chapters.length, showAlert],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -299,17 +304,17 @@ export default function UploadMangaPage() {
 
     // Validate required fields
     if (!coverFile) {
-      alert("გთხოვთ ატვირთოთ ყდის სურათი");
+      showAlert("გთხოვთ ატვირთოთ ყდის სურათი", "error");
       return;
     }
 
     if (!formData.artist) {
-      alert("გთხოვთ შეიყვანოთ მხატვარი");
+      showAlert("გთხოვთ შეიყვანოთ მხატვარი", "error");
       return;
     }
 
     if (chapters.length === 0) {
-      alert("გთხოვთ დაამატოთ მინიმუმ ერთი თავი");
+      showAlert("გთხოვთ დაამატოთ მინიმუმ ერთი თავი", "error");
       return;
     }
 
@@ -317,15 +322,15 @@ export default function UploadMangaPage() {
     for (let i = 0; i < chapters.length; i++) {
       const chapter = chapters[i];
       if (!chapter.chapterNumber) {
-        alert(`გთხოვთ შეიყვანოთ თავის ნომერი თავისთვის ${i + 1}`);
+        showAlert(`გთხოვთ შეიყვანოთ თავის ნომერი თავისთვის ${i + 1}`, "error");
         return;
       }
       if (!chapter.title) {
-        alert(`გთხოვთ შეიყვანოთ თავის სათაური თავისთვის ${i + 1}`);
+        showAlert(`გთხოვთ შეიყვანოთ თავის სათაური თავისთვის ${i + 1}`, "error");
         return;
       }
       if (chapter.files.length === 0) {
-        alert(`გთხოვთ ატვირთოთ გვერდები თავისთვის ${i + 1}`);
+        showAlert(`გთხოვთ ატვირთოთ გვერდები თავისთვის ${i + 1}`, "error");
         return;
       }
     }
@@ -354,7 +359,10 @@ export default function UploadMangaPage() {
           await uploadCover.mutateAsync({ file: coverFile, mangaId: manga.id });
           setUploadProgress(40);
         } catch {
-          alert("მანგა შეიქმნა, მაგრამ ყდის სურათის ატვირთვა ვერ მოხერხდა");
+          showAlert(
+            "მანგა შეიქმნა, მაგრამ ყდის სურათის ატვირთვა ვერ მოხერხდა",
+            "warning",
+          );
           setUploadProgress(40);
         }
       } else {
@@ -421,7 +429,7 @@ export default function UploadMangaPage() {
         router.push(`/manga/${manga.slug}`);
       }, 500);
     } catch {
-      alert("მანგის შექმნა ვერ მოხერხდა");
+      showAlert("მანგის შექმნა ვერ მოხერხდა", "error");
       setIsUploading(false);
       setUploadProgress(0);
       setCurrentStep("");
@@ -442,6 +450,7 @@ export default function UploadMangaPage() {
 
   return (
     <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 py-8 sm:px-4 md:px-8">
+      {AlertModalComponent}
       <div className="mb-16">
         <h1 className="mb-6 font-bold text-[clamp(2.5rem,6vw,4.5rem)] uppercase leading-none tracking-tighter">
           მანგის ატვირთვა

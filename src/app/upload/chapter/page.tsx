@@ -10,6 +10,7 @@ import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { getMangaDetail } from "@/features/manga/api/get-manga-detail";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useCreateChapter } from "@/features/upload/hooks/use-create-chapter";
+import { useAlertModal } from "@/hooks/use-alert-modal";
 import { formatFileSize, validatePageImages } from "@/utils/file-validation";
 
 function ChapterUploadContent() {
@@ -28,6 +29,7 @@ function ChapterUploadContent() {
   });
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const { showAlert, AlertModalComponent } = useAlertModal();
 
   const previewUrls = useMemo(
     () => selectedFiles.map((file) => URL.createObjectURL(file)),
@@ -71,7 +73,7 @@ function ChapterUploadContent() {
 
     const validation = validatePageImages(files);
     if (!validation.valid) {
-      alert(validation.error);
+      showAlert(validation.error!, "error");
       return;
     }
 
@@ -82,12 +84,12 @@ function ChapterUploadContent() {
     e.preventDefault();
 
     if (!formData.chapterNumber) {
-      alert("გთხოვთ მიუთითოთ თავის ნომერი");
+      showAlert("გთხოვთ მიუთითოთ თავის ნომერი", "error");
       return;
     }
 
     if (selectedFiles.length === 0) {
-      alert("გთხოვთ აირჩიოთ თავის გვერდები");
+      showAlert("გთხოვთ აირჩიოთ თავის გვერდები", "error");
       return;
     }
 
@@ -121,11 +123,15 @@ function ChapterUploadContent() {
 
       const manga = await getMangaDetail(Number(mangaId));
 
-      alert(`თავი ${chapter.chapter_number} წარმატებით აიტვირთა!`);
+      showAlert(
+        `თავი ${chapter.chapter_number} წარმატებით აიტვირთა!`,
+        "success",
+      );
       router.push(`/manga/${manga.slug}`);
     } catch (error) {
-      alert(
+      showAlert(
         error instanceof Error ? error.message : "თავის ატვირთვა ვერ მოხერხდა",
+        "error",
       );
     } finally {
       setIsUploading(false);
@@ -135,6 +141,7 @@ function ChapterUploadContent() {
 
   return (
     <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 py-8 sm:px-4 md:px-8">
+      {AlertModalComponent}
       <div className="mb-16">
         <h1 className="mb-6 font-bold text-[clamp(2.5rem,6vw,4.5rem)] uppercase leading-none tracking-tighter">
           თავის ატვირთვა
