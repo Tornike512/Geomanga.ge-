@@ -14,6 +14,7 @@ import {
 } from "@/features/manga";
 import { MangaDexGrid, MangaGrid } from "@/features/manga/components";
 import { BLOCKED_MANGA_IDS } from "@/features/manga/constants/blocked-manga";
+import { HIDDEN_TAG_NAMES } from "@/features/manga/constants/hidden-tags";
 import { useAuthors } from "@/features/manga/hooks/use-authors";
 import { useTags } from "@/features/tags/hooks/use-tags";
 import type { MangaListParams, MangaStatus } from "@/types/manga.types";
@@ -378,22 +379,25 @@ function BrowseContent() {
       }
     : mangadexData;
 
-  // Group MangaDex tags by group
+  // Group MangaDex tags by group (excluding hidden tags)
+  const hiddenNamesLower = HIDDEN_TAG_NAMES.map((n) => n.toLowerCase());
   const mangadexTagsByGroup = (() => {
     if (!mangadexTags) return {};
     const grouped: Record<string, typeof mangadexTags> = {};
     for (const tag of mangadexTags) {
+      if (hiddenNamesLower.includes(tag.name.toLowerCase())) continue;
       if (!grouped[tag.group]) grouped[tag.group] = [];
       grouped[tag.group].push(tag);
     }
     return grouped;
   })();
 
-  // Group backend tags by group (for local source)
+  // Group backend tags by group (for local source, excluding hidden tags)
   const backendTagsByGroup = (() => {
     if (!backendTags) return {};
     const grouped: Record<string, typeof backendTags> = {};
     for (const tag of backendTags) {
+      if (hiddenNamesLower.includes(tag.name.toLowerCase())) continue;
       if (!grouped[tag.group]) grouped[tag.group] = [];
       grouped[tag.group].push(tag);
     }

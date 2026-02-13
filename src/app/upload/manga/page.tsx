@@ -14,6 +14,7 @@ import { API_URL } from "@/config";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { useGenres } from "@/features/genres/hooks/use-genres";
 import { AuthorSearchInput } from "@/features/manga/components/author-search-input";
+import { HIDDEN_TAG_NAMES } from "@/features/manga/constants/hidden-tags";
 import { useCreateManga } from "@/features/manga/hooks/use-create-manga";
 import { useMangaDexTags } from "@/features/manga/hooks/use-mangadex-manga";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
@@ -227,11 +228,13 @@ export default function UploadMangaPage() {
     }));
   };
 
-  // Group MangaDex tags by group
+  // Group MangaDex tags by group (excluding hidden tags)
+  const hiddenNamesLower = HIDDEN_TAG_NAMES.map((n) => n.toLowerCase());
   const tagsByGroup = (() => {
     if (!mangadexTags) return {};
     const grouped: Record<string, typeof mangadexTags> = {};
     for (const tag of mangadexTags) {
+      if (hiddenNamesLower.includes(tag.name.toLowerCase())) continue;
       if (!grouped[tag.group]) grouped[tag.group] = [];
       grouped[tag.group].push(tag);
     }
