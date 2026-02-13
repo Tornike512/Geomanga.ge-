@@ -311,7 +311,7 @@ export default function ProfilePage() {
               />
             </div>
 
-            <div className="w-full">
+            <div className="w-full text-center">
               <h1 className="mb-1 truncate font-semibold text-xl">
                 {user.username}
               </h1>
