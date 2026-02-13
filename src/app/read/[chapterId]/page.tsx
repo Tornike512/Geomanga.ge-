@@ -499,24 +499,32 @@ export default function ReaderPage() {
           className={`fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
         >
           <div className="mx-auto flex max-w-[1920px] items-center justify-center gap-3 px-4 py-2">
-            {localChapter.previous_chapter_id && (
+            {localChapter.previous_chapter_id ? (
               <Link
                 href={`/read/${localChapter.previous_chapter_id}`}
-                className="rounded-md px-2 py-1 text-[var(--muted-foreground)] text-xs transition-colors hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]"
+                className="rounded-md bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
               >
                 წინა
               </Link>
+            ) : (
+              <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-[var(--muted-foreground)]/50 text-xs">
+                წინა
+              </span>
             )}
-            <span className="text-[var(--muted-foreground)] text-xs">
+            <span className="font-medium text-[var(--foreground)] text-xs">
               თავი {localChapter.chapter_number}
             </span>
-            {localChapter.next_chapter_id && (
+            {localChapter.next_chapter_id ? (
               <Link
                 href={`/read/${localChapter.next_chapter_id}`}
-                className="rounded-md px-2 py-1 text-[var(--muted-foreground)] text-xs transition-colors hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]"
+                className="rounded-md bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
               >
                 შემდეგი
               </Link>
+            ) : (
+              <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-[var(--muted-foreground)]/50 text-xs">
+                შემდეგი
+              </span>
             )}
           </div>
         </div>
