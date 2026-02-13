@@ -15,6 +15,7 @@ import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { useGenres } from "@/features/genres/hooks/use-genres";
 import { AuthorSearchInput } from "@/features/manga/components/author-search-input";
 import { useCreateManga } from "@/features/manga/hooks/use-create-manga";
+import { useTags } from "@/features/tags/hooks/use-tags";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
 import { useAlertModal } from "@/hooks/use-alert-modal";
@@ -131,6 +132,7 @@ export default function UploadMangaPage() {
   const router = useRouter();
   const { data: user } = useCurrentUser();
   const { data: genres } = useGenres();
+  const { data: backendTags } = useTags();
   const createManga = useCreateManga();
   const uploadCover = useUploadCover();
 
@@ -145,6 +147,7 @@ export default function UploadMangaPage() {
     status: "ongoing" as MangaStatus,
     releaseYear: new Date().getFullYear(),
     genreIds: [] as number[],
+    tagIds: [] as number[],
   });
   const [chapters, setChapters] = useState<
     Array<{
@@ -214,6 +217,26 @@ export default function UploadMangaPage() {
         : [...prev.genreIds, genreId],
     }));
   };
+
+  const handleTagToggle = (tagId: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      tagIds: prev.tagIds.includes(tagId)
+        ? prev.tagIds.filter((id) => id !== tagId)
+        : [...prev.tagIds, tagId],
+    }));
+  };
+
+  // Group backend tags by group
+  const tagsByGroup = (() => {
+    if (!backendTags) return {};
+    const grouped: Record<string, typeof backendTags> = {};
+    for (const tag of backendTags) {
+      if (!grouped[tag.group]) grouped[tag.group] = [];
+      grouped[tag.group].push(tag);
+    }
+    return grouped;
+  })();
 
   const handleAddChapter = () => {
     const nextChapterNum = chapters.length + 1;
@@ -348,6 +371,7 @@ export default function UploadMangaPage() {
         artist: formData.artist,
         status: formData.status,
         genre_ids: formData.genreIds,
+        tag_ids: formData.tagIds,
         cover_image_url: "",
       });
       setUploadProgress(20);
@@ -749,6 +773,52 @@ export default function UploadMangaPage() {
                 ))}
               </div>
             </Card>
+
+            {/* Tags (from MangaDex) */}
+            {Object.keys(tagsByGroup).length > 0 && (
+              <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+                <h3 className="mb-4 font-semibold text-lg tracking-tight">
+                  თეგები
+                </h3>
+                {Object.entries(tagsByGroup).map(([group, groupTags]) => (
+                  <div key={group} className="mb-4 last:mb-0">
+                    <p className="mb-2 font-medium text-[var(--muted-foreground)] text-sm">
+                      {group === "genre"
+                        ? "ჟანრები"
+                        : group === "theme"
+                          ? "თემები"
+                          : group === "format"
+                            ? "ფორმატი"
+                            : group === "content"
+                              ? "კონტენტი"
+                              : group}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {groupTags.map((tag) => (
+                        <Button
+                          key={tag.id}
+                          type="button"
+                          variant="ghost"
+                          onClick={() => handleTagToggle(tag.id)}
+                          className="h-auto p-0 hover:bg-transparent"
+                        >
+                          <Badge
+                            variant={
+                              formData.tagIds.includes(tag.id)
+                                ? "secondary"
+                                : "default"
+                            }
+                            className="cursor-pointer transition-all hover:opacity-80"
+                          >
+                            {tag.name}
+                          </Badge>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </Card>
+            )}
 
             {/* Chapters */}
             <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
