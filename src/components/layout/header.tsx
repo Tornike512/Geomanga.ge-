@@ -60,7 +60,7 @@ export function Header() {
               <SearchBar />
             </div>
 
-            <div className="ml-auto hidden shrink-0 items-center gap-4 sm:flex">
+            <div className="ml-auto hidden shrink-0 items-center gap-4 lg:flex">
               {isLoading ? (
                 <div className="h-9 w-9 animate-pulse rounded-full bg-[var(--muted)]/40" />
               ) : user ? (
@@ -84,7 +84,7 @@ export function Header() {
               variant="ghost"
               size="sm"
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-              className="ml-auto h-auto shrink-0 p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] sm:hidden"
+              className="ml-auto h-auto shrink-0 p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] lg:hidden"
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMobileMenuOpen ? (
@@ -99,7 +99,7 @@ export function Header() {
 
       {/* Mobile dropdown menu */}
       <div
-        className={`fixed top-16 right-0 left-0 z-[59] origin-top transform border-[var(--border)] border-b bg-[var(--background)] shadow-lg transition-all duration-300 ease-in-out sm:hidden ${
+        className={`fixed top-16 right-0 left-0 z-[59] origin-top transform border-[var(--border)] border-b bg-[var(--background)] shadow-lg transition-all duration-300 ease-in-out lg:hidden ${
           isMobileMenuOpen
             ? "scale-y-100 opacity-100"
             : "pointer-events-none scale-y-0 opacity-0"
@@ -189,7 +189,7 @@ export function Header() {
       {/* Mobile menu backdrop */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 z-[58] bg-black/30 sm:hidden"
+          className="fixed inset-0 z-[58] bg-black/30 lg:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-hidden="true"
         />
