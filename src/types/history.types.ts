@@ -30,3 +30,30 @@ export interface ReadingHistoryCreate {
 export interface ReadingHistoryUpdate {
   readonly chapter_id: number;
 }
+
+export interface MangadexReadingHistory {
+  readonly id: number;
+  readonly user_id: number;
+  readonly mangadex_manga_id: string;
+  readonly mangadex_chapter_id: string;
+  readonly manga_title: string;
+  readonly chapter_number: string;
+  readonly cover_image_url: string | null;
+  readonly last_read_at: string;
+}
+
+export interface MangadexReadingHistoryCreate {
+  readonly mangadex_manga_id: string;
+  readonly mangadex_chapter_id: string;
+  readonly manga_title: string;
+  readonly chapter_number: string;
+  readonly cover_image_url?: string | null;
+}
+
+export interface MangadexReadingHistoryListResponse {
+  readonly items: MangadexReadingHistory[];
+  readonly total: number;
+  readonly page: number;
+  readonly page_size: number;
+  readonly pages: number;
+}

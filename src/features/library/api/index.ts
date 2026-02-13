@@ -4,6 +4,7 @@ export { getBookmarks } from "./get-bookmarks";
 export { getLibraryEntries } from "./get-library-entries";
 export { getMangaCategory } from "./get-manga-categories";
 export { getMangaProgress } from "./get-manga-progress";
+export { getMangadexReadingHistory } from "./get-mangadex-reading-history";
 export { getReadingHistory } from "./get-reading-history";
 export { removeBookmark } from "./remove-bookmark";
 export { removeLibraryEntry } from "./remove-library-entry";

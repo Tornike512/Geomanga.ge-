@@ -1,16 +1,21 @@
 "use client";
 
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Spinner } from "@/components/spinner";
 import { useLibraryEntries } from "@/features/library/hooks/use-library-entries";
+import { useMangadexReadingHistory } from "@/features/library/hooks/use-mangadex-reading-history";
 import { useReadingHistory } from "@/features/library/hooks/use-reading-history";
 import { MangaGrid } from "@/features/manga/components/manga-grid";
-import type { ReadingHistoryWithDetails } from "@/types/history.types";
+import type {
+  MangadexReadingHistory,
+  ReadingHistoryWithDetails,
+} from "@/types/history.types";
 import type { LibraryCategory } from "@/types/library.types";
 
 const TABS = {
@@ -69,7 +74,13 @@ export default function LibraryTabPage() {
     data: historyData,
     isLoading: historyLoading,
     error: historyError,
-  } = useReadingHistory({ page: currentPage, limit: pageSize });
+  } = useReadingHistory({ page: 1, limit: 100 });
+
+  const {
+    data: mangadexHistoryData,
+    isLoading: mangadexHistoryLoading,
+    error: mangadexHistoryError,
+  } = useMangadexReadingHistory({ page: 1, limit: 100 });
 
   // Fetch counts for all library tabs (for display in tabs)
   const { data: bookmarksCount } = useLibraryEntries("bookmarks", { limit: 1 });
@@ -77,16 +88,55 @@ export default function LibraryTabPage() {
   const { data: toreadCount } = useLibraryEntries("toread", { limit: 1 });
   const { data: favoritesCount } = useLibraryEntries("favorites", { limit: 1 });
 
+  type UnifiedHistoryItem =
+    | { source: "local"; data: ReadingHistoryWithDetails }
+    | { source: "mangadex"; data: MangadexReadingHistory };
+
+  const mergedHistory = useMemo(() => {
+    if (activeTab !== "history") return [];
+    const items: UnifiedHistoryItem[] = [];
+    if (historyData?.items) {
+      for (const item of historyData.items) {
+        items.push({ source: "local", data: item });
+      }
+    }
+    if (mangadexHistoryData?.items) {
+      for (const item of mangadexHistoryData.items) {
+        items.push({ source: "mangadex", data: item });
+      }
+    }
+    items.sort(
+      (a, b) =>
+        new Date(b.data.last_read_at).getTime() -
+        new Date(a.data.last_read_at).getTime(),
+    );
+    return items;
+  }, [activeTab, historyData?.items, mangadexHistoryData?.items]);
+
+  const totalHistoryCount =
+    (historyData?.total ?? 0) + (mangadexHistoryData?.total ?? 0);
+  const paginatedHistory = mergedHistory.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
+  const totalHistoryPages = Math.ceil(totalHistoryCount / pageSize);
+
   const tabCounts: Partial<Record<Tab, number>> = {
     bookmarks: bookmarksCount?.total,
-    history: historyData?.total,
+    history: totalHistoryCount || undefined,
     dropped: droppedCount?.total,
     toread: toreadCount?.total,
     favorites: favoritesCount?.total,
   };
 
-  const isLoading = activeTab === "history" ? historyLoading : libraryLoading;
-  const error = activeTab === "history" ? historyError : libraryError;
+  const isLoading =
+    activeTab === "history"
+      ? historyLoading || mangadexHistoryLoading
+      : libraryLoading;
+  const error =
+    activeTab === "history"
+      ? historyError || mangadexHistoryError
+      : libraryError;
   const data =
     activeTab === "history" ? historyData : isLibraryTab ? libraryData : null;
 
@@ -142,7 +192,11 @@ export default function LibraryTabPage() {
             სცადეთ ხელახლა
           </Button>
         </div>
-      ) : !data || data.items.length === 0 ? (
+      ) : (
+          activeTab === "history"
+            ? mergedHistory.length === 0
+            : !data || data.items.length === 0
+        ) ? (
         <div className="py-8 text-center">
           <div className="mb-4 flex flex-col items-center justify-center text-gray-400">
             <svg
@@ -189,50 +243,106 @@ export default function LibraryTabPage() {
         </div>
       ) : (
         <>
-          {isLibraryTab ? (
+          {isLibraryTab && data ? (
             <MangaGrid manga={data.items.map((entry) => entry.manga)} />
           ) : (
             <div className="space-y-4">
-              {(activeTab === "history" && "items" in data
-                ? (data.items as ReadingHistoryWithDetails[])
-                : []
-              ).map((history) => (
-                <Link
-                  key={history.id}
-                  href={`/read/${history.chapter.id}`}
-                  className="group flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)] p-3 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] sm:gap-4 sm:p-4"
-                >
-                  <Image
-                    src={history.manga.cover_image_url || "/placeholder.png"}
-                    alt={history.manga.title}
-                    width={64}
-                    height={96}
-                    className="h-20 w-14 shrink-0 rounded-lg object-cover sm:h-24 sm:w-16"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <h3 className="mb-1 truncate font-medium text-sm sm:text-base">
-                      {history.manga.title}
-                    </h3>
-                    <p className="mb-1 truncate text-[var(--muted-foreground)] text-xs sm:mb-2 sm:text-sm">
-                      თავი {history.chapter.chapter_number}
-                      {history.chapter.title && `: ${history.chapter.title}`}
-                    </p>
-                    {formatDate(history.last_read_at) && (
-                      <div className="text-[var(--muted-foreground)] text-xs">
-                        {formatDate(history.last_read_at)}
+              {paginatedHistory.map((item) => {
+                if (item.source === "local") {
+                  const history = item.data;
+                  return (
+                    <Link
+                      key={`local-${history.id}`}
+                      href={`/read/${history.chapter.id}`}
+                      className="group flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)] p-3 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] sm:gap-4 sm:p-4"
+                    >
+                      <Image
+                        src={
+                          history.manga.cover_image_url || "/placeholder.png"
+                        }
+                        alt={history.manga.title}
+                        width={64}
+                        height={96}
+                        className="h-20 w-14 shrink-0 rounded-lg object-cover sm:h-24 sm:w-16"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <h3 className="mb-1 truncate font-medium text-sm sm:text-base">
+                          {history.manga.title}
+                        </h3>
+                        <p className="mb-1 truncate text-[var(--muted-foreground)] text-xs sm:mb-2 sm:text-sm">
+                          თავი {history.chapter.chapter_number}
+                          {history.chapter.title &&
+                            `: ${history.chapter.title}`}
+                        </p>
+                        {formatDate(history.last_read_at) && (
+                          <div className="text-[var(--muted-foreground)] text-xs">
+                            {formatDate(history.last_read_at)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="shrink-0">
+                        <ArrowRight className="h-5 w-5 text-[var(--muted-foreground)] transition-colors group-hover:text-[var(--accent)]" />
+                      </div>
+                    </Link>
+                  );
+                }
+                const history = item.data;
+                return (
+                  <Link
+                    key={`md-${history.id}`}
+                    href={`/read/md-${history.mangadex_chapter_id}`}
+                    className="group flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)] p-3 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] sm:gap-4 sm:p-4"
+                  >
+                    {history.cover_image_url ? (
+                      <Image
+                        src={history.cover_image_url}
+                        alt={history.manga_title}
+                        width={64}
+                        height={96}
+                        className="h-20 w-14 shrink-0 rounded-lg object-cover sm:h-24 sm:w-16"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="flex h-20 w-14 shrink-0 items-center justify-center rounded-lg bg-[var(--muted)] sm:h-24 sm:w-16">
+                        <span className="text-[var(--muted-foreground)] text-xs">
+                          N/A
+                        </span>
                       </div>
                     )}
-                  </div>
-                  <div className="shrink-0">
-                    <ArrowRight className="h-5 w-5 text-[var(--muted-foreground)] transition-colors group-hover:text-[var(--accent)]" />
-                  </div>
-                </Link>
-              ))}
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-1 flex items-center gap-2">
+                        <h3 className="truncate font-medium text-sm sm:text-base">
+                          {history.manga_title}
+                        </h3>
+                        <Badge
+                          variant="secondary"
+                          className="shrink-0 gap-1 py-0 text-[10px]"
+                        >
+                          <Globe className="h-2.5 w-2.5" />
+                          MD
+                        </Badge>
+                      </div>
+                      <p className="mb-1 truncate text-[var(--muted-foreground)] text-xs sm:mb-2 sm:text-sm">
+                        თავი {history.chapter_number}
+                      </p>
+                      {formatDate(history.last_read_at) && (
+                        <div className="text-[var(--muted-foreground)] text-xs">
+                          {formatDate(history.last_read_at)}
+                        </div>
+                      )}
+                    </div>
+                    <div className="shrink-0">
+                      <ArrowRight className="h-5 w-5 text-[var(--muted-foreground)] transition-colors group-hover:text-[var(--accent)]" />
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           )}
 
           {/* Pagination */}
-          {data.total > pageSize && (
+          {(activeTab === "history" ? totalHistoryCount : (data?.total ?? 0)) >
+            pageSize && (
             <div className="mt-8 flex items-center justify-center gap-4">
               <Button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
@@ -246,11 +356,18 @@ export default function LibraryTabPage() {
               <span className="text-[var(--muted-foreground)] text-sm">
                 გვერდი{" "}
                 <span className="text-[var(--accent)]">{currentPage}</span> /{" "}
-                {Math.ceil(data.total / pageSize)}
+                {activeTab === "history"
+                  ? totalHistoryPages
+                  : Math.ceil((data?.total ?? 0) / pageSize)}
               </span>
               <Button
                 onClick={() => setCurrentPage((p) => p + 1)}
-                disabled={currentPage >= Math.ceil(data.total / pageSize)}
+                disabled={
+                  currentPage >=
+                  (activeTab === "history"
+                    ? totalHistoryPages
+                    : Math.ceil((data?.total ?? 0) / pageSize))
+                }
                 variant="outline"
                 size="sm"
               >

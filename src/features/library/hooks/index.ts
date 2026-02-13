@@ -4,6 +4,7 @@ export { useBookmarks } from "./use-bookmarks";
 export { useLibraryEntries } from "./use-library-entries";
 export { useMangaCategory } from "./use-manga-categories";
 export { useMangaProgress } from "./use-manga-progress";
+export { useMangadexReadingHistory } from "./use-mangadex-reading-history";
 export { useReadingHistory } from "./use-reading-history";
 export { useRemoveBookmark } from "./use-remove-bookmark";
 export { useRemoveLibraryEntry } from "./use-remove-library-entry";

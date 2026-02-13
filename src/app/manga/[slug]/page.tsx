@@ -561,6 +561,18 @@ export default function MangaDetailPage() {
                     <Link
                       key={chapter.id}
                       href={`/read/md-${chapter.id}`}
+                      onClick={() => {
+                        sessionStorage.setItem(
+                          `md-chapter-${chapter.id}`,
+                          JSON.stringify({
+                            mangaId: mangaDexId,
+                            chapterNumber: chapter.chapter_number,
+                            title: chapter.title,
+                            mangaTitle: manga.title,
+                            coverImageUrl: coverUrl,
+                          }),
+                        );
+                      }}
                       className="group block rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
                     >
                       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">

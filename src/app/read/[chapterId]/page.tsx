@@ -14,6 +14,7 @@ import { ChapterComments } from "@/features/comments";
 import { useMangaDexChapterPages } from "@/features/manga";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
 import { useChaptersByManga } from "@/features/reader/hooks/use-chapters-by-manga";
+import { useTrackMangadexReading } from "@/features/reader/hooks/use-track-mangadex-reading";
 import { useTrackReading } from "@/features/reader/hooks/use-track-reading";
 
 // Parse initial page ID from URL (e.g., /read/1/18 -> "18")
@@ -212,7 +213,15 @@ export default function ReaderPage() {
     mangaId: string | null;
     chapterNumber: string | null;
     title: string | null;
-  }>({ mangaId: null, chapterNumber: null, title: null });
+    mangaTitle: string | null;
+    coverImageUrl: string | null;
+  }>({
+    mangaId: null,
+    chapterNumber: null,
+    title: null,
+    mangaTitle: null,
+    coverImageUrl: null,
+  });
 
   // Local chapter data
   const {
@@ -232,6 +241,7 @@ export default function ReaderPage() {
   } = useMangaDexChapterPages(mangaDexChapterId || "");
 
   const trackReading = useTrackReading();
+  const trackMangadexReading = useTrackMangadexReading();
 
   // Refs for page elements (used for scroll tracking)
   const pageRefs = useRef<Map<number | string, HTMLDivElement | null>>(
@@ -279,6 +289,8 @@ export default function ReaderPage() {
             mangaId: string | null;
             chapterNumber: string | null;
             title: string | null;
+            mangaTitle: string | null;
+            coverImageUrl: string | null;
           };
           setMangaDexInfo(parsed);
         } catch {
@@ -287,6 +299,34 @@ export default function ReaderPage() {
       }
     }
   }, [isMangaDex, mangaDexChapterId]);
+
+  // Track MangaDex reading progress
+  useEffect(() => {
+    if (
+      isMangaDex &&
+      mangaDexChapterId &&
+      mangaDexInfo.mangaId &&
+      mangaDexInfo.mangaTitle &&
+      mangaDexInfo.chapterNumber
+    ) {
+      trackMangadexReading.mutate({
+        mangadex_manga_id: mangaDexInfo.mangaId,
+        mangadex_chapter_id: mangaDexChapterId,
+        manga_title: mangaDexInfo.mangaTitle,
+        chapter_number: mangaDexInfo.chapterNumber,
+        cover_image_url: mangaDexInfo.coverImageUrl,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    isMangaDex,
+    mangaDexChapterId,
+    mangaDexInfo.mangaId,
+    mangaDexInfo.mangaTitle,
+    mangaDexInfo.chapterNumber,
+    mangaDexInfo.coverImageUrl,
+    trackMangadexReading.mutate,
+  ]);
 
   // Clear refs when chapter changes
   useEffect(() => {
