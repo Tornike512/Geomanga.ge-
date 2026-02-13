@@ -94,7 +94,7 @@ export interface MangaCreate {
   readonly author?: string;
   readonly artist?: string;
   readonly genre_ids?: number[];
-  readonly tag_ids?: number[];
+  readonly mangadex_tag_ids?: string[];
 }
 
 export interface MangaUpdate {
@@ -108,7 +108,7 @@ export interface MangaUpdate {
   readonly author?: string;
   readonly artist?: string;
   readonly genre_ids?: number[];
-  readonly tag_ids?: number[];
+  readonly mangadex_tag_ids?: string[];
 }
 
 export interface MangaListParams {

@@ -15,7 +15,7 @@ import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { useGenres } from "@/features/genres/hooks/use-genres";
 import { AuthorSearchInput } from "@/features/manga/components/author-search-input";
 import { useCreateManga } from "@/features/manga/hooks/use-create-manga";
-import { useTags } from "@/features/tags/hooks/use-tags";
+import { useMangaDexTags } from "@/features/manga/hooks/use-mangadex-manga";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
 import { useAlertModal } from "@/hooks/use-alert-modal";
@@ -132,7 +132,7 @@ export default function UploadMangaPage() {
   const router = useRouter();
   const { data: user } = useCurrentUser();
   const { data: genres } = useGenres();
-  const { data: backendTags } = useTags();
+  const { data: mangadexTags } = useMangaDexTags();
   const createManga = useCreateManga();
   const uploadCover = useUploadCover();
 
@@ -147,7 +147,7 @@ export default function UploadMangaPage() {
     status: "ongoing" as MangaStatus,
     releaseYear: new Date().getFullYear(),
     genreIds: [] as number[],
-    tagIds: [] as number[],
+    mangadexTagIds: [] as string[],
   });
   const [chapters, setChapters] = useState<
     Array<{
@@ -218,20 +218,20 @@ export default function UploadMangaPage() {
     }));
   };
 
-  const handleTagToggle = (tagId: number) => {
+  const handleTagToggle = (tagId: string) => {
     setFormData((prev) => ({
       ...prev,
-      tagIds: prev.tagIds.includes(tagId)
-        ? prev.tagIds.filter((id) => id !== tagId)
-        : [...prev.tagIds, tagId],
+      mangadexTagIds: prev.mangadexTagIds.includes(tagId)
+        ? prev.mangadexTagIds.filter((id) => id !== tagId)
+        : [...prev.mangadexTagIds, tagId],
     }));
   };
 
-  // Group backend tags by group
+  // Group MangaDex tags by group
   const tagsByGroup = (() => {
-    if (!backendTags) return {};
-    const grouped: Record<string, typeof backendTags> = {};
-    for (const tag of backendTags) {
+    if (!mangadexTags) return {};
+    const grouped: Record<string, typeof mangadexTags> = {};
+    for (const tag of mangadexTags) {
       if (!grouped[tag.group]) grouped[tag.group] = [];
       grouped[tag.group].push(tag);
     }
@@ -371,7 +371,7 @@ export default function UploadMangaPage() {
         artist: formData.artist,
         status: formData.status,
         genre_ids: formData.genreIds,
-        tag_ids: formData.tagIds,
+        mangadex_tag_ids: formData.mangadexTagIds,
         cover_image_url: "",
       });
       setUploadProgress(20);
@@ -804,7 +804,7 @@ export default function UploadMangaPage() {
                         >
                           <Badge
                             variant={
-                              formData.tagIds.includes(tag.id)
+                              formData.mangadexTagIds.includes(tag.id)
                                 ? "secondary"
                                 : "default"
                             }
