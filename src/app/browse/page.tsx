@@ -260,18 +260,10 @@ function BrowseContent() {
     if (source === "local" && genres) {
       const match = genres.find((g) => g.name.toLowerCase() === nameLower);
       if (match && !localGenreIds.includes(match.id)) {
-        setLocalFilters((prev) => ({
-          ...prev,
-          genres: [match.id],
-          page: 1,
-        }));
-        setLocalDraft((prev) => ({
-          ...prev,
-          genres: [match.id],
-        }));
+        setLocalFilters((prev) => ({ ...prev, genres: [match.id], page: 1 }));
+        setLocalDraft((prev) => ({ ...prev, genres: [match.id] }));
       }
     } else if (source === "mangadex" && mangadexTags) {
-      // Check if it matches a MangaDex tag (any group)
       const tagMatch = mangadexTags.find(
         (t) => t.name.toLowerCase() === nameLower,
       );
@@ -281,14 +273,9 @@ function BrowseContent() {
           includedTags: [tagMatch.id],
           page: 1,
         }));
-        setMangadexDraft((prev) => ({
-          ...prev,
-          includedTags: [tagMatch.id],
-        }));
+        setMangadexDraft((prev) => ({ ...prev, includedTags: [tagMatch.id] }));
         return;
       }
-
-      // Check if it matches a MangaDex demographic
       const demographicMatch = DEMOGRAPHICS.find((d) => d === nameLower);
       if (demographicMatch && mangadexDemographic !== demographicMatch) {
         setMangadexFilters((prev) => ({
@@ -311,6 +298,20 @@ function BrowseContent() {
     mangadexTagIds,
     mangadexDemographic,
   ]);
+
+  // Check if genre name exists on the current source
+  const genreNotFound = (() => {
+    if (!genreNameFilter) return false;
+    const nameLower = genreNameFilter.toLowerCase();
+    if (source === "local") {
+      if (!genres) return false;
+      return !genres.some((g) => g.name.toLowerCase() === nameLower);
+    }
+    if (!mangadexTags) return false;
+    const hasTag = mangadexTags.some((t) => t.name.toLowerCase() === nameLower);
+    const hasDemo = DEMOGRAPHICS.some((d) => d === nameLower);
+    return !hasTag && !hasDemo;
+  })();
 
   // Resolve author name → MangaDex UUIDs
   const { data: authorResults, isLoading: authorLoading } =
@@ -788,11 +789,17 @@ function BrowseContent() {
 
       {/* Results */}
       {source === "local" ? (
-        <MangaGrid manga={localData?.items || []} isLoading={localLoading} />
+        <MangaGrid
+          manga={genreNotFound ? [] : localData?.items || []}
+          isLoading={!genreNotFound && localLoading}
+        />
       ) : (
         <MangaDexGrid
-          manga={filteredMangadexData?.items || []}
-          isLoading={mangadexLoading || (!!authorFilter && authorLoading)}
+          manga={genreNotFound ? [] : filteredMangadexData?.items || []}
+          isLoading={
+            !genreNotFound &&
+            (mangadexLoading || (!!authorFilter && authorLoading))
+          }
         />
       )}
 
