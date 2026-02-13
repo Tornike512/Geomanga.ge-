@@ -311,23 +311,25 @@ export default function ProfilePage() {
               />
             </div>
 
-            <h1 className="mb-1 max-w-full truncate font-semibold text-xl">
-              {user.username}
-            </h1>
-            <p className="mb-4 max-w-full truncate text-[var(--muted-foreground)] text-sm">
-              {user.email}
-            </p>
-
-            {/* Bio */}
-            {user.bio && (
-              <p className="mb-4 text-[var(--foreground)] text-sm">
-                {user.bio}
+            <div className="w-full">
+              <h1 className="mb-1 truncate font-semibold text-xl">
+                {user.username}
+              </h1>
+              <p className="mb-4 truncate text-[var(--muted-foreground)] text-sm">
+                {user.email}
               </p>
-            )}
 
-            {/* Member Since */}
-            <div className="mt-6 border-[var(--border)] border-t pt-6 text-[var(--muted-foreground)] text-sm">
-              წევრი {new Date(user.created_at).toLocaleDateString()}-დან
+              {/* Bio */}
+              {user.bio && (
+                <p className="mb-4 text-[var(--foreground)] text-sm">
+                  {user.bio}
+                </p>
+              )}
+
+              {/* Member Since */}
+              <div className="mt-6 border-[var(--border)] border-t pt-6 text-[var(--muted-foreground)] text-sm">
+                წევრი {new Date(user.created_at).toLocaleDateString()}-დან
+              </div>
             </div>
           </Card>
         </div>
