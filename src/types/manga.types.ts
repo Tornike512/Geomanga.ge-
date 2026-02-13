@@ -1,5 +1,6 @@
 import type { Chapter } from "./chapter.types";
 import type { Genre } from "./genre.types";
+import type { Tag } from "./tag.types";
 import type { UserRole } from "./user.types";
 
 export interface MangaUploader {
@@ -53,6 +54,7 @@ export interface Manga {
   readonly created_at: string;
   readonly updated_at: string;
   readonly genres?: Genre[];
+  readonly tags?: Tag[];
 }
 
 export interface ReadingProgress {
@@ -66,6 +68,7 @@ export interface ReadingProgress {
 
 export interface MangaDetail extends Manga {
   readonly genres: Genre[];
+  readonly tags: Tag[];
   readonly chapter_count: number;
   readonly latest_chapter: Chapter | undefined;
   readonly uploader?: MangaUploader;
@@ -91,6 +94,7 @@ export interface MangaCreate {
   readonly author?: string;
   readonly artist?: string;
   readonly genre_ids?: number[];
+  readonly tag_ids?: number[];
 }
 
 export interface MangaUpdate {
@@ -104,6 +108,7 @@ export interface MangaUpdate {
   readonly author?: string;
   readonly artist?: string;
   readonly genre_ids?: number[];
+  readonly tag_ids?: number[];
 }
 
 export interface MangaListParams {
@@ -116,6 +121,7 @@ export interface MangaListParams {
   readonly age_rating?: AgeRating;
   readonly genre?: number;
   readonly genres?: number[];
+  readonly tags?: number[];
   readonly author?: string;
   readonly sort_by?: "created_at" | "updated_at" | "rating" | "views" | "title";
   readonly order_desc?: boolean;

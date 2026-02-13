@@ -15,6 +15,7 @@ import {
 import { MangaDexGrid, MangaGrid } from "@/features/manga/components";
 import { BLOCKED_MANGA_IDS } from "@/features/manga/constants/blocked-manga";
 import { useAuthors } from "@/features/manga/hooks/use-authors";
+import { useTags } from "@/features/tags/hooks/use-tags";
 import type { MangaListParams, MangaStatus } from "@/types/manga.types";
 import { AgeRating, ContentType, TranslationStatus } from "@/types/manga.types";
 import type { MangaDexBrowseParams } from "@/types/mangadex.types";
@@ -95,6 +96,13 @@ const MANGADEX_DEMOGRAPHIC_OPTIONS = [
 
 const DEMOGRAPHICS = ["shounen", "shoujo", "seinen", "josei"] as const;
 
+const TAG_GROUP_LABELS: Record<string, string> = {
+  genre: "ჟანრები",
+  theme: "თემები",
+  format: "ფორმატი",
+  content: "კონტენტი",
+};
+
 interface LocalFilterState {
   page: number;
   limit: number;
@@ -103,6 +111,7 @@ interface LocalFilterState {
   content_type: ContentType | undefined;
   age_rating: AgeRating | undefined;
   genres: number[];
+  tags: number[];
   sort_by: MangaListParams["sort_by"];
   order_desc: boolean;
 }
@@ -124,6 +133,7 @@ interface LocalModalDraft {
   content_type: ContentType | undefined;
   translation_status: TranslationStatus | undefined;
   genres: number[];
+  tags: number[];
 }
 
 interface MangaDexModalDraft {
@@ -184,6 +194,10 @@ function BrowseContent() {
         ? searchParams.get("genres")?.split(",").map(Number).filter(Boolean) ||
           []
         : [],
+    tags:
+      initialSource === "local"
+        ? searchParams.get("tags")?.split(",").map(Number).filter(Boolean) || []
+        : [],
   }));
 
   // MangaDex filters - initialized from URL
@@ -231,6 +245,7 @@ function BrowseContent() {
     content_type: localFilters.content_type,
     translation_status: localFilters.translation_status,
     genres: [...localFilters.genres],
+    tags: [...localFilters.tags],
   });
 
   const [mangadexDraft, setMangadexDraft] = useState<MangaDexModalDraft>({
@@ -247,6 +262,7 @@ function BrowseContent() {
   // Data fetching
   const { data: genres } = useGenres();
   const { data: mangadexTags } = useMangaDexTags();
+  const { data: backendTags } = useTags();
 
   // Resolve genre name → source-specific IDs when data loads or source changes
   const localGenreIds = localFilters.genres;
@@ -328,6 +344,7 @@ function BrowseContent() {
     ...localFilters,
     language: "georgian",
     genres: localFilters.genres.length > 0 ? localFilters.genres : undefined,
+    tags: localFilters.tags.length > 0 ? localFilters.tags : undefined,
     author: authorFilter || undefined,
   });
 
@@ -361,9 +378,27 @@ function BrowseContent() {
       }
     : mangadexData;
 
-  // Filter by tag group for MangaDex
-  const genreTags =
-    mangadexTags?.filter((tag) => tag.group === "genre").slice(0, 20) || [];
+  // Group MangaDex tags by group
+  const mangadexTagsByGroup = (() => {
+    if (!mangadexTags) return {};
+    const grouped: Record<string, typeof mangadexTags> = {};
+    for (const tag of mangadexTags) {
+      if (!grouped[tag.group]) grouped[tag.group] = [];
+      grouped[tag.group].push(tag);
+    }
+    return grouped;
+  })();
+
+  // Group backend tags by group (for local source)
+  const backendTagsByGroup = (() => {
+    if (!backendTags) return {};
+    const grouped: Record<string, typeof backendTags> = {};
+    for (const tag of backendTags) {
+      if (!grouped[tag.group]) grouped[tag.group] = [];
+      grouped[tag.group].push(tag);
+    }
+    return grouped;
+  })();
 
   // URL sync - update URL whenever applied filters change
   const updateUrl = useCallback(() => {
@@ -386,6 +421,8 @@ function BrowseContent() {
         params.set("translation_status", localFilters.translation_status);
       if (localFilters.genres.length > 0)
         params.set("genres", localFilters.genres.join(","));
+      if (localFilters.tags.length > 0)
+        params.set("tags", localFilters.tags.join(","));
     } else {
       if (mangadexFilters.status) params.set("status", mangadexFilters.status);
       if (mangadexFilters.sortBy && mangadexFilters.sortBy !== "followedCount")
@@ -416,6 +453,7 @@ function BrowseContent() {
         content_type: localFilters.content_type,
         translation_status: localFilters.translation_status,
         genres: [...localFilters.genres],
+        tags: [...localFilters.tags],
       });
     } else {
       setMangadexDraft({
@@ -453,6 +491,7 @@ function BrowseContent() {
       content_type: undefined,
       translation_status: undefined,
       genres: [],
+      tags: [],
     });
   };
 
@@ -471,6 +510,15 @@ function BrowseContent() {
       genres: prev.genres.includes(genreId)
         ? prev.genres.filter((id) => id !== genreId)
         : [...prev.genres, genreId],
+    }));
+  };
+
+  const toggleLocalDraftTag = (tagId: number) => {
+    setLocalDraft((prev) => ({
+      ...prev,
+      tags: prev.tags.includes(tagId)
+        ? prev.tags.filter((id) => id !== tagId)
+        : [...prev.tags, tagId],
     }));
   };
 
@@ -548,7 +596,8 @@ function BrowseContent() {
     (localFilters.translation_status ? 1 : 0) +
     (localFilters.content_type ? 1 : 0) +
     (localFilters.age_rating ? 1 : 0) +
-    localFilters.genres.length;
+    localFilters.genres.length +
+    localFilters.tags.length;
 
   const mangadexActiveFilterCount =
     (mangadexFilters.status ? 1 : 0) +
@@ -1012,6 +1061,35 @@ function BrowseContent() {
               </div>
             </div>
 
+            {/* Tags Filter (from backend, synced from MangaDex) */}
+            {Object.entries(backendTagsByGroup).map(([group, groupTags]) => (
+              <div key={group} className="mb-6">
+                <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
+                  {TAG_GROUP_LABELS[group] || group}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {groupTags.map((tag) => (
+                    <Button
+                      key={tag.id}
+                      type="button"
+                      variant={
+                        localDraft.tags.includes(tag.id) ? "default" : "outline"
+                      }
+                      size="sm"
+                      onClick={() => toggleLocalDraftTag(tag.id)}
+                      className={`rounded-lg px-3 py-1.5 text-sm ${
+                        localDraft.tags.includes(tag.id)
+                          ? ""
+                          : "hover:border-[var(--border-hover)]"
+                      }`}
+                    >
+                      {tag.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            ))}
+
             {/* Modal Footer */}
             <div className="flex gap-3 border-[var(--border)] border-t pt-4">
               <Button
@@ -1123,34 +1201,36 @@ function BrowseContent() {
               />
             </div>
 
-            {/* Genre Tags Filter */}
-            <div className="mb-6">
-              <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
-                ჟანრები
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {genreTags.map((tag) => (
-                  <Button
-                    key={tag.id}
-                    type="button"
-                    variant={
-                      mangadexDraft.includedTags.includes(tag.id)
-                        ? "default"
-                        : "outline"
-                    }
-                    size="sm"
-                    onClick={() => toggleMangadexDraftTag(tag.id)}
-                    className={`rounded-lg px-3 py-1.5 text-sm ${
-                      mangadexDraft.includedTags.includes(tag.id)
-                        ? ""
-                        : "hover:border-[var(--border-hover)]"
-                    }`}
-                  >
-                    {tag.name}
-                  </Button>
-                ))}
+            {/* Tags Filter - grouped by category */}
+            {Object.entries(mangadexTagsByGroup).map(([group, groupTags]) => (
+              <div key={group} className="mb-6">
+                <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
+                  {TAG_GROUP_LABELS[group] || group}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {groupTags.map((tag) => (
+                    <Button
+                      key={tag.id}
+                      type="button"
+                      variant={
+                        mangadexDraft.includedTags.includes(tag.id)
+                          ? "default"
+                          : "outline"
+                      }
+                      size="sm"
+                      onClick={() => toggleMangadexDraftTag(tag.id)}
+                      className={`rounded-lg px-3 py-1.5 text-sm ${
+                        mangadexDraft.includedTags.includes(tag.id)
+                          ? ""
+                          : "hover:border-[var(--border-hover)]"
+                      }`}
+                    >
+                      {tag.name}
+                    </Button>
+                  ))}
+                </div>
               </div>
-            </div>
+            ))}
 
             {/* Modal Footer */}
             <div className="flex gap-3 border-[var(--border)] border-t pt-4">
