@@ -32,6 +32,7 @@ export const Dropdown = ({
 }: DropdownProps): React.ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [expandedWidth, setExpandedWidth] = useState<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const listboxRef = useRef<HTMLDivElement>(null);
 
@@ -122,6 +123,15 @@ export const Dropdown = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Expand trigger to match dropdown menu width when open
+  useEffect(() => {
+    if (isOpen && listboxRef.current) {
+      setExpandedWidth(listboxRef.current.scrollWidth);
+    } else {
+      setExpandedWidth(null);
+    }
+  }, [isOpen]);
+
   // Scroll highlighted option into view
   useEffect(() => {
     if (isOpen && highlightedIndex >= 0 && listboxRef.current) {
@@ -135,7 +145,14 @@ export const Dropdown = ({
   const listboxId = id ? `${id}-listbox` : undefined;
 
   return (
-    <div ref={dropdownRef} className={cn("relative inline-block", className)}>
+    <div
+      ref={dropdownRef}
+      className={cn(
+        "relative inline-block transition-[min-width] duration-200 ease-out",
+        className,
+      )}
+      style={expandedWidth ? { minWidth: expandedWidth } : undefined}
+    >
       {/* Trigger Button */}
       <Button
         variant="ghost"
@@ -206,7 +223,7 @@ export const Dropdown = ({
         aria-label={ariaLabel}
         className={cn(
           // Base styles
-          "absolute left-0 z-[9999] mt-2 w-full overflow-hidden rounded-lg",
+          "absolute left-0 z-[9999] mt-2 w-max min-w-full overflow-hidden rounded-lg",
           "border border-[var(--border)] bg-[var(--card-solid)] shadow-black/20 shadow-xl backdrop-blur-md",
           // Animation styles
           "origin-top transition-all duration-200 ease-out",
