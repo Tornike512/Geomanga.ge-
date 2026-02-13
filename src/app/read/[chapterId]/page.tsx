@@ -507,7 +507,7 @@ export default function ReaderPage() {
                 წინა
               </Link>
             ) : (
-              <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-[var(--muted-foreground)]/50 text-xs">
+              <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
                 წინა
               </span>
             )}
@@ -522,7 +522,7 @@ export default function ReaderPage() {
                 შემდეგი
               </Link>
             ) : (
-              <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-[var(--muted-foreground)]/50 text-xs">
+              <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
                 შემდეგი
               </span>
             )}
