@@ -569,9 +569,19 @@ export default function ProfilePage() {
 
           <Card className="p-6">
             {/* Change Password Section */}
-            <div className="border-[var(--border)] border-b pb-8">
+            <div
+              className={
+                user.role === UserRole.ADMIN
+                  ? "border-[var(--border)] border-b pb-8"
+                  : ""
+              }
+            >
               <h3 className="mb-4 font-medium text-base">უსაფრთხოება</h3>
-              {!isChangingPassword ? (
+              {user.auth_provider === "google" ? (
+                <p className="text-[var(--muted-foreground)] text-sm">
+                  Google-ით შესული ანგარიშისთვის პაროლის შეცვლა შეუძლებელია
+                </p>
+              ) : !isChangingPassword ? (
                 <Button
                   variant="outline"
                   className="whitespace-nowrap"
