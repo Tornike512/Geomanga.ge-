@@ -169,7 +169,7 @@ export default function UploadMangaPage() {
       // Validate cover image
       const validation = validateCoverImage(file);
       if (!validation.valid) {
-        showAlert(validation.error!, "error");
+        showAlert(validation.error ?? "", "error");
         return;
       }
 
@@ -276,7 +276,7 @@ export default function UploadMangaPage() {
       // Validate files
       const validation = validatePageImages(acceptedFiles);
       if (!validation.valid) {
-        showAlert(validation.error!, "error");
+        showAlert(validation.error ?? "", "error");
         return;
       }
 
@@ -297,7 +297,7 @@ export default function UploadMangaPage() {
       const validation = validatePageImages(acceptedFiles);
 
       if (!validation.valid) {
-        showAlert(validation.error!, "error");
+        showAlert(validation.error ?? "", "error");
         return;
       }
 

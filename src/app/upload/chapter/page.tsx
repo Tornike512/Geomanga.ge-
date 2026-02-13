@@ -73,7 +73,7 @@ function ChapterUploadContent() {
 
     const validation = validatePageImages(files);
     if (!validation.valid) {
-      showAlert(validation.error!, "error");
+      showAlert(validation.error ?? "", "error");
       return;
     }
 
