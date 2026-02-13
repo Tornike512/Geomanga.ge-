@@ -34,7 +34,7 @@ export function Header() {
                 alt="Geomanga"
                 width={120}
                 height={40}
-                className="h-8 w-auto sm:h-10"
+                className="h-10 w-auto sm:h-12"
                 priority
               />
             </Link>
