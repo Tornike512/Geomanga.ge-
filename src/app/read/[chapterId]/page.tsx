@@ -495,55 +495,37 @@ export default function ReaderPage() {
         </div>
 
         {/* Bottom Bar */}
-        {(() => {
-          const currentIndex = allChapters?.findIndex(
-            (ch) => ch.id === localChapter.id,
-          );
-          const prevChapter =
-            currentIndex != null && currentIndex > 0
-              ? allChapters?.[currentIndex - 1]
-              : null;
-          const nextChapter =
-            currentIndex != null && allChapters
-              ? (allChapters[currentIndex + 1] ?? null)
-              : null;
-
-          return (
-            <div
-              className={`fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
-            >
-              <div className="mx-auto grid max-w-[1920px] grid-cols-3 items-center px-4 py-2">
-                <div className="flex justify-start">
-                  {prevChapter && (
-                    <Link
-                      href={`/read/${prevChapter.id}`}
-                      className="flex h-7 w-7 items-center justify-center rounded-md text-[var(--muted-foreground)] transition-colors hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]"
-                      aria-label="წინა თავი"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Link>
-                  )}
-                </div>
-                <div className="text-center text-[var(--muted-foreground)] text-xs">
-                  {currentPageNumber
-                    ? `${currentPageNumber} / ${localChapter.pages.length}`
-                    : `თავი ${localChapter.chapter_number}`}
-                </div>
-                <div className="flex justify-end">
-                  {nextChapter && (
-                    <Link
-                      href={`/read/${nextChapter.id}`}
-                      className="flex h-7 w-7 items-center justify-center rounded-md text-[var(--muted-foreground)] transition-colors hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]"
-                      aria-label="შემდეგი თავი"
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Link>
-                  )}
-                </div>
-              </div>
+        <div
+          className={`fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
+        >
+          <div className="mx-auto grid max-w-[1920px] grid-cols-3 items-center px-4 py-2">
+            <div className="flex justify-start">
+              {localChapter.previous_chapter_id && (
+                <Link
+                  href={`/read/${localChapter.previous_chapter_id}`}
+                  className="flex h-7 w-7 items-center justify-center rounded-md text-[var(--muted-foreground)] transition-colors hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]"
+                  aria-label="წინა თავი"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Link>
+              )}
             </div>
-          );
-        })()}
+            <div className="text-center text-[var(--muted-foreground)] text-xs">
+              თავი {localChapter.chapter_number}
+            </div>
+            <div className="flex justify-end">
+              {localChapter.next_chapter_id && (
+                <Link
+                  href={`/read/${localChapter.next_chapter_id}`}
+                  className="flex h-7 w-7 items-center justify-center rounded-md text-[var(--muted-foreground)] transition-colors hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]"
+                  aria-label="შემდეგი თავი"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
