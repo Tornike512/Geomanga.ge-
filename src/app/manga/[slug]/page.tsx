@@ -220,9 +220,17 @@ export default function MangaDetailPage() {
                   {/* Badges */}
                   <div className="mb-4 flex flex-wrap items-center gap-2">
                     {genres.slice(0, 5).map((genre) => (
-                      <Badge key={genre.id} variant="secondary">
-                        {genre.name}
-                      </Badge>
+                      <Link
+                        key={genre.id}
+                        href={`/browse?genre_name=${encodeURIComponent(genre.name)}${isMangaDex ? "&source=mangadex" : ""}`}
+                      >
+                        <Badge
+                          variant="secondary"
+                          className="transition-colors hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]"
+                        >
+                          {genre.name}
+                        </Badge>
+                      </Link>
                     ))}
                   </div>
                 </div>

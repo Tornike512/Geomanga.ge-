@@ -144,9 +144,11 @@ function BrowseContent() {
   // Read initial values from URL
   const initialSource = (searchParams.get("source") as DataSource) || "local";
   const initialAuthor = searchParams.get("author") || "";
+  const initialGenreName = searchParams.get("genre_name") || "";
 
   const [source, setSource] = useState<DataSource>(initialSource);
   const [authorFilter, setAuthorFilter] = useState(initialAuthor);
+  const [genreNameFilter, setGenreNameFilter] = useState(initialGenreName);
 
   // Local filters - initialized from URL
   const [localFilters, setLocalFilters] = useState<LocalFilterState>(() => ({
@@ -244,6 +246,72 @@ function BrowseContent() {
   const { data: genres } = useGenres();
   const { data: mangadexTags } = useMangaDexTags();
 
+  // Resolve genre name → source-specific IDs when data loads or source changes
+  const DEMOGRAPHICS = ["shounen", "shoujo", "seinen", "josei"] as const;
+
+  useEffect(() => {
+    if (!genreNameFilter) return;
+    const nameLower = genreNameFilter.toLowerCase();
+
+    if (source === "local" && genres) {
+      const match = genres.find((g) => g.name.toLowerCase() === nameLower);
+      if (match && !localFilters.genres.includes(match.id)) {
+        setLocalFilters((prev) => ({
+          ...prev,
+          genres: [match.id],
+          page: 1,
+        }));
+        setLocalDraft((prev) => ({
+          ...prev,
+          genres: [match.id],
+        }));
+      }
+    } else if (source === "mangadex" && mangadexTags) {
+      // Check if it matches a MangaDex tag (any group)
+      const tagMatch = mangadexTags.find(
+        (t) => t.name.toLowerCase() === nameLower,
+      );
+      if (tagMatch && !mangadexFilters.includedTags.includes(tagMatch.id)) {
+        setMangadexFilters((prev) => ({
+          ...prev,
+          includedTags: [tagMatch.id],
+          page: 1,
+        }));
+        setMangadexDraft((prev) => ({
+          ...prev,
+          includedTags: [tagMatch.id],
+        }));
+        return;
+      }
+
+      // Check if it matches a MangaDex demographic
+      const demographicMatch = DEMOGRAPHICS.find((d) => d === nameLower);
+      if (
+        demographicMatch &&
+        mangadexFilters.demographic !== demographicMatch
+      ) {
+        setMangadexFilters((prev) => ({
+          ...prev,
+          demographic: demographicMatch,
+          page: 1,
+        }));
+        setMangadexDraft((prev) => ({
+          ...prev,
+          demographic: demographicMatch,
+        }));
+      }
+    }
+  }, [
+    genreNameFilter,
+    source,
+    genres,
+    mangadexTags,
+    DEMOGRAPHICS.find,
+    localFilters.genres.includes,
+    mangadexFilters.demographic,
+    mangadexFilters.includedTags.includes,
+  ]);
+
   // Resolve author name → MangaDex UUIDs
   const { data: authorResults, isLoading: authorLoading } =
     useAuthors(authorFilter);
@@ -301,6 +369,7 @@ function BrowseContent() {
     const params = new URLSearchParams();
 
     if (authorFilter) params.set("author", authorFilter);
+    if (genreNameFilter) params.set("genre_name", genreNameFilter);
     if (source !== "local") params.set("source", source);
 
     if (source === "local") {
@@ -332,7 +401,7 @@ function BrowseContent() {
 
     const qs = params.toString();
     window.history.replaceState(null, "", qs ? `/browse?${qs}` : "/browse");
-  }, [source, authorFilter, localFilters, mangadexFilters]);
+  }, [source, authorFilter, genreNameFilter, localFilters, mangadexFilters]);
 
   useEffect(() => {
     updateUrl();
@@ -421,6 +490,58 @@ function BrowseContent() {
     }));
   };
 
+  const handleSourceSwitch = (newSource: DataSource) => {
+    if (newSource === source) return;
+
+    if (newSource === "mangadex" && genres && mangadexTags) {
+      const selectedGenreNames = localFilters.genres
+        .map((id) => genres.find((g) => g.id === id)?.name?.toLowerCase())
+        .filter(Boolean) as string[];
+
+      if (selectedGenreNames.length > 0) {
+        const matchingTagIds = mangadexTags
+          .filter(
+            (tag) =>
+              tag.group === "genre" &&
+              selectedGenreNames.includes(tag.name.toLowerCase()),
+          )
+          .map((tag) => tag.id);
+
+        setMangadexFilters((prev) => ({
+          ...prev,
+          includedTags: matchingTagIds,
+          page: 1,
+        }));
+        setMangadexDraft((prev) => ({
+          ...prev,
+          includedTags: matchingTagIds,
+        }));
+      }
+    } else if (newSource === "local" && genres && mangadexTags) {
+      const selectedTagNames = mangadexFilters.includedTags
+        .map((id) => mangadexTags.find((t) => t.id === id)?.name?.toLowerCase())
+        .filter(Boolean) as string[];
+
+      if (selectedTagNames.length > 0) {
+        const matchingGenreIds = genres
+          .filter((g) => selectedTagNames.includes(g.name.toLowerCase()))
+          .map((g) => g.id);
+
+        setLocalFilters((prev) => ({
+          ...prev,
+          genres: matchingGenreIds,
+          page: 1,
+        }));
+        setLocalDraft((prev) => ({
+          ...prev,
+          genres: matchingGenreIds,
+        }));
+      }
+    }
+
+    setSource(newSource);
+  };
+
   const localActiveFilterCount =
     (localFilters.status ? 1 : 0) +
     (localFilters.translation_status ? 1 : 0) +
@@ -449,7 +570,7 @@ function BrowseContent() {
         <Button
           variant={source === "local" ? "default" : "outline"}
           size="sm"
-          onClick={() => setSource("local")}
+          onClick={() => handleSourceSwitch("local")}
           className="flex items-center gap-2 whitespace-nowrap"
         >
           <Server className="h-4 w-4" />
@@ -458,7 +579,7 @@ function BrowseContent() {
         <Button
           variant={source === "mangadex" ? "default" : "outline"}
           size="sm"
-          onClick={() => setSource("mangadex")}
+          onClick={() => handleSourceSwitch("mangadex")}
           className="flex items-center gap-2"
         >
           <Globe className="h-4 w-4" />
@@ -479,6 +600,39 @@ function BrowseContent() {
               onClick={() => setAuthorFilter("")}
               className="ml-1 rounded-full p-0.5 transition-colors hover:bg-[var(--accent)]/20"
               aria-label="ავტორის ფილტრის წაშლა"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </span>
+        </div>
+      )}
+
+      {/* Active Genre Name Filter */}
+      {genreNameFilter && (
+        <div className="mb-4 flex items-center gap-2">
+          <span className="text-[var(--muted-foreground)] text-sm">ჟანრი:</span>
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--accent)]/50 bg-[var(--accent)]/10 px-3 py-1.5 font-medium text-[var(--accent)] text-sm">
+            {genreNameFilter}
+            <button
+              type="button"
+              onClick={() => {
+                setGenreNameFilter("");
+                setLocalFilters((prev) => ({ ...prev, genres: [], page: 1 }));
+                setLocalDraft((prev) => ({ ...prev, genres: [] }));
+                setMangadexFilters((prev) => ({
+                  ...prev,
+                  includedTags: [],
+                  demographic: undefined,
+                  page: 1,
+                }));
+                setMangadexDraft((prev) => ({
+                  ...prev,
+                  includedTags: [],
+                  demographic: undefined,
+                }));
+              }}
+              className="ml-1 rounded-full p-0.5 transition-colors hover:bg-[var(--accent)]/20"
+              aria-label="ჟანრის ფილტრის წაშლა"
             >
               <X className="h-3.5 w-3.5" />
             </button>
