@@ -311,10 +311,10 @@ export default function ProfilePage() {
               />
             </div>
 
-            <h1 className="mb-1 w-full truncate text-center font-semibold text-xl">
+            <h1 className="mb-1 max-w-full truncate font-semibold text-xl">
               {user.username}
             </h1>
-            <p className="mb-4 w-full truncate text-center text-[var(--muted-foreground)] text-sm">
+            <p className="mb-4 max-w-full truncate text-[var(--muted-foreground)] text-sm">
               {user.email}
             </p>
 
