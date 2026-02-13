@@ -80,7 +80,6 @@ export default function ProfilePage() {
     updateProfile.mutate(
       {
         username: formData.username,
-        email: formData.email,
         bio: formData.bio || undefined,
       },
       {
@@ -385,11 +384,7 @@ export default function ProfilePage() {
                   id="email"
                   type="email"
                   value={formData.email}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, email: e.target.value }))
-                  }
-                  disabled={!isEditing}
-                  required
+                  disabled
                 />
               </div>
 

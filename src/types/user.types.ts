@@ -31,7 +31,6 @@ export interface UserCreate {
 
 export interface UserUpdate {
   readonly username?: string;
-  readonly email?: string;
   readonly avatar_url?: string;
   readonly bio?: string;
   readonly banner_url?: string;

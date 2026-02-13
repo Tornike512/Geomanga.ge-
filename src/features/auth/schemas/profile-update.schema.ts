@@ -10,7 +10,6 @@ export const profileUpdateSchema = z.object({
       "Username can only contain letters, numbers, and underscores",
     )
     .optional(),
-  email: z.string().email("Please enter a valid email").optional(),
   avatar_url: z
     .string()
     .url("Please enter a valid URL")
