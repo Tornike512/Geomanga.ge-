@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/button";
 import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth";
+import { useConfirmModal } from "@/hooks/use-confirm-modal";
 import {
   useChapterComments,
   useCreateChapterComment,
@@ -35,6 +36,7 @@ export function ChapterComments({ chapterId }: ChapterCommentsProps) {
   const updateComment = useUpdateComment();
   const toggleLike = useToggleLikeComment();
   const replyToComment = useReplyToComment();
+  const { confirm, ConfirmModalComponent } = useConfirmModal();
 
   const handleSubmitComment = (content: string) => {
     createComment.mutate(content, {
@@ -44,8 +46,9 @@ export function ChapterComments({ chapterId }: ChapterCommentsProps) {
     });
   };
 
-  const handleDeleteComment = (commentId: number) => {
-    if (window.confirm("ნამდვილად გსურთ კომენტარის წაშლა?")) {
+  const handleDeleteComment = async (commentId: number) => {
+    const confirmed = await confirm("ნამდვილად გსურთ კომენტარის წაშლა?");
+    if (confirmed) {
       deleteComment.mutate(commentId);
     }
   };
@@ -68,6 +71,7 @@ export function ChapterComments({ chapterId }: ChapterCommentsProps) {
 
   return (
     <div className="py-8">
+      {ConfirmModalComponent}
       <div className="mb-6 flex items-center gap-2">
         <MessageCircle className="h-5 w-5 text-[var(--accent)]" />
         <h2 className="font-semibold text-[var(--foreground)] text-lg">

@@ -31,6 +31,7 @@ import {
 } from "@/features/manga";
 import { MangaRating } from "@/features/ratings";
 import { useChaptersByManga, useDeleteChapter } from "@/features/reader";
+import { useConfirmModal } from "@/hooks/use-confirm-modal";
 import { UserRole } from "@/types/user.types";
 import { formatDate, formatNumber, formatRating } from "@/utils/formatters";
 import { getCoverUrl } from "@/utils/image-urls";
@@ -93,6 +94,7 @@ export default function MangaDetailPage() {
   const { data: user } = useCurrentUser();
   const deleteManga = useDeleteManga();
   const deleteChapter = useDeleteChapter();
+  const { confirm, ConfirmModalComponent } = useConfirmModal();
 
   const canDeleteManga =
     user?.id === localManga?.uploader?.id ||
@@ -101,11 +103,12 @@ export default function MangaDetailPage() {
   const canDeleteChapter =
     user?.role === UserRole.MODERATOR || user?.role === UserRole.ADMIN;
 
-  const handleDeleteManga = () => {
+  const handleDeleteManga = async () => {
     if (!localManga) return;
-    if (
-      window.confirm("ნამდვილად გსურთ მანგის წაშლა? ეს მოქმედება შეუქცევადია.")
-    ) {
+    const confirmed = await confirm(
+      "ნამდვილად გსურთ მანგის წაშლა? ეს მოქმედება შეუქცევადია.",
+    );
+    if (confirmed) {
       deleteManga.mutate(localManga.id, {
         onSuccess: () => {
           router.push("/");
@@ -114,8 +117,14 @@ export default function MangaDetailPage() {
     }
   };
 
-  const handleDeleteChapter = (chapterId: number, chapterNumber: number) => {
-    if (window.confirm(`ნამდვილად გსურთ თავი ${chapterNumber}-ის წაშლა?`)) {
+  const handleDeleteChapter = async (
+    chapterId: number,
+    chapterNumber: number,
+  ) => {
+    const confirmed = await confirm(
+      `ნამდვილად გსურთ თავი ${chapterNumber}-ის წაშლა?`,
+    );
+    if (confirmed) {
       deleteChapter.mutate(chapterId);
     }
   };
@@ -157,6 +166,7 @@ export default function MangaDetailPage() {
 
   return (
     <div className="relative w-full overflow-x-hidden">
+      {ConfirmModalComponent}
       {/* Hero Section with Cover and Title */}
       <section className="w-full overflow-x-hidden border-[var(--border)] border-b">
         <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 py-8 sm:px-4 md:px-8 md:py-12">
