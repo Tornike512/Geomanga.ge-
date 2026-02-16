@@ -337,21 +337,22 @@ export default function LibraryTabPage() {
                       className="group"
                     >
                       <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
-                        {entry.manga.cover_image_url ? (
-                          <Image
-                            src={entry.manga.cover_image_url}
-                            alt={entry.manga.title}
-                            width={200}
-                            height={300}
-                            className="aspect-[2/3] w-full object-cover"
-                          />
-                        ) : (
-                          <div className="flex aspect-[2/3] w-full items-center justify-center bg-[var(--muted)]">
-                            <span className="text-[var(--muted-foreground)] text-xs">
-                              N/A
-                            </span>
-                          </div>
-                        )}
+                        <div className="relative aspect-[2/3] w-full overflow-hidden">
+                          {entry.manga.cover_image_url ? (
+                            <Image
+                              src={entry.manga.cover_image_url}
+                              alt={entry.manga.title}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-[var(--muted)]">
+                              <span className="text-[var(--muted-foreground)] text-xs">
+                                N/A
+                              </span>
+                            </div>
+                          )}
+                        </div>
                         <div className="p-2">
                           <h3 className="truncate font-medium text-sm group-hover:text-[var(--accent)]">
                             {entry.manga.title}
@@ -369,22 +370,23 @@ export default function LibraryTabPage() {
                     className="group"
                   >
                     <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
-                      {entry.cover_image_url ? (
-                        <Image
-                          src={entry.cover_image_url}
-                          alt={entry.manga_title}
-                          width={200}
-                          height={300}
-                          className="aspect-[2/3] w-full object-cover"
-                          unoptimized
-                        />
-                      ) : (
-                        <div className="flex aspect-[2/3] w-full items-center justify-center bg-[var(--muted)]">
-                          <span className="text-[var(--muted-foreground)] text-xs">
-                            N/A
-                          </span>
-                        </div>
-                      )}
+                      <div className="relative aspect-[2/3] w-full overflow-hidden">
+                        {entry.cover_image_url ? (
+                          <Image
+                            src={entry.cover_image_url}
+                            alt={entry.manga_title}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-[var(--muted)]">
+                            <span className="text-[var(--muted-foreground)] text-xs">
+                              N/A
+                            </span>
+                          </div>
+                        )}
+                      </div>
                       <div className="p-2">
                         <div className="flex items-center gap-1">
                           <h3 className="truncate font-medium text-sm group-hover:text-[var(--accent)]">
