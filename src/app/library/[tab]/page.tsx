@@ -388,8 +388,8 @@ export default function LibraryTabPage() {
                         )}
                       </div>
                       <div className="p-2">
-                        <div className="flex items-center gap-1">
-                          <h3 className="truncate font-medium text-sm group-hover:text-[var(--accent)]">
+                        <div className="flex min-w-0 items-center gap-1">
+                          <h3 className="min-w-0 truncate font-medium text-sm group-hover:text-[var(--accent)]">
                             {entry.manga_title}
                           </h3>
                           <Badge
