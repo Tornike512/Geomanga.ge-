@@ -1,7 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { BookOpen } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Avatar } from "@/components/avatar";
@@ -18,6 +20,7 @@ import {
   type PasswordUpdateFormData,
   passwordUpdateSchema,
 } from "@/features/auth/schemas/password-update.schema";
+import { useLibraryEntries } from "@/features/library/hooks/use-library-entries";
 import { useUploadAvatar } from "@/features/upload/hooks/use-upload-avatar";
 import { useUploadBanner } from "@/features/upload/hooks/use-upload-banner";
 import { type PrivacySettings, UserRole } from "@/types/user.types";
@@ -569,6 +572,9 @@ export default function ProfilePage() {
             </div>
           </Card>
 
+          {/* Library Section */}
+          <LibrarySection />
+
           <Card className="p-6">
             {/* Change Password Section */}
             <div
@@ -717,5 +723,70 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+const LIBRARY_TABS = [
+  { key: "reading", label: "ვკითხულობ", category: "reading" as const },
+  { key: "bookmarks", label: "სანიშნეები", category: "bookmarks" as const },
+  { key: "favorites", label: "ფავორიტები", category: "favorites" as const },
+  { key: "toread", label: "წასაკითხი", category: "toread" as const },
+  { key: "dropped", label: "მიტოვებული", category: "dropped" as const },
+];
+
+function LibrarySection() {
+  const { data: readingData } = useLibraryEntries("reading", { limit: 1 });
+  const { data: bookmarksData } = useLibraryEntries("bookmarks", { limit: 1 });
+  const { data: favoritesData } = useLibraryEntries("favorites", { limit: 1 });
+  const { data: toreadData } = useLibraryEntries("toread", { limit: 1 });
+  const { data: droppedData } = useLibraryEntries("dropped", { limit: 1 });
+
+  const counts: Record<string, number> = {
+    reading: readingData?.total ?? 0,
+    bookmarks: bookmarksData?.total ?? 0,
+    favorites: favoritesData?.total ?? 0,
+    toread: toreadData?.total ?? 0,
+    dropped: droppedData?.total ?? 0,
+  };
+
+  const totalCount = Object.values(counts).reduce((a, b) => a + b, 0);
+
+  return (
+    <Card className="mb-6 p-6">
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <BookOpen className="h-5 w-5 text-[var(--accent)]" />
+          <h2 className="font-semibold text-lg">ჩემი ბიბლიოთეკა</h2>
+        </div>
+        <Link href="/library/bookmarks">
+          <Button variant="outline" size="sm" className="whitespace-nowrap">
+            ყველას ნახვა
+          </Button>
+        </Link>
+      </div>
+
+      {totalCount === 0 ? (
+        <p className="text-[var(--muted-foreground)] text-sm">
+          ბიბლიოთეკაში ჯერ არაფერი გაქვთ
+        </p>
+      ) : (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+          {LIBRARY_TABS.map((tab) => (
+            <Link
+              key={tab.key}
+              href={`/library/${tab.key}`}
+              className="group rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 text-center transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+            >
+              <div className="mb-1 font-semibold text-2xl text-[var(--accent)]">
+                {counts[tab.key]}
+              </div>
+              <div className="text-[var(--muted-foreground)] text-xs group-hover:text-[var(--foreground)]">
+                {tab.label}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </Card>
   );
 }
