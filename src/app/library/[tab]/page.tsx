@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, ChevronLeft, ChevronRight, Globe } from "lucide-react";
+import { ChevronLeft, ChevronRight, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
@@ -43,13 +43,6 @@ const LIBRARY_TAB_TO_CATEGORY: Partial<Record<Tab, LibraryCategory>> = {
 
 function isValidTab(tab: string): tab is Tab {
   return tab in TABS;
-}
-
-function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleDateString();
 }
 
 export default function LibraryTabPage() {
@@ -409,7 +402,7 @@ export default function LibraryTabPage() {
           ) : isLibraryTab && data ? (
             <MangaGrid manga={data.items.map((entry) => entry.manga)} />
           ) : (
-            <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {paginatedHistory.map((item) => {
                 if (item.source === "local") {
                   const history = item.data;
@@ -417,34 +410,28 @@ export default function LibraryTabPage() {
                     <Link
                       key={`local-${history.id}`}
                       href={`/read/${history.chapter.id}`}
-                      className="group flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)] p-3 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] sm:gap-4 sm:p-4"
+                      className="group block overflow-hidden"
                     >
-                      <Image
-                        src={
-                          history.manga.cover_image_url || "/placeholder.png"
-                        }
-                        alt={history.manga.title}
-                        width={64}
-                        height={96}
-                        className="h-20 w-14 shrink-0 rounded-lg object-cover sm:h-24 sm:w-16"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <h3 className="mb-1 truncate font-medium text-sm sm:text-base">
-                          {history.manga.title}
-                        </h3>
-                        <p className="mb-1 truncate text-[var(--muted-foreground)] text-xs sm:mb-2 sm:text-sm">
-                          თავი {history.chapter.chapter_number}
-                          {history.chapter.title &&
-                            `: ${history.chapter.title}`}
-                        </p>
-                        {formatDate(history.last_read_at) && (
-                          <div className="text-[var(--muted-foreground)] text-xs">
-                            {formatDate(history.last_read_at)}
-                          </div>
-                        )}
-                      </div>
-                      <div className="shrink-0">
-                        <ArrowRight className="h-5 w-5 text-[var(--muted-foreground)] transition-colors group-hover:text-[var(--accent)]" />
+                      <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                        <div className="relative aspect-[2/3] w-full overflow-hidden">
+                          <Image
+                            src={
+                              history.manga.cover_image_url ||
+                              "/placeholder.png"
+                            }
+                            alt={history.manga.title}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="min-w-0 p-2">
+                          <h3 className="line-clamp-1 font-medium text-sm group-hover:text-[var(--accent)]">
+                            {history.manga.title}
+                          </h3>
+                          <p className="line-clamp-1 text-[var(--muted-foreground)] text-xs">
+                            თავი {history.chapter.chapter_number}
+                          </p>
+                        </div>
                       </div>
                     </Link>
                   );
@@ -454,48 +441,43 @@ export default function LibraryTabPage() {
                   <Link
                     key={`md-${history.id}`}
                     href={`/read/md-${history.mangadex_chapter_id}`}
-                    className="group flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)] p-3 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] sm:gap-4 sm:p-4"
+                    className="group block overflow-hidden"
                   >
-                    {history.cover_image_url ? (
-                      <Image
-                        src={history.cover_image_url}
-                        alt={history.manga_title}
-                        width={64}
-                        height={96}
-                        className="h-20 w-14 shrink-0 rounded-lg object-cover sm:h-24 sm:w-16"
-                        unoptimized
-                      />
-                    ) : (
-                      <div className="flex h-20 w-14 shrink-0 items-center justify-center rounded-lg bg-[var(--muted)] sm:h-24 sm:w-16">
-                        <span className="text-[var(--muted-foreground)] text-xs">
-                          N/A
-                        </span>
+                    <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                      <div className="relative aspect-[2/3] w-full overflow-hidden">
+                        {history.cover_image_url ? (
+                          <Image
+                            src={history.cover_image_url}
+                            alt={history.manga_title}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-[var(--muted)]">
+                            <span className="text-[var(--muted-foreground)] text-xs">
+                              N/A
+                            </span>
+                          </div>
+                        )}
                       </div>
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <div className="mb-1 flex items-center gap-2">
-                        <h3 className="truncate font-medium text-sm sm:text-base">
-                          {history.manga_title}
-                        </h3>
-                        <Badge
-                          variant="secondary"
-                          className="shrink-0 gap-1 py-0 text-[10px]"
-                        >
-                          <Globe className="h-2.5 w-2.5" />
-                          MD
-                        </Badge>
-                      </div>
-                      <p className="mb-1 truncate text-[var(--muted-foreground)] text-xs sm:mb-2 sm:text-sm">
-                        თავი {history.chapter_number}
-                      </p>
-                      {formatDate(history.last_read_at) && (
-                        <div className="text-[var(--muted-foreground)] text-xs">
-                          {formatDate(history.last_read_at)}
+                      <div className="min-w-0 p-2">
+                        <div className="flex min-w-0 items-center gap-1">
+                          <h3 className="line-clamp-1 min-w-0 font-medium text-sm group-hover:text-[var(--accent)]">
+                            {history.manga_title}
+                          </h3>
+                          <Badge
+                            variant="secondary"
+                            className="shrink-0 gap-0.5 px-1 py-0 text-[8px]"
+                          >
+                            <Globe className="h-2 w-2" />
+                            MD
+                          </Badge>
                         </div>
-                      )}
-                    </div>
-                    <div className="shrink-0">
-                      <ArrowRight className="h-5 w-5 text-[var(--muted-foreground)] transition-colors group-hover:text-[var(--accent)]" />
+                        <p className="line-clamp-1 text-[var(--muted-foreground)] text-xs">
+                          თავი {history.chapter_number}
+                        </p>
+                      </div>
                     </div>
                   </Link>
                 );
