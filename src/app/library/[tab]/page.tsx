@@ -353,7 +353,7 @@ export default function LibraryTabPage() {
                             </div>
                           )}
                         </div>
-                        <div className="p-2">
+                        <div className="min-w-0 p-2">
                           <h3 className="truncate font-medium text-sm group-hover:text-[var(--accent)]">
                             {entry.manga.title}
                           </h3>
@@ -387,7 +387,7 @@ export default function LibraryTabPage() {
                           </div>
                         )}
                       </div>
-                      <div className="p-2">
+                      <div className="min-w-0 p-2">
                         <div className="flex min-w-0 items-center gap-1">
                           <h3 className="min-w-0 truncate font-medium text-sm group-hover:text-[var(--accent)]">
                             {entry.manga_title}
