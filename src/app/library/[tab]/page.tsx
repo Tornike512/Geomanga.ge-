@@ -354,7 +354,7 @@ export default function LibraryTabPage() {
                           )}
                         </div>
                         <div className="min-w-0 p-2">
-                          <h3 className="truncate font-medium text-sm [text-wrap:nowrap] group-hover:text-[var(--accent)]">
+                          <h3 className="line-clamp-1 font-medium text-sm group-hover:text-[var(--accent)]">
                             {entry.manga.title}
                           </h3>
                         </div>
@@ -389,7 +389,7 @@ export default function LibraryTabPage() {
                       </div>
                       <div className="min-w-0 p-2">
                         <div className="flex min-w-0 items-center gap-1">
-                          <h3 className="min-w-0 truncate font-medium text-sm [text-wrap:nowrap] group-hover:text-[var(--accent)]">
+                          <h3 className="line-clamp-1 min-w-0 font-medium text-sm group-hover:text-[var(--accent)]">
                             {entry.manga_title}
                           </h3>
                           <Badge
