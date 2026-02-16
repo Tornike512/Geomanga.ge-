@@ -334,7 +334,7 @@ export default function LibraryTabPage() {
                     <Link
                       key={`local-${entry.id}`}
                       href={`/manga/${entry.manga.slug}`}
-                      className="group min-w-0"
+                      className="group block overflow-hidden"
                     >
                       <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
                         <div className="relative aspect-[2/3] w-full overflow-hidden">
@@ -367,7 +367,7 @@ export default function LibraryTabPage() {
                   <Link
                     key={`md-${entry.id}`}
                     href={`/manga/md-${entry.mangadex_manga_id}`}
-                    className="group min-w-0"
+                    className="group block overflow-hidden"
                   >
                     <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
                       <div className="relative aspect-[2/3] w-full overflow-hidden">
