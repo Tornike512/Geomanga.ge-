@@ -921,8 +921,8 @@ function LibraryFullSection() {
       <h2 className="mb-4 font-semibold text-lg">ჩემი ბიბლიოთეკა</h2>
 
       {/* Tabs */}
-      <div className="mb-6 rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm">
-        <div className="flex flex-col gap-1 sm:flex-row">
+      <div className="mb-6 overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm">
+        <div className="flex gap-1">
           {(Object.keys(LIBRARY_TABS) as LibraryTab[]).map((tabKey) => (
             <Button
               key={tabKey}
@@ -931,7 +931,7 @@ function LibraryFullSection() {
                 setActiveTab(tabKey);
                 setCurrentPage(1);
               }}
-              className={`min-w-0 flex-1 whitespace-nowrap rounded-md px-4 py-3 text-center font-medium text-sm transition-all duration-200 sm:px-6 ${
+              className={`shrink-0 whitespace-nowrap rounded-md px-4 py-3 text-center font-medium text-sm transition-all duration-200 ${
                 activeTab === tabKey
                   ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
                   : "text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]"
