@@ -1,12 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BookOpen } from "lucide-react";
+import { ChevronLeft, ChevronRight, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Avatar } from "@/components/avatar";
+import { Badge } from "@/components/badge";
 import { BannerCropModal } from "@/components/banner-crop-modal";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
@@ -21,8 +22,20 @@ import {
   passwordUpdateSchema,
 } from "@/features/auth/schemas/password-update.schema";
 import { useLibraryEntries } from "@/features/library/hooks/use-library-entries";
+import { useMangadexLibraryEntries } from "@/features/library/hooks/use-mangadex-library-entries";
+import { useMangadexReadingHistory } from "@/features/library/hooks/use-mangadex-reading-history";
+import { useReadingHistory } from "@/features/library/hooks/use-reading-history";
+import { MangaGrid } from "@/features/manga/components/manga-grid";
 import { useUploadAvatar } from "@/features/upload/hooks/use-upload-avatar";
 import { useUploadBanner } from "@/features/upload/hooks/use-upload-banner";
+import type {
+  MangadexReadingHistory,
+  ReadingHistoryWithDetails,
+} from "@/types/history.types";
+import type {
+  LibraryCategory,
+  MangadexLibraryEntry,
+} from "@/types/library.types";
 import { type PrivacySettings, UserRole } from "@/types/user.types";
 
 export default function ProfilePage() {
@@ -573,7 +586,7 @@ export default function ProfilePage() {
           </Card>
 
           {/* Library Section */}
-          <LibrarySection />
+          <LibraryFullSection />
 
           <Card className="p-6">
             {/* Change Password Section */}
@@ -726,66 +739,485 @@ export default function ProfilePage() {
   );
 }
 
-const LIBRARY_TABS = [
-  { key: "reading", label: "ვკითხულობ", category: "reading" as const },
-  { key: "bookmarks", label: "სანიშნეები", category: "bookmarks" as const },
-  { key: "favorites", label: "ფავორიტები", category: "favorites" as const },
-  { key: "toread", label: "წასაკითხი", category: "toread" as const },
-  { key: "dropped", label: "მიტოვებული", category: "dropped" as const },
-];
+const LIBRARY_TABS = {
+  bookmarks: "სანიშნეები",
+  reading: "ვკითხულობ",
+  history: "კითხვის ისტორია",
+  dropped: "მიტოვებული",
+  toread: "წასაკითხი",
+  favorites: "ფავორიტები",
+} as const;
 
-function LibrarySection() {
-  const { data: readingData } = useLibraryEntries("reading", { limit: 1 });
-  const { data: bookmarksData } = useLibraryEntries("bookmarks", { limit: 1 });
-  const { data: favoritesData } = useLibraryEntries("favorites", { limit: 1 });
-  const { data: toreadData } = useLibraryEntries("toread", { limit: 1 });
-  const { data: droppedData } = useLibraryEntries("dropped", { limit: 1 });
+type LibraryTab = keyof typeof LIBRARY_TABS;
 
-  const counts: Record<string, number> = {
-    reading: readingData?.total ?? 0,
-    bookmarks: bookmarksData?.total ?? 0,
-    favorites: favoritesData?.total ?? 0,
-    toread: toreadData?.total ?? 0,
-    dropped: droppedData?.total ?? 0,
+const LIBRARY_TAB_TO_CATEGORY: Partial<Record<LibraryTab, LibraryCategory>> = {
+  bookmarks: "bookmarks",
+  reading: "reading",
+  dropped: "dropped",
+  toread: "toread",
+  favorites: "favorites",
+};
+
+function LibraryFullSection() {
+  const [activeTab, setActiveTab] = useState<LibraryTab>("bookmarks");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 20;
+
+  const libraryCategory = LIBRARY_TAB_TO_CATEGORY[activeTab];
+  const isLibraryTab = !!libraryCategory;
+
+  const {
+    data: libraryData,
+    isLoading: libraryLoading,
+    error: libraryError,
+  } = useLibraryEntries(libraryCategory || "bookmarks", {
+    page: currentPage,
+    limit: pageSize,
+  });
+
+  const { data: mangadexLibraryData, isLoading: mangadexLibraryLoading } =
+    useMangadexLibraryEntries(libraryCategory || "bookmarks", {
+      page: 1,
+      limit: 100,
+    });
+
+  const {
+    data: historyData,
+    isLoading: historyLoading,
+    error: historyError,
+  } = useReadingHistory({ page: 1, limit: 100 });
+
+  const {
+    data: mangadexHistoryData,
+    isLoading: mangadexHistoryLoading,
+    error: mangadexHistoryError,
+  } = useMangadexReadingHistory({ page: 1, limit: 100 });
+
+  // Tab counts
+  const { data: bookmarksCount } = useLibraryEntries("bookmarks", { limit: 1 });
+  const { data: readingCount } = useLibraryEntries("reading", { limit: 1 });
+  const { data: mangadexReadingCount } = useMangadexLibraryEntries("reading", {
+    limit: 1,
+  });
+  const { data: droppedCount } = useLibraryEntries("dropped", { limit: 1 });
+  const { data: toreadCount } = useLibraryEntries("toread", { limit: 1 });
+  const { data: favoritesCount } = useLibraryEntries("favorites", { limit: 1 });
+
+  type UnifiedHistoryItem =
+    | { source: "local"; data: ReadingHistoryWithDetails }
+    | { source: "mangadex"; data: MangadexReadingHistory };
+
+  const mergedHistory = useMemo(() => {
+    if (activeTab !== "history") return [];
+    const items: UnifiedHistoryItem[] = [];
+    if (historyData?.items) {
+      for (const item of historyData.items) {
+        items.push({ source: "local", data: item });
+      }
+    }
+    if (mangadexHistoryData?.items) {
+      for (const item of mangadexHistoryData.items) {
+        items.push({ source: "mangadex", data: item });
+      }
+    }
+    items.sort(
+      (a, b) =>
+        new Date(b.data.last_read_at).getTime() -
+        new Date(a.data.last_read_at).getTime(),
+    );
+    return items;
+  }, [activeTab, historyData?.items, mangadexHistoryData?.items]);
+
+  type UnifiedReadingItem =
+    | {
+        source: "local";
+        data: {
+          id: number;
+          manga: {
+            id: number;
+            title: string;
+            cover_image_url?: string | null;
+            slug: string;
+          };
+          created_at: string;
+        };
+      }
+    | { source: "mangadex"; data: MangadexLibraryEntry };
+
+  const mergedReading = useMemo(() => {
+    if (activeTab !== "reading") return [];
+    const items: UnifiedReadingItem[] = [];
+    if (libraryData?.items) {
+      for (const item of libraryData.items) {
+        items.push({
+          source: "local",
+          data: {
+            id: item.id,
+            manga: {
+              id: item.manga.id,
+              title: item.manga.title,
+              cover_image_url: item.manga.cover_image_url,
+              slug: item.manga.slug,
+            },
+            created_at: item.created_at,
+          },
+        });
+      }
+    }
+    if (mangadexLibraryData?.items) {
+      for (const item of mangadexLibraryData.items) {
+        items.push({ source: "mangadex", data: item });
+      }
+    }
+    items.sort(
+      (a, b) =>
+        new Date(b.data.created_at).getTime() -
+        new Date(a.data.created_at).getTime(),
+    );
+    return items;
+  }, [activeTab, libraryData?.items, mangadexLibraryData?.items]);
+
+  const totalHistoryCount =
+    (historyData?.total ?? 0) + (mangadexHistoryData?.total ?? 0);
+  const paginatedHistory = mergedHistory.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
+  const totalHistoryPages = Math.ceil(totalHistoryCount / pageSize);
+
+  const totalReadingCount =
+    (readingCount?.total ?? 0) + (mangadexReadingCount?.total ?? 0);
+
+  const tabCounts: Partial<Record<LibraryTab, number>> = {
+    bookmarks: bookmarksCount?.total,
+    reading: totalReadingCount || undefined,
+    history: totalHistoryCount || undefined,
+    dropped: droppedCount?.total,
+    toread: toreadCount?.total,
+    favorites: favoritesCount?.total,
   };
 
-  const totalCount = Object.values(counts).reduce((a, b) => a + b, 0);
+  const isReadingTab = activeTab === "reading";
+  const isHistoryTab = activeTab === "history";
+
+  const isLoading = isHistoryTab
+    ? historyLoading || mangadexHistoryLoading
+    : isReadingTab
+      ? libraryLoading || mangadexLibraryLoading
+      : libraryLoading;
+  const error = isHistoryTab
+    ? historyError || mangadexHistoryError
+    : libraryError;
+  const data = isHistoryTab ? historyData : isLibraryTab ? libraryData : null;
+
+  const isEmpty = isHistoryTab
+    ? mergedHistory.length === 0
+    : isReadingTab
+      ? mergedReading.length === 0
+      : !data || data.items.length === 0;
 
   return (
     <Card className="mb-6 p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BookOpen className="h-5 w-5 text-[var(--accent)]" />
-          <h2 className="font-semibold text-lg">ჩემი ბიბლიოთეკა</h2>
-        </div>
-        <Link href="/library/bookmarks">
-          <Button variant="outline" size="sm" className="whitespace-nowrap">
-            ყველას ნახვა
-          </Button>
-        </Link>
-      </div>
+      <h2 className="mb-4 font-semibold text-lg">ჩემი ბიბლიოთეკა</h2>
 
-      {totalCount === 0 ? (
-        <p className="text-[var(--muted-foreground)] text-sm">
-          ბიბლიოთეკაში ჯერ არაფერი გაქვთ
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
-          {LIBRARY_TABS.map((tab) => (
-            <Link
-              key={tab.key}
-              href={`/library/${tab.key}`}
-              className="group rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 text-center transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+      {/* Tabs */}
+      <div className="mb-6 rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm">
+        <div className="flex flex-col gap-1 sm:flex-row">
+          {(Object.keys(LIBRARY_TABS) as LibraryTab[]).map((tabKey) => (
+            <Button
+              key={tabKey}
+              variant="unstyled"
+              onClick={() => {
+                setActiveTab(tabKey);
+                setCurrentPage(1);
+              }}
+              className={`min-w-0 flex-1 whitespace-nowrap rounded-md px-4 py-3 text-center font-medium text-sm transition-all duration-200 sm:px-6 ${
+                activeTab === tabKey
+                  ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
+                  : "text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]"
+              }`}
             >
-              <div className="mb-1 font-semibold text-2xl text-[var(--accent)]">
-                {counts[tab.key]}
-              </div>
-              <div className="text-[var(--muted-foreground)] text-xs group-hover:text-[var(--foreground)]">
-                {tab.label}
-              </div>
-            </Link>
+              {LIBRARY_TABS[tabKey]}
+              {tabCounts[tabKey] != null && tabCounts[tabKey] > 0 && (
+                <span className="ml-2 opacity-70">({tabCounts[tabKey]})</span>
+              )}
+            </Button>
           ))}
         </div>
+      </div>
+
+      {/* Content */}
+      {isLoading ? (
+        <div className="flex min-h-[200px] items-center justify-center">
+          <Spinner size="lg" />
+        </div>
+      ) : error ? (
+        <div className="py-8 text-center">
+          <p className="mb-4 text-red-600">
+            ბიბლიოთეკის ჩატვირთვა ვერ მოხერხდა
+          </p>
+          <Button
+            onClick={() => window.location.reload()}
+            className="whitespace-nowrap"
+          >
+            სცადეთ ხელახლა
+          </Button>
+        </div>
+      ) : isEmpty ? (
+        <div className="py-8 text-center">
+          <div className="mb-4 flex flex-col items-center justify-center text-gray-400">
+            <svg
+              className="mx-auto mb-4 h-16 w-16"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-label="Empty library"
+              role="img"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+              />
+            </svg>
+            <h3 className="mb-2 font-bold text-xl">
+              {activeTab === "bookmarks"
+                ? "სანიშნეები ჯერ არ გაქვთ"
+                : activeTab === "reading"
+                  ? "ვკითხულობ სიაში მანგა არ გაქვთ"
+                  : activeTab === "history"
+                    ? "კითხვის ისტორია არ გაქვთ"
+                    : activeTab === "dropped"
+                      ? "მიტოვებული მანგა არ გაქვთ"
+                      : activeTab === "toread"
+                        ? "წასაკითხი მანგა არ გაქვთ"
+                        : "ფავორიტები ჯერ არ გაქვთ"}
+            </h3>
+            <p className="mb-4 text-gray-600">
+              {activeTab === "bookmarks"
+                ? "დაიწყეთ მანგის სანიშნებში დამატება, რომ აქ იხილოთ"
+                : activeTab === "reading"
+                  ? 'დაამატეთ მანგა „ვკითხულობ" სიაში, რომ აქ იხილოთ'
+                  : activeTab === "history"
+                    ? "დაიწყეთ მანგის კითხვა, რომ აქ იხილოთ თქვენი ისტორია"
+                    : activeTab === "dropped"
+                      ? "მიტოვებული მანგა აქ გამოჩნდება"
+                      : activeTab === "toread"
+                        ? "წასაკითხი მანგა აქ გამოჩნდება"
+                        : "ფავორიტები აქ გამოჩნდება"}
+            </p>
+          </div>
+          <Link href="/browse">
+            <Button className="whitespace-nowrap">მანგის ნავიგაცია</Button>
+          </Link>
+        </div>
+      ) : (
+        <>
+          {isReadingTab ? (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              {mergedReading.map((item) => {
+                if (item.source === "local") {
+                  const entry = item.data;
+                  return (
+                    <Link
+                      key={`local-${entry.id}`}
+                      href={`/manga/${entry.manga.slug}`}
+                      className="group block overflow-hidden"
+                    >
+                      <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                        <div className="relative aspect-[2/3] w-full overflow-hidden">
+                          {entry.manga.cover_image_url ? (
+                            <Image
+                              src={entry.manga.cover_image_url}
+                              alt={entry.manga.title}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-[var(--muted)]">
+                              <span className="text-[var(--muted-foreground)] text-xs">
+                                N/A
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0 p-2">
+                          <h3 className="line-clamp-1 font-medium text-sm group-hover:text-[var(--accent)]">
+                            {entry.manga.title}
+                          </h3>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                }
+                const entry = item.data;
+                return (
+                  <Link
+                    key={`md-${entry.id}`}
+                    href={`/manga/md-${entry.mangadex_manga_id}`}
+                    className="group block overflow-hidden"
+                  >
+                    <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                      <div className="relative aspect-[2/3] w-full overflow-hidden">
+                        {entry.cover_image_url ? (
+                          <Image
+                            src={entry.cover_image_url}
+                            alt={entry.manga_title}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-[var(--muted)]">
+                            <span className="text-[var(--muted-foreground)] text-xs">
+                              N/A
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="min-w-0 p-2">
+                        <div className="flex min-w-0 items-center gap-1">
+                          <h3 className="line-clamp-1 min-w-0 font-medium text-sm group-hover:text-[var(--accent)]">
+                            {entry.manga_title}
+                          </h3>
+                          <Badge
+                            variant="secondary"
+                            className="shrink-0 gap-0.5 px-1 py-0 text-[8px]"
+                          >
+                            <Globe className="h-2 w-2" />
+                            MD
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : isLibraryTab && data ? (
+            <MangaGrid manga={data.items.map((entry) => entry.manga)} />
+          ) : (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              {paginatedHistory.map((item) => {
+                if (item.source === "local") {
+                  const history = item.data;
+                  return (
+                    <Link
+                      key={`local-${history.id}`}
+                      href={`/read/${history.chapter.id}`}
+                      className="group block overflow-hidden"
+                    >
+                      <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                        <div className="relative aspect-[2/3] w-full overflow-hidden">
+                          <Image
+                            src={
+                              history.manga.cover_image_url ||
+                              "/placeholder.png"
+                            }
+                            alt={history.manga.title}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="min-w-0 p-2">
+                          <h3 className="line-clamp-1 font-medium text-sm group-hover:text-[var(--accent)]">
+                            {history.manga.title}
+                          </h3>
+                          <p className="line-clamp-1 text-[var(--muted-foreground)] text-xs">
+                            თავი {history.chapter.chapter_number}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                }
+                const history = item.data;
+                return (
+                  <Link
+                    key={`md-${history.id}`}
+                    href={`/read/md-${history.mangadex_chapter_id}`}
+                    className="group block overflow-hidden"
+                  >
+                    <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                      <div className="relative aspect-[2/3] w-full overflow-hidden">
+                        {history.cover_image_url ? (
+                          <Image
+                            src={history.cover_image_url}
+                            alt={history.manga_title}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-[var(--muted)]">
+                            <span className="text-[var(--muted-foreground)] text-xs">
+                              N/A
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="min-w-0 p-2">
+                        <div className="flex min-w-0 items-center gap-1">
+                          <h3 className="line-clamp-1 min-w-0 font-medium text-sm group-hover:text-[var(--accent)]">
+                            {history.manga_title}
+                          </h3>
+                          <Badge
+                            variant="secondary"
+                            className="shrink-0 gap-0.5 px-1 py-0 text-[8px]"
+                          >
+                            <Globe className="h-2 w-2" />
+                            MD
+                          </Badge>
+                        </div>
+                        <p className="line-clamp-1 text-[var(--muted-foreground)] text-xs">
+                          თავი {history.chapter_number}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Pagination */}
+          {(isHistoryTab ? totalHistoryCount : (data?.total ?? 0)) >
+            pageSize && (
+            <div className="mt-8 flex items-center justify-center gap-4">
+              <Button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                variant="outline"
+                size="sm"
+              >
+                <ChevronLeft className="mr-1 h-4 w-4" />
+                წინა
+              </Button>
+              <span className="text-[var(--muted-foreground)] text-sm">
+                გვერდი{" "}
+                <span className="text-[var(--accent)]">{currentPage}</span> /{" "}
+                {isHistoryTab
+                  ? totalHistoryPages
+                  : Math.ceil((data?.total ?? 0) / pageSize)}
+              </span>
+              <Button
+                onClick={() => setCurrentPage((p) => p + 1)}
+                disabled={
+                  currentPage >=
+                  (isHistoryTab
+                    ? totalHistoryPages
+                    : Math.ceil((data?.total ?? 0) / pageSize))
+                }
+                variant="outline"
+                size="sm"
+              >
+                შემდეგი
+                <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </Card>
   );
