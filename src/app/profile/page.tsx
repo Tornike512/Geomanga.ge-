@@ -947,7 +947,7 @@ function LibraryFullSection() {
                 setActiveTab(tabKey);
                 setCurrentPage(1);
               }}
-              className={`flex-1 whitespace-nowrap rounded-md px-3 py-3 text-center font-medium text-sm transition-all duration-200 ${
+              className={`flex-1 cursor-pointer whitespace-nowrap rounded-md px-3 py-3 text-center font-medium text-sm transition-all duration-200 ${
                 activeTab === tabKey
                   ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
                   : "text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]"
