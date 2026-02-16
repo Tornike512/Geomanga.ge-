@@ -920,8 +920,24 @@ function LibraryFullSection() {
     <Card className="mb-6 p-6">
       <h2 className="mb-4 font-semibold text-lg">ჩემი ბიბლიოთეკა</h2>
 
-      {/* Tabs */}
-      <div className="mb-6 overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm">
+      {/* Tabs - Dropdown on small screens, tab bar on md+ */}
+      <div className="mb-6 md:hidden">
+        <Dropdown
+          value={activeTab}
+          onChange={(val) => {
+            setActiveTab(val as LibraryTab);
+            setCurrentPage(1);
+          }}
+          options={(Object.keys(LIBRARY_TABS) as LibraryTab[]).map(
+            (tabKey) => ({
+              value: tabKey,
+              label: `${LIBRARY_TABS[tabKey]}${tabCounts[tabKey] != null && tabCounts[tabKey] > 0 ? ` (${tabCounts[tabKey]})` : ""}`,
+            }),
+          )}
+          className="w-full"
+        />
+      </div>
+      <div className="mb-6 hidden rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm md:block">
         <div className="flex gap-1">
           {(Object.keys(LIBRARY_TABS) as LibraryTab[]).map((tabKey) => (
             <Button
