@@ -1,10 +1,14 @@
 export { addBookmark } from "./add-bookmark";
 export { addLibraryEntry } from "./add-library-entry";
+export { addMangadexLibraryEntry } from "./add-mangadex-library-entry";
 export { getBookmarks } from "./get-bookmarks";
 export { getLibraryEntries } from "./get-library-entries";
 export { getMangaCategory } from "./get-manga-categories";
 export { getMangaProgress } from "./get-manga-progress";
+export { getMangadexLibraryEntries } from "./get-mangadex-library-entries";
+export { getMangadexMangaCategory } from "./get-mangadex-manga-category";
 export { getMangadexReadingHistory } from "./get-mangadex-reading-history";
 export { getReadingHistory } from "./get-reading-history";
 export { removeBookmark } from "./remove-bookmark";
 export { removeLibraryEntry } from "./remove-library-entry";
+export { removeMangadexLibraryEntry } from "./remove-mangadex-library-entry";

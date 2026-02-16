@@ -9,26 +9,49 @@ import {
 } from "@/types/library.types";
 import { cn } from "@/utils/cn";
 import { useAddLibraryEntry } from "../hooks/use-add-library-entry";
+import { useAddMangadexLibraryEntry } from "../hooks/use-add-mangadex-library-entry";
 import { useMangaCategory } from "../hooks/use-manga-categories";
+import { useMangadexMangaCategory } from "../hooks/use-mangadex-manga-category";
 import { useRemoveLibraryEntry } from "../hooks/use-remove-library-entry";
+import { useRemoveMangadexLibraryEntry } from "../hooks/use-remove-mangadex-library-entry";
 
 interface LibraryDropdownProps {
-  readonly mangaId: number;
+  readonly mangaId?: number;
+  readonly mangadexId?: string;
+  readonly mangaTitle?: string;
+  readonly coverImageUrl?: string | null;
   readonly className?: string;
 }
 
 export const LibraryDropdown = ({
   mangaId,
+  mangadexId,
+  mangaTitle,
+  coverImageUrl,
   className,
 }: LibraryDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data: categoryData, isLoading } = useMangaCategory(mangaId);
-  const addEntry = useAddLibraryEntry();
-  const removeEntry = useRemoveLibraryEntry();
+  const isMangaDex = !!mangadexId;
 
-  const currentCategory = categoryData?.category || null;
+  // Local manga hooks
+  const { data: localCategoryData, isLoading: localLoading } = useMangaCategory(
+    isMangaDex ? undefined : mangaId,
+  );
+  const addLocalEntry = useAddLibraryEntry();
+  const removeLocalEntry = useRemoveLibraryEntry();
+
+  // MangaDex manga hooks
+  const { data: mangadexCategoryData, isLoading: mangadexLoading } =
+    useMangadexMangaCategory(isMangaDex ? mangadexId : undefined);
+  const addMangadexEntry = useAddMangadexLibraryEntry();
+  const removeMangadexEntry = useRemoveMangadexLibraryEntry();
+
+  const isLoading = isMangaDex ? mangadexLoading : localLoading;
+  const currentCategory = isMangaDex
+    ? (mangadexCategoryData?.category ?? null)
+    : (localCategoryData?.category ?? null);
 
   const handleToggle = useCallback((): void => {
     setIsOpen((prev) => !prev);
@@ -38,13 +61,40 @@ export const LibraryDropdown = ({
     (category: LibraryCategory) => {
       if (currentCategory === category) {
         // Clicking the same category removes it
-        removeEntry.mutate({ mangaId, category });
+        if (isMangaDex) {
+          removeMangadexEntry.mutate({
+            mangadexMangaId: mangadexId as string,
+            category,
+          });
+        } else {
+          removeLocalEntry.mutate({ mangaId: mangaId as number, category });
+        }
       } else {
         // Selecting a new category (API auto-removes from previous)
-        addEntry.mutate({ manga_id: mangaId, category });
+        if (isMangaDex) {
+          addMangadexEntry.mutate({
+            mangadex_manga_id: mangadexId as string,
+            manga_title: mangaTitle as string,
+            cover_image_url: coverImageUrl,
+            category,
+          });
+        } else {
+          addLocalEntry.mutate({ manga_id: mangaId as number, category });
+        }
       }
     },
-    [mangaId, currentCategory, addEntry, removeEntry],
+    [
+      mangaId,
+      mangadexId,
+      mangaTitle,
+      coverImageUrl,
+      currentCategory,
+      isMangaDex,
+      addLocalEntry,
+      removeLocalEntry,
+      addMangadexEntry,
+      removeMangadexEntry,
+    ],
   );
 
   // Close dropdown when clicking outside
@@ -62,7 +112,9 @@ export const LibraryDropdown = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const isPending = addEntry.isPending || removeEntry.isPending;
+  const isPending = isMangaDex
+    ? addMangadexEntry.isPending || removeMangadexEntry.isPending
+    : addLocalEntry.isPending || removeLocalEntry.isPending;
 
   return (
     <div ref={dropdownRef} className={cn("relative inline-block", className)}>

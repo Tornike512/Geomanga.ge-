@@ -327,8 +327,15 @@ export default function MangaDetailPage() {
                           </Button>
                         </Link>
                       ))}
-                    {!isMangaDex && user && localManga && (
+                    {user && !isMangaDex && localManga && (
                       <LibraryDropdown mangaId={localManga.id} />
+                    )}
+                    {user && isMangaDex && mangaDexManga && mangaDexId && (
+                      <LibraryDropdown
+                        mangadexId={mangaDexId}
+                        mangaTitle={mangaDexManga.title}
+                        coverImageUrl={mangaDexManga.cover_image_url}
+                      />
                     )}
                     {!isMangaDex && canDeleteManga && localManga && (
                       <Button

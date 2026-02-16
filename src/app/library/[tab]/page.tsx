@@ -9,6 +9,7 @@ import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Spinner } from "@/components/spinner";
 import { useLibraryEntries } from "@/features/library/hooks/use-library-entries";
+import { useMangadexLibraryEntries } from "@/features/library/hooks/use-mangadex-library-entries";
 import { useMangadexReadingHistory } from "@/features/library/hooks/use-mangadex-reading-history";
 import { useReadingHistory } from "@/features/library/hooks/use-reading-history";
 import { MangaGrid } from "@/features/manga/components/manga-grid";
@@ -16,10 +17,14 @@ import type {
   MangadexReadingHistory,
   ReadingHistoryWithDetails,
 } from "@/types/history.types";
-import type { LibraryCategory } from "@/types/library.types";
+import type {
+  LibraryCategory,
+  MangadexLibraryEntry,
+} from "@/types/library.types";
 
 const TABS = {
   bookmarks: "სანიშნეები",
+  reading: "ვკითხულობ",
   history: "კითხვის ისტორია",
   dropped: "მიტოვებული",
   toread: "წასაკითხი",
@@ -30,6 +35,7 @@ type Tab = keyof typeof TABS;
 
 const LIBRARY_TAB_TO_CATEGORY: Partial<Record<Tab, LibraryCategory>> = {
   bookmarks: "bookmarks",
+  reading: "reading",
   dropped: "dropped",
   toread: "toread",
   favorites: "favorites",
@@ -70,6 +76,13 @@ export default function LibraryTabPage() {
     limit: pageSize,
   });
 
+  // MangaDex library entries for the reading tab
+  const { data: mangadexLibraryData, isLoading: mangadexLibraryLoading } =
+    useMangadexLibraryEntries(libraryCategory || "bookmarks", {
+      page: 1,
+      limit: 100,
+    });
+
   const {
     data: historyData,
     isLoading: historyLoading,
@@ -84,6 +97,10 @@ export default function LibraryTabPage() {
 
   // Fetch counts for all library tabs (for display in tabs)
   const { data: bookmarksCount } = useLibraryEntries("bookmarks", { limit: 1 });
+  const { data: readingCount } = useLibraryEntries("reading", { limit: 1 });
+  const { data: mangadexReadingCount } = useMangadexLibraryEntries("reading", {
+    limit: 1,
+  });
   const { data: droppedCount } = useLibraryEntries("dropped", { limit: 1 });
   const { data: toreadCount } = useLibraryEntries("toread", { limit: 1 });
   const { data: favoritesCount } = useLibraryEntries("favorites", { limit: 1 });
@@ -113,6 +130,56 @@ export default function LibraryTabPage() {
     return items;
   }, [activeTab, historyData?.items, mangadexHistoryData?.items]);
 
+  // Merged reading entries (local + MangaDex) for the reading tab
+  type UnifiedReadingItem =
+    | {
+        source: "local";
+        data: {
+          id: number;
+          manga: {
+            id: number;
+            title: string;
+            cover_image_url?: string | null;
+            slug: string;
+          };
+          created_at: string;
+        };
+      }
+    | { source: "mangadex"; data: MangadexLibraryEntry };
+
+  const mergedReading = useMemo(() => {
+    if (activeTab !== "reading") return [];
+    const items: UnifiedReadingItem[] = [];
+    if (libraryData?.items) {
+      for (const item of libraryData.items) {
+        items.push({
+          source: "local",
+          data: {
+            id: item.id,
+            manga: {
+              id: item.manga.id,
+              title: item.manga.title,
+              cover_image_url: item.manga.cover_image_url,
+              slug: item.manga.slug,
+            },
+            created_at: item.created_at,
+          },
+        });
+      }
+    }
+    if (mangadexLibraryData?.items) {
+      for (const item of mangadexLibraryData.items) {
+        items.push({ source: "mangadex", data: item });
+      }
+    }
+    items.sort(
+      (a, b) =>
+        new Date(b.data.created_at).getTime() -
+        new Date(a.data.created_at).getTime(),
+    );
+    return items;
+  }, [activeTab, libraryData?.items, mangadexLibraryData?.items]);
+
   const totalHistoryCount =
     (historyData?.total ?? 0) + (mangadexHistoryData?.total ?? 0);
   const paginatedHistory = mergedHistory.slice(
@@ -121,24 +188,38 @@ export default function LibraryTabPage() {
   );
   const totalHistoryPages = Math.ceil(totalHistoryCount / pageSize);
 
+  const totalReadingCount =
+    (readingCount?.total ?? 0) + (mangadexReadingCount?.total ?? 0);
+
   const tabCounts: Partial<Record<Tab, number>> = {
     bookmarks: bookmarksCount?.total,
+    reading: totalReadingCount || undefined,
     history: totalHistoryCount || undefined,
     dropped: droppedCount?.total,
     toread: toreadCount?.total,
     favorites: favoritesCount?.total,
   };
 
-  const isLoading =
-    activeTab === "history"
-      ? historyLoading || mangadexHistoryLoading
+  const isReadingTab = activeTab === "reading";
+  const isHistoryTab = activeTab === "history";
+
+  const isLoading = isHistoryTab
+    ? historyLoading || mangadexHistoryLoading
+    : isReadingTab
+      ? libraryLoading || mangadexLibraryLoading
       : libraryLoading;
-  const error =
-    activeTab === "history"
-      ? historyError || mangadexHistoryError
-      : libraryError;
-  const data =
-    activeTab === "history" ? historyData : isLibraryTab ? libraryData : null;
+  const error = isHistoryTab
+    ? historyError || mangadexHistoryError
+    : libraryError;
+  const data = isHistoryTab ? historyData : isLibraryTab ? libraryData : null;
+
+  // For non-reading library tabs, check if empty based on local data only
+  // For reading tab, check merged data
+  const isEmpty = isHistoryTab
+    ? mergedHistory.length === 0
+    : isReadingTab
+      ? mergedReading.length === 0
+      : !data || data.items.length === 0;
 
   return (
     <div className="container mx-auto box-border max-w-[1920px] overflow-x-hidden px-2 py-12 sm:px-4 md:px-8 md:py-12">
@@ -192,11 +273,7 @@ export default function LibraryTabPage() {
             სცადეთ ხელახლა
           </Button>
         </div>
-      ) : (
-          activeTab === "history"
-            ? mergedHistory.length === 0
-            : !data || data.items.length === 0
-        ) ? (
+      ) : isEmpty ? (
         <div className="py-8 text-center">
           <div className="mb-4 flex flex-col items-center justify-center text-gray-400">
             <svg
@@ -217,24 +294,28 @@ export default function LibraryTabPage() {
             <h3 className="mb-2 font-bold text-xl">
               {activeTab === "bookmarks"
                 ? "სანიშნეები ჯერ არ გაქვთ"
-                : activeTab === "history"
-                  ? "კითხვის ისტორია არ გაქვთ"
-                  : activeTab === "dropped"
-                    ? "მიტოვებული მანგა არ გაქვთ"
-                    : activeTab === "toread"
-                      ? "წასაკითხი მანგა არ გაქვთ"
-                      : "ფავორიტები ჯერ არ გაქვთ"}
+                : activeTab === "reading"
+                  ? "ვკითხულობ სიაში მანგა არ გაქვთ"
+                  : activeTab === "history"
+                    ? "კითხვის ისტორია არ გაქვთ"
+                    : activeTab === "dropped"
+                      ? "მიტოვებული მანგა არ გაქვთ"
+                      : activeTab === "toread"
+                        ? "წასაკითხი მანგა არ გაქვთ"
+                        : "ფავორიტები ჯერ არ გაქვთ"}
             </h3>
             <p className="mb-4 text-gray-600">
               {activeTab === "bookmarks"
                 ? "დაიწყეთ მანგის სანიშნებში დამატება, რომ აქ იხილოთ"
-                : activeTab === "history"
-                  ? "დაიწყეთ მანგის კითხვა, რომ აქ იხილოთ თქვენი ისტორია"
-                  : activeTab === "dropped"
-                    ? "მიტოვებული მანგა აქ გამოჩნდება"
-                    : activeTab === "toread"
-                      ? "წასაკითხი მანგა აქ გამოჩნდება"
-                      : "ფავორიტები აქ გამოჩნდება"}
+                : activeTab === "reading"
+                  ? 'დაამატეთ მანგა „ვკითხულობ" სიაში, რომ აქ იხილოთ'
+                  : activeTab === "history"
+                    ? "დაიწყეთ მანგის კითხვა, რომ აქ იხილოთ თქვენი ისტორია"
+                    : activeTab === "dropped"
+                      ? "მიტოვებული მანგა აქ გამოჩნდება"
+                      : activeTab === "toread"
+                        ? "წასაკითხი მანგა აქ გამოჩნდება"
+                        : "ფავორიტები აქ გამოჩნდება"}
             </p>
           </div>
           <Link href="/browse">
@@ -243,7 +324,87 @@ export default function LibraryTabPage() {
         </div>
       ) : (
         <>
-          {isLibraryTab && data ? (
+          {isReadingTab ? (
+            // Reading tab: merged local + MangaDex entries displayed as cards
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              {mergedReading.map((item) => {
+                if (item.source === "local") {
+                  const entry = item.data;
+                  return (
+                    <Link
+                      key={`local-${entry.id}`}
+                      href={`/manga/${entry.manga.slug}`}
+                      className="group"
+                    >
+                      <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                        {entry.manga.cover_image_url ? (
+                          <Image
+                            src={entry.manga.cover_image_url}
+                            alt={entry.manga.title}
+                            width={200}
+                            height={300}
+                            className="aspect-[2/3] w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex aspect-[2/3] w-full items-center justify-center bg-[var(--muted)]">
+                            <span className="text-[var(--muted-foreground)] text-xs">
+                              N/A
+                            </span>
+                          </div>
+                        )}
+                        <div className="p-2">
+                          <h3 className="truncate font-medium text-sm group-hover:text-[var(--accent)]">
+                            {entry.manga.title}
+                          </h3>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                }
+                const entry = item.data;
+                return (
+                  <Link
+                    key={`md-${entry.id}`}
+                    href={`/manga/md-${entry.mangadex_manga_id}`}
+                    className="group"
+                  >
+                    <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                      {entry.cover_image_url ? (
+                        <Image
+                          src={entry.cover_image_url}
+                          alt={entry.manga_title}
+                          width={200}
+                          height={300}
+                          className="aspect-[2/3] w-full object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="flex aspect-[2/3] w-full items-center justify-center bg-[var(--muted)]">
+                          <span className="text-[var(--muted-foreground)] text-xs">
+                            N/A
+                          </span>
+                        </div>
+                      )}
+                      <div className="p-2">
+                        <div className="flex items-center gap-1">
+                          <h3 className="truncate font-medium text-sm group-hover:text-[var(--accent)]">
+                            {entry.manga_title}
+                          </h3>
+                          <Badge
+                            variant="secondary"
+                            className="shrink-0 gap-0.5 px-1 py-0 text-[8px]"
+                          >
+                            <Globe className="h-2 w-2" />
+                            MD
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : isLibraryTab && data ? (
             <MangaGrid manga={data.items.map((entry) => entry.manga)} />
           ) : (
             <div className="space-y-4">
@@ -341,7 +502,7 @@ export default function LibraryTabPage() {
           )}
 
           {/* Pagination */}
-          {(activeTab === "history" ? totalHistoryCount : (data?.total ?? 0)) >
+          {(isHistoryTab ? totalHistoryCount : (data?.total ?? 0)) >
             pageSize && (
             <div className="mt-8 flex items-center justify-center gap-4">
               <Button
@@ -356,7 +517,7 @@ export default function LibraryTabPage() {
               <span className="text-[var(--muted-foreground)] text-sm">
                 გვერდი{" "}
                 <span className="text-[var(--accent)]">{currentPage}</span> /{" "}
-                {activeTab === "history"
+                {isHistoryTab
                   ? totalHistoryPages
                   : Math.ceil((data?.total ?? 0) / pageSize)}
               </span>
@@ -364,7 +525,7 @@ export default function LibraryTabPage() {
                 onClick={() => setCurrentPage((p) => p + 1)}
                 disabled={
                   currentPage >=
-                  (activeTab === "history"
+                  (isHistoryTab
                     ? totalHistoryPages
                     : Math.ceil((data?.total ?? 0) / pageSize))
                 }
