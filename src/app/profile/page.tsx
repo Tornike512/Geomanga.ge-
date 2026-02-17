@@ -820,12 +820,23 @@ function LibraryFullSection() {
         items.push({ source: "mangadex", data: item });
       }
     }
+    // Sort by most recent first
     items.sort(
       (a, b) =>
         new Date(b.data.last_read_at).getTime() -
         new Date(a.data.last_read_at).getTime(),
     );
-    return items;
+    // Deduplicate by manga — keep only the most recent chapter per manga
+    const seen = new Set<string>();
+    return items.filter((item) => {
+      const key =
+        item.source === "local"
+          ? `local-${item.data.manga_id}`
+          : `md-${item.data.mangadex_manga_id}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
   }, [activeTab, historyData?.items, mangadexHistoryData?.items]);
 
   type UnifiedReadingItem =
@@ -877,8 +888,7 @@ function LibraryFullSection() {
     return items;
   }, [activeTab, libraryData?.items, mangadexLibraryData?.items]);
 
-  const totalHistoryCount =
-    (historyData?.total ?? 0) + (mangadexHistoryData?.total ?? 0);
+  const totalHistoryCount = mergedHistory.length;
   const paginatedHistory = mergedHistory.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize,
