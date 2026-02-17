@@ -20,7 +20,7 @@ import { useMangaDexTags } from "@/features/manga/hooks/use-mangadex-manga";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
 import { useAlertModal } from "@/hooks/use-alert-modal";
-import { ContentType, type MangaStatus } from "@/types/manga.types";
+import { AgeRating, ContentType, type MangaStatus } from "@/types/manga.types";
 import { getCookie } from "@/utils/cookies";
 import {
   createImagePreview,
@@ -147,6 +147,7 @@ export default function UploadMangaPage() {
     artist: "",
     status: "ongoing" as MangaStatus,
     contentType: "manga" as ContentType,
+    ageRating: AgeRating.FOR_EVERYONE,
     releaseYear: new Date().getFullYear(),
     genreIds: [] as number[],
     mangadexTagIds: [] as string[],
@@ -375,6 +376,7 @@ export default function UploadMangaPage() {
         artist: formData.artist,
         status: formData.status,
         content_type: formData.contentType,
+        age_rating: formData.ageRating,
         genre_ids: formData.genreIds,
         mangadex_tag_ids: formData.mangadexTagIds,
         cover_image_url: "",
@@ -747,6 +749,31 @@ export default function UploadMangaPage() {
                         }))
                       }
                       aria-label="მანგის ტიპი"
+                      className="w-full"
+                    />
+                  </div>
+                  <div className="overflow-visible">
+                    <label
+                      htmlFor="ageRating"
+                      className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
+                    >
+                      ასაკი *
+                    </label>
+                    <Dropdown
+                      id="ageRating"
+                      options={[
+                        { value: AgeRating.FOR_EVERYONE, label: "ყველასთვის" },
+                        { value: AgeRating.SIXTEEN_PLUS, label: "16+" },
+                        { value: AgeRating.EIGHTEEN_PLUS, label: "18+" },
+                      ]}
+                      value={formData.ageRating}
+                      onChange={(value) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          ageRating: value as AgeRating,
+                        }))
+                      }
+                      aria-label="ასაკის შეზღუდვა"
                       className="w-full"
                     />
                   </div>
