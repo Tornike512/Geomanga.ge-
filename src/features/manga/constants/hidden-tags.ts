@@ -7,6 +7,8 @@ export const HIDDEN_TAG_NAMES = [
   "Loli",
   "Incest",
   "Cross-Dressing",
+  "Crossdressing",
+  "Doujinshi",
   "Gender Swap",
   "Harem",
   "Reverse Harem",
