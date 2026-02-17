@@ -595,7 +595,7 @@ export default function ReaderPage() {
                 className="w-full"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <Image
+                <img
                   src={pageUrl}
                   alt={`გვერდი ${index + 1}`}
                   className="h-auto w-full"
