@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import { Spinner } from "@/components/spinner";
 import { useDebounce } from "@/hooks";
 import { useInfiniteMangaDexSearch } from "../hooks/use-infinite-mangadex-search";
 import { useInfiniteSearchManga } from "../hooks/use-infinite-search-manga";
@@ -211,7 +212,7 @@ export function SearchBar() {
               {isLoading ? (
                 <div className="flex items-center justify-center p-12">
                   <div className="flex flex-col items-center gap-3">
-                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
+                    <Spinner size="md" />
                     <p className="text-[var(--muted-foreground)] text-sm">
                       ძიება...
                     </p>
@@ -254,7 +255,7 @@ export function SearchBar() {
                     {isFetchingMore ? (
                       <div className="flex items-center justify-center">
                         <div className="flex flex-col items-center gap-2">
-                          <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
+                          <Spinner size="sm" />
                           <p className="text-[var(--muted-foreground)] text-xs">
                             მეტის ჩატვირთვა...
                           </p>

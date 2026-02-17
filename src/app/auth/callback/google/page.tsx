@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/button";
+import { Spinner } from "@/components/spinner";
 import { useGoogleAuth } from "@/features/auth";
 
 export default function GoogleCallbackPage() {
@@ -50,7 +51,7 @@ export default function GoogleCallbackPage() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
-        <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-[var(--accent)] border-t-transparent" />
+        <Spinner size="md" className="mx-auto mb-4" />
         <p className="text-[var(--muted-foreground)]">
           Google-ით ავთენტიფიკაცია...
         </p>
