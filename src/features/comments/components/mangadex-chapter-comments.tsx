@@ -8,11 +8,11 @@ import { useCurrentUser } from "@/features/auth";
 import { useConfirmModal } from "@/hooks/use-confirm-modal";
 import {
   useCreateMangadexChapterComment,
-  useDeleteComment,
   useMangadexChapterComments,
-  useReplyToComment,
-  useToggleLikeComment,
-  useUpdateComment,
+  useMangadexDeleteComment,
+  useMangadexReplyToComment,
+  useMangadexToggleLikeComment,
+  useMangadexUpdateComment,
 } from "../hooks";
 import { CommentForm } from "./comment-form";
 import { CommentItem } from "./comment-item";
@@ -42,10 +42,10 @@ export function MangadexChapterComments({
     mangadexChapterId,
     mangadexMangaId,
   );
-  const deleteComment = useDeleteComment();
-  const updateComment = useUpdateComment();
-  const toggleLike = useToggleLikeComment();
-  const replyToComment = useReplyToComment();
+  const deleteComment = useMangadexDeleteComment();
+  const updateComment = useMangadexUpdateComment();
+  const toggleLike = useMangadexToggleLikeComment();
+  const replyToComment = useMangadexReplyToComment();
   const { confirm, ConfirmModalComponent } = useConfirmModal();
 
   const handleSubmitComment = (content: string) => {
