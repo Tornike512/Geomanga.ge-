@@ -97,6 +97,13 @@ body {
     "ss02" on;
 }
 
+/* Pointer cursor for interactive elements */
+button,
+a,
+[role="button"] {
+  cursor: pointer;
+}
+
 /* Focus states with amber accent - key to accessibility */
 button:focus-visible,
 a:focus-visible,
