@@ -13,6 +13,7 @@ import { getCoverUrl } from "@/utils/image-urls";
 interface MangaCardProps {
   readonly manga: Manga;
   readonly compact?: boolean;
+  readonly eagerLoad?: boolean;
 }
 
 const getTranslationStatusLabel = (status: TranslationStatus): string => {
@@ -41,7 +42,7 @@ const getMangaStatusLabel = (status: MangaStatus): string => {
   }
 };
 
-export function MangaCard({ manga, compact }: MangaCardProps) {
+export function MangaCard({ manga, compact, eagerLoad }: MangaCardProps) {
   const displayGenres = manga.genres?.slice(0, 3) || [];
 
   return (
@@ -54,7 +55,7 @@ export function MangaCard({ manga, compact }: MangaCardProps) {
             width={300}
             height={400}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
+            loading={eagerLoad ? "eager" : "lazy"}
           />
           {/* Translation Status Badge - Top Left */}
           {!compact && manga.translation_status && (

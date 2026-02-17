@@ -9,6 +9,7 @@ import type { MangaDexTransformedManga } from "@/types/mangadex.types";
 
 interface MangaDexCardProps {
   readonly manga: MangaDexTransformedManga;
+  readonly eagerLoad?: boolean;
 }
 
 const getMangaStatusLabel = (
@@ -28,7 +29,7 @@ const getMangaStatusLabel = (
   }
 };
 
-export function MangaDexCard({ manga }: MangaDexCardProps) {
+export function MangaDexCard({ manga, eagerLoad }: MangaDexCardProps) {
   const displayTags = manga.tags.slice(0, 3);
   // Use md-{mangadex_id} slug format to identify MangaDex manga
   const localUrl = `/manga/md-${manga.mangadex_id}`;
@@ -44,7 +45,7 @@ export function MangaDexCard({ manga }: MangaDexCardProps) {
               width={256}
               height={384}
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              loading="lazy"
+              loading={eagerLoad ? "eager" : "lazy"}
               unoptimized
             />
           ) : (

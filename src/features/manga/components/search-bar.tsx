@@ -231,7 +231,7 @@ export function SearchBar() {
                             }
                             className="h-full w-full p-0 hover:bg-transparent"
                           >
-                            <MangaCard manga={manga} compact />
+                            <MangaCard manga={manga} compact eagerLoad />
                           </Button>
                         ))
                       : englishResults.map((manga) => (
@@ -244,7 +244,7 @@ export function SearchBar() {
                             }
                             className="h-full w-full p-0 hover:bg-transparent"
                           >
-                            <MangaDexCard manga={manga} />
+                            <MangaDexCard manga={manga} eagerLoad />
                           </Button>
                         ))}
                   </div>
