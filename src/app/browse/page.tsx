@@ -129,6 +129,7 @@ interface MangaDexFilterState {
   sortBy: MangaDexBrowseParams["sortBy"];
   orderDesc: boolean;
   includedTags: string[];
+  excludedTags: string[];
 }
 
 interface LocalModalDraft {
@@ -145,6 +146,7 @@ interface MangaDexModalDraft {
   contentRating: MangaDexBrowseParams["contentRating"];
   demographic: MangaDexBrowseParams["demographic"];
   includedTags: string[];
+  excludedTags: string[];
 }
 
 export default function BrowsePage() {
@@ -257,6 +259,10 @@ function BrowseContent() {
         initialSource === "mangadex"
           ? searchParams.get("tags")?.split(",").filter(Boolean) || []
           : [],
+      excludedTags:
+        initialSource === "mangadex"
+          ? searchParams.get("excluded_tags")?.split(",").filter(Boolean) || []
+          : [],
     }),
   );
 
@@ -275,6 +281,7 @@ function BrowseContent() {
     contentRating: mangadexFilters.contentRating,
     demographic: mangadexFilters.demographic,
     includedTags: [...mangadexFilters.includedTags],
+    excludedTags: [...mangadexFilters.excludedTags],
   });
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -393,6 +400,10 @@ function BrowseContent() {
         mangadexFilters.includedTags.length > 0
           ? mangadexFilters.includedTags
           : undefined,
+      excludedTags:
+        mangadexFilters.excludedTags.length > 0
+          ? mangadexFilters.excludedTags
+          : undefined,
       availableTranslatedLanguage: "en",
       authorIds: authorFilter ? authorIds : undefined,
     },
@@ -472,6 +483,8 @@ function BrowseContent() {
         params.set("demographic", mangadexFilters.demographic);
       if (mangadexFilters.includedTags.length > 0)
         params.set("tags", mangadexFilters.includedTags.join(","));
+      if (mangadexFilters.excludedTags.length > 0)
+        params.set("excluded_tags", mangadexFilters.excludedTags.join(","));
       if (mangadexFilters.title) params.set("q", mangadexFilters.title);
     }
 
@@ -500,6 +513,7 @@ function BrowseContent() {
         contentRating: mangadexFilters.contentRating,
         demographic: mangadexFilters.demographic,
         includedTags: [...mangadexFilters.includedTags],
+        excludedTags: [...mangadexFilters.excludedTags],
       });
     }
     setIsFilterModalOpen(true);
@@ -542,6 +556,7 @@ function BrowseContent() {
       contentRating: undefined,
       demographic: undefined,
       includedTags: [],
+      excludedTags: [],
     });
   };
 
@@ -600,12 +615,28 @@ function BrowseContent() {
   };
 
   const toggleMangadexDraftTag = (tagId: string) => {
-    setMangadexDraft((prev) => ({
-      ...prev,
-      includedTags: prev.includedTags.includes(tagId)
-        ? prev.includedTags.filter((id) => id !== tagId)
-        : [...prev.includedTags, tagId],
-    }));
+    setMangadexDraft((prev) => {
+      const isIncluded = prev.includedTags.includes(tagId);
+      const isExcluded = prev.excludedTags.includes(tagId);
+
+      if (isIncluded) {
+        return {
+          ...prev,
+          includedTags: prev.includedTags.filter((id) => id !== tagId),
+          excludedTags: [...prev.excludedTags, tagId],
+        };
+      } else if (isExcluded) {
+        return {
+          ...prev,
+          excludedTags: prev.excludedTags.filter((id) => id !== tagId),
+        };
+      } else {
+        return {
+          ...prev,
+          includedTags: [...prev.includedTags, tagId],
+        };
+      }
+    });
   };
 
   const handleSearch = () => {
@@ -682,7 +713,8 @@ function BrowseContent() {
     (mangadexFilters.status ? 1 : 0) +
     (mangadexFilters.contentRating ? 1 : 0) +
     (mangadexFilters.demographic ? 1 : 0) +
-    mangadexFilters.includedTags.length;
+    mangadexFilters.includedTags.length +
+    mangadexFilters.excludedTags.length;
 
   const activeFilterCount =
     source === "local" ? localActiveFilterCount : mangadexActiveFilterCount;
@@ -1308,29 +1340,42 @@ function BrowseContent() {
             {Object.entries(mangadexTagsByGroup).map(([group, groupTags]) => (
               <div key={group} className="mb-6">
                 <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
-                  {TAG_GROUP_LABELS[group] || group}
+                  {TAG_GROUP_LABELS[group] || group}{" "}
+                  <span className="font-normal text-xs">
+                    (ერთხელ - ჩართე, ორჯელ - გამორიცხე)
+                  </span>
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {groupTags.map((tag) => (
-                    <Button
-                      key={tag.id}
-                      type="button"
-                      variant={
-                        mangadexDraft.includedTags.includes(tag.id)
-                          ? "default"
-                          : "outline"
-                      }
-                      size="sm"
-                      onClick={() => toggleMangadexDraftTag(tag.id)}
-                      className={`rounded-lg px-3 py-1.5 text-sm ${
-                        mangadexDraft.includedTags.includes(tag.id)
-                          ? ""
-                          : "hover:border-[var(--border-hover)]"
-                      }`}
-                    >
-                      {tag.name}
-                    </Button>
-                  ))}
+                  {groupTags.map((tag) => {
+                    const isIncluded = mangadexDraft.includedTags.includes(
+                      tag.id,
+                    );
+                    const isExcluded = mangadexDraft.excludedTags.includes(
+                      tag.id,
+                    );
+                    return (
+                      <Button
+                        key={tag.id}
+                        type="button"
+                        variant={
+                          isIncluded
+                            ? "default"
+                            : isExcluded
+                              ? "destructive"
+                              : "outline"
+                        }
+                        size="sm"
+                        onClick={() => toggleMangadexDraftTag(tag.id)}
+                        className={`rounded-lg px-3 py-1.5 text-sm ${
+                          isIncluded || isExcluded
+                            ? ""
+                            : "hover:border-[var(--border-hover)]"
+                        }`}
+                      >
+                        {tag.name}
+                      </Button>
+                    );
+                  })}
                 </div>
               </div>
             ))}

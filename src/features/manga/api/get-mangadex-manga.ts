@@ -274,10 +274,17 @@ export const browseMangaDex = async (
     }
   }
 
-  // Tags
+  // Tags - included
   if (params.includedTags && params.includedTags.length > 0) {
     for (const tag of params.includedTags) {
       searchParams.append("includedTags[]", tag);
+    }
+  }
+
+  // Tags - excluded
+  if (params.excludedTags && params.excludedTags.length > 0) {
+    for (const tag of params.excludedTags) {
+      searchParams.append("excludedTags[]", tag);
     }
   }
 

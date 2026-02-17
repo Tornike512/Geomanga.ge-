@@ -216,6 +216,7 @@ export interface MangaDexBrowseParams {
     | "year";
   readonly orderDesc?: boolean;
   readonly includedTags?: string[];
+  readonly excludedTags?: string[];
   readonly originalLanguage?: string;
   readonly availableTranslatedLanguage?: string;
   readonly authorIds?: string[];
