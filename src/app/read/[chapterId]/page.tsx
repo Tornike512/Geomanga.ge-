@@ -215,12 +215,14 @@ export default function ReaderPage() {
     title: string | null;
     mangaTitle: string | null;
     coverImageUrl: string | null;
+    language: string;
   }>({
     mangaId: null,
     chapterNumber: null,
     title: null,
     mangaTitle: null,
     coverImageUrl: null,
+    language: "en",
   });
 
   // Local chapter data
@@ -243,7 +245,7 @@ export default function ReaderPage() {
   // MangaDex chapter list for prev/next navigation
   const { data: mangaDexAllChapters } = useMangaDexChapters(
     mangaDexInfo.mangaId || "",
-    "en",
+    mangaDexInfo.language,
   );
 
   const trackReading = useTrackReading();
@@ -297,8 +299,12 @@ export default function ReaderPage() {
             title: string | null;
             mangaTitle: string | null;
             coverImageUrl: string | null;
+            language?: string;
           };
-          setMangaDexInfo(parsed);
+          setMangaDexInfo({
+            ...parsed,
+            language: parsed.language || "en",
+          });
         } catch {
           // Ignore parse errors
         }
@@ -354,6 +360,7 @@ export default function ReaderPage() {
       : null;
   const nextMangaDexChapter =
     currentMdIndex != null &&
+    currentMdIndex >= 0 &&
     mangaDexInternalChapters &&
     currentMdIndex < mangaDexInternalChapters.length - 1
       ? mangaDexInternalChapters[currentMdIndex + 1]
@@ -370,6 +377,7 @@ export default function ReaderPage() {
           title: ch.title,
           mangaTitle: mangaDexInfo.mangaTitle,
           coverImageUrl: mangaDexInfo.coverImageUrl,
+          language: mangaDexInfo.language,
         }),
       );
     }

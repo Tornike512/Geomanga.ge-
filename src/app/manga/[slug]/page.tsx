@@ -577,6 +577,7 @@ export default function MangaDetailPage() {
                             title: chapter.title,
                             mangaTitle: manga.title,
                             coverImageUrl: coverUrl,
+                            language,
                           }),
                         );
                       }}
