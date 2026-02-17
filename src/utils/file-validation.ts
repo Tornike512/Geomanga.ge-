@@ -5,11 +5,20 @@ interface ValidationResult {
 
 export const MAX_COVER_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 export const MAX_PAGE_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+const ALLOWED_IMAGE_EXTENSIONS = [".png", ".jpg", ".jpeg", ".webp"];
 
 /**
  * Validates an image file for cover upload
  */
 export function validateCoverImage(file: File): ValidationResult {
+  const extension = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
+  if (!ALLOWED_IMAGE_EXTENSIONS.includes(extension)) {
+    return {
+      valid: false,
+      error: "არასწორი ფაილის ფორმატი. დაშვებული: png, jpg, jpeg, webp",
+    };
+  }
+
   if (!file.type.startsWith("image/")) {
     return {
       valid: false,
