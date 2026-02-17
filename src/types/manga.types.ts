@@ -121,7 +121,9 @@ export interface MangaListParams {
   readonly age_rating?: AgeRating;
   readonly genre?: number;
   readonly genres?: number[];
+  readonly excluded_genres?: number[];
   readonly tags?: number[];
+  readonly excluded_tags?: number[];
   readonly author?: string;
   readonly sort_by?: "created_at" | "updated_at" | "rating" | "views" | "title";
   readonly order_desc?: boolean;

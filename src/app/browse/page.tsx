@@ -112,7 +112,9 @@ interface LocalFilterState {
   content_type: ContentType | undefined;
   age_rating: AgeRating | undefined;
   genres: number[];
+  excluded_genres: number[];
   tags: number[];
+  excluded_tags: number[];
   sort_by: MangaListParams["sort_by"];
   order_desc: boolean;
 }
@@ -134,7 +136,9 @@ interface LocalModalDraft {
   content_type: ContentType | undefined;
   translation_status: TranslationStatus | undefined;
   genres: number[];
+  excluded_genres: number[];
   tags: number[];
+  excluded_tags: number[];
 }
 
 interface MangaDexModalDraft {
@@ -195,9 +199,25 @@ function BrowseContent() {
         ? searchParams.get("genres")?.split(",").map(Number).filter(Boolean) ||
           []
         : [],
+    excluded_genres:
+      initialSource === "local"
+        ? searchParams
+            .get("excluded_genres")
+            ?.split(",")
+            .map(Number)
+            .filter(Boolean) || []
+        : [],
     tags:
       initialSource === "local"
         ? searchParams.get("tags")?.split(",").map(Number).filter(Boolean) || []
+        : [],
+    excluded_tags:
+      initialSource === "local"
+        ? searchParams
+            .get("excluded_tags")
+            ?.split(",")
+            .map(Number)
+            .filter(Boolean) || []
         : [],
   }));
 
@@ -246,7 +266,9 @@ function BrowseContent() {
     content_type: localFilters.content_type,
     translation_status: localFilters.translation_status,
     genres: [...localFilters.genres],
+    excluded_genres: [...localFilters.excluded_genres],
     tags: [...localFilters.tags],
+    excluded_tags: [...localFilters.excluded_tags],
   });
 
   const [mangadexDraft, setMangadexDraft] = useState<MangaDexModalDraft>({
@@ -345,7 +367,15 @@ function BrowseContent() {
     ...localFilters,
     language: "georgian",
     genres: localFilters.genres.length > 0 ? localFilters.genres : undefined,
+    excluded_genres:
+      localFilters.excluded_genres.length > 0
+        ? localFilters.excluded_genres
+        : undefined,
     tags: localFilters.tags.length > 0 ? localFilters.tags : undefined,
+    excluded_tags:
+      localFilters.excluded_tags.length > 0
+        ? localFilters.excluded_tags
+        : undefined,
     author: authorFilter || undefined,
   });
 
@@ -425,8 +455,12 @@ function BrowseContent() {
         params.set("translation_status", localFilters.translation_status);
       if (localFilters.genres.length > 0)
         params.set("genres", localFilters.genres.join(","));
+      if (localFilters.excluded_genres.length > 0)
+        params.set("excluded_genres", localFilters.excluded_genres.join(","));
       if (localFilters.tags.length > 0)
         params.set("tags", localFilters.tags.join(","));
+      if (localFilters.excluded_tags.length > 0)
+        params.set("excluded_tags", localFilters.excluded_tags.join(","));
     } else {
       if (mangadexFilters.status) params.set("status", mangadexFilters.status);
       if (mangadexFilters.sortBy && mangadexFilters.sortBy !== "followedCount")
@@ -457,7 +491,9 @@ function BrowseContent() {
         content_type: localFilters.content_type,
         translation_status: localFilters.translation_status,
         genres: [...localFilters.genres],
+        excluded_genres: [...localFilters.excluded_genres],
         tags: [...localFilters.tags],
+        excluded_tags: [...localFilters.excluded_tags],
       });
     } else {
       setMangadexDraft({
@@ -495,7 +531,9 @@ function BrowseContent() {
       content_type: undefined,
       translation_status: undefined,
       genres: [],
+      excluded_genres: [],
       tags: [],
+      excluded_tags: [],
     });
   };
 
@@ -517,12 +555,30 @@ function BrowseContent() {
     }));
   };
 
+  const toggleLocalDraftExcludedGenre = (genreId: number) => {
+    setLocalDraft((prev) => ({
+      ...prev,
+      excluded_genres: prev.excluded_genres.includes(genreId)
+        ? prev.excluded_genres.filter((id) => id !== genreId)
+        : [...prev.excluded_genres, genreId],
+    }));
+  };
+
   const toggleLocalDraftTag = (tagId: number) => {
     setLocalDraft((prev) => ({
       ...prev,
       tags: prev.tags.includes(tagId)
         ? prev.tags.filter((id) => id !== tagId)
         : [...prev.tags, tagId],
+    }));
+  };
+
+  const toggleLocalDraftExcludedTag = (tagId: number) => {
+    setLocalDraft((prev) => ({
+      ...prev,
+      excluded_tags: prev.excluded_tags.includes(tagId)
+        ? prev.excluded_tags.filter((id) => id !== tagId)
+        : [...prev.excluded_tags, tagId],
     }));
   };
 
@@ -601,7 +657,9 @@ function BrowseContent() {
     (localFilters.content_type ? 1 : 0) +
     (localFilters.age_rating ? 1 : 0) +
     localFilters.genres.length +
-    localFilters.tags.length;
+    localFilters.excluded_genres.length +
+    localFilters.tags.length +
+    localFilters.excluded_tags.length;
 
   const mangadexActiveFilterCount =
     (mangadexFilters.status ? 1 : 0) +
@@ -1036,10 +1094,10 @@ function BrowseContent() {
               />
             </div>
 
-            {/* Genres Filter */}
+            {/* Genres Filter - Include */}
             <div className="mb-6">
               <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
-                ჟანრები
+                ჟანრები (ჩართული)
               </h3>
               <div className="flex flex-wrap gap-2">
                 {genres?.map((genre) => (
@@ -1047,14 +1105,53 @@ function BrowseContent() {
                     key={genre.id}
                     type="button"
                     variant={
-                      localDraft.genres.includes(genre.id)
+                      localDraft.genres.includes(genre.id) ||
+                      localDraft.excluded_genres.includes(genre.id)
                         ? "default"
                         : "outline"
                     }
                     size="sm"
-                    onClick={() => toggleLocalDraftGenre(genre.id)}
+                    onClick={() => {
+                      if (localDraft.excluded_genres.includes(genre.id)) {
+                        toggleLocalDraftExcludedGenre(genre.id);
+                      } else {
+                        toggleLocalDraftGenre(genre.id);
+                      }
+                    }}
                     className={`rounded-lg px-3 py-1.5 text-sm ${
                       localDraft.genres.includes(genre.id)
+                        ? ""
+                        : localDraft.excluded_genres.includes(genre.id)
+                          ? "opacity-50"
+                          : "hover:border-[var(--border-hover)]"
+                    }`}
+                  >
+                    {genre.name_ka || genre.name}
+                    {localDraft.excluded_genres.includes(genre.id) && " ✕"}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Genres Filter - Exclude */}
+            <div className="mb-6">
+              <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
+                ჟანრები (გამორიცხული)
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {genres?.map((genre) => (
+                  <Button
+                    key={`exclude-${genre.id}`}
+                    type="button"
+                    variant={
+                      localDraft.excluded_genres.includes(genre.id)
+                        ? "destructive"
+                        : "outline"
+                    }
+                    size="sm"
+                    onClick={() => toggleLocalDraftExcludedGenre(genre.id)}
+                    className={`rounded-lg px-3 py-1.5 text-sm ${
+                      localDraft.excluded_genres.includes(genre.id)
                         ? ""
                         : "hover:border-[var(--border-hover)]"
                     }`}
@@ -1069,7 +1166,7 @@ function BrowseContent() {
             {Object.entries(backendTagsByGroup).map(([group, groupTags]) => (
               <div key={group} className="mb-6">
                 <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
-                  {TAG_GROUP_LABELS[group] || group}
+                  {TAG_GROUP_LABELS[group] || group} (ჩართული)
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {groupTags.map((tag) => (
@@ -1077,12 +1174,55 @@ function BrowseContent() {
                       key={tag.id}
                       type="button"
                       variant={
-                        localDraft.tags.includes(tag.id) ? "default" : "outline"
+                        localDraft.tags.includes(tag.id) ||
+                        localDraft.excluded_tags.includes(tag.id)
+                          ? "default"
+                          : "outline"
                       }
                       size="sm"
-                      onClick={() => toggleLocalDraftTag(tag.id)}
+                      onClick={() => {
+                        if (localDraft.excluded_tags.includes(tag.id)) {
+                          toggleLocalDraftExcludedTag(tag.id);
+                        } else {
+                          toggleLocalDraftTag(tag.id);
+                        }
+                      }}
                       className={`rounded-lg px-3 py-1.5 text-sm ${
                         localDraft.tags.includes(tag.id)
+                          ? ""
+                          : localDraft.excluded_tags.includes(tag.id)
+                            ? "opacity-50"
+                            : "hover:border-[var(--border-hover)]"
+                      }`}
+                    >
+                      {tag.name}
+                      {localDraft.excluded_tags.includes(tag.id) && " ✕"}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* Tags Filter - Excluded */}
+            {Object.entries(backendTagsByGroup).map(([group, groupTags]) => (
+              <div key={`exclude-${group}`} className="mb-6">
+                <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
+                  {TAG_GROUP_LABELS[group] || group} (გამორიცხული)
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {groupTags.map((tag) => (
+                    <Button
+                      key={`exclude-${tag.id}`}
+                      type="button"
+                      variant={
+                        localDraft.excluded_tags.includes(tag.id)
+                          ? "destructive"
+                          : "outline"
+                      }
+                      size="sm"
+                      onClick={() => toggleLocalDraftExcludedTag(tag.id)}
+                      className={`rounded-lg px-3 py-1.5 text-sm ${
+                        localDraft.excluded_tags.includes(tag.id)
                           ? ""
                           : "hover:border-[var(--border-hover)]"
                       }`}
