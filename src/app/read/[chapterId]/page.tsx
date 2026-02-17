@@ -11,7 +11,7 @@ import { Dropdown } from "@/components/dropdown";
 import { Spinner } from "@/components/spinner";
 import { API_URL } from "@/config";
 import { ChapterComments, MangadexChapterComments } from "@/features/comments";
-import { useMangaDexChapterPages } from "@/features/manga";
+import { useMangaDexChapterPages, useMangaDexChapters } from "@/features/manga";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
 import { useChaptersByManga } from "@/features/reader/hooks/use-chapters-by-manga";
 import { useTrackMangadexReading } from "@/features/reader/hooks/use-track-mangadex-reading";
@@ -240,6 +240,12 @@ export default function ReaderPage() {
     error: mangaDexError,
   } = useMangaDexChapterPages(mangaDexChapterId || "");
 
+  // MangaDex chapter list for prev/next navigation
+  const { data: mangaDexAllChapters } = useMangaDexChapters(
+    mangaDexInfo.mangaId || "",
+    "en",
+  );
+
   const trackReading = useTrackReading();
   const trackMangadexReading = useTrackMangadexReading();
 
@@ -254,7 +260,7 @@ export default function ReaderPage() {
     : localChapter?.pages?.length || 0;
 
   // Track current page and update URL
-  const currentPageId = usePageScrollTracking(chapterId, pageRefs, pagesCount);
+  usePageScrollTracking(chapterId, pageRefs, pagesCount);
 
   // Scroll to initial page from URL (e.g., /read/1/18 scrolls to page 18)
   useInitialPageScroll(chapterId, pageRefs, pagesCount);
@@ -333,28 +339,43 @@ export default function ReaderPage() {
     pageRefs.current.clear();
   }, []);
 
-  const isLoading = isMangaDex ? mangaDexLoading : localLoading;
-  const error = isMangaDex ? mangaDexError : localError;
+  // Compute prev/next MangaDex chapters (skipping external-only chapters)
+  const mangaDexInternalChapters = mangaDexAllChapters?.filter(
+    (ch) => !ch.external_url,
+  );
+  const currentMdIndex = mangaDexInternalChapters?.findIndex(
+    (ch) => ch.id === mangaDexChapterId,
+  );
+  const prevMangaDexChapter =
+    currentMdIndex != null && currentMdIndex > 0
+      ? mangaDexInternalChapters?.[currentMdIndex - 1]
+      : null;
+  const nextMangaDexChapter =
+    currentMdIndex != null &&
+    mangaDexInternalChapters &&
+    currentMdIndex < mangaDexInternalChapters.length - 1
+      ? mangaDexInternalChapters[currentMdIndex + 1]
+      : null;
 
-  // Helper to get current page number for display
-  const getCurrentPageNumber = (): number | null => {
-    if (!currentPageId) return null;
-
-    if (typeof currentPageId === "string" && currentPageId.startsWith("md-")) {
-      // MangaDex page: extract number from "md-X"
-      return parseInt(currentPageId.slice(3), 10);
+  const navigateToMdChapter = (chId: string) => {
+    const ch = mangaDexInternalChapters?.find((c) => c.id === chId);
+    if (ch) {
+      sessionStorage.setItem(
+        `md-chapter-${ch.id}`,
+        JSON.stringify({
+          mangaId: mangaDexInfo.mangaId,
+          chapterNumber: ch.chapter_number,
+          title: ch.title,
+          mangaTitle: mangaDexInfo.mangaTitle,
+          coverImageUrl: mangaDexInfo.coverImageUrl,
+        }),
+      );
     }
-
-    if (!isMangaDex && localChapter?.pages) {
-      // Local chapter: find the page and return its page_number
-      const page = localChapter.pages.find((p) => p.id === currentPageId);
-      return page?.page_number ?? null;
-    }
-
-    return null;
+    router.push(`/read/md-${chId}`);
   };
 
-  const currentPageNumber = getCurrentPageNumber();
+  const isLoading = isMangaDex ? mangaDexLoading : localLoading;
+  const error = isMangaDex ? mangaDexError : localError;
 
   if (isLoading) {
     return (
@@ -621,13 +642,38 @@ export default function ReaderPage() {
       <div
         className={`fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
       >
-        <div className="mx-auto flex max-w-[1920px] items-center justify-center px-4 py-2">
-          <div className="text-[var(--muted-foreground)] text-xs">
-            {currentPageNumber
-              ? `${currentPageNumber} / ${mangaDexPages?.length || 0}`
-              : `${mangaDexPages?.length || 0} გვერდი`}{" "}
-            • MangaDex
-          </div>
+        <div className="mx-auto flex max-w-[1920px] items-center justify-center gap-3 px-4 py-2">
+          {prevMangaDexChapter ? (
+            <button
+              type="button"
+              onClick={() => navigateToMdChapter(prevMangaDexChapter.id)}
+              className="rounded-md bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
+            >
+              წინა
+            </button>
+          ) : (
+            <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
+              წინა
+            </span>
+          )}
+          <span className="font-medium text-[var(--foreground)] text-xs">
+            {mangaDexInfo.chapterNumber
+              ? `თავი ${mangaDexInfo.chapterNumber}`
+              : "MangaDex"}
+          </span>
+          {nextMangaDexChapter ? (
+            <button
+              type="button"
+              onClick={() => navigateToMdChapter(nextMangaDexChapter.id)}
+              className="rounded-md bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
+            >
+              შემდეგი
+            </button>
+          ) : (
+            <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
+              შემდეგი
+            </span>
+          )}
         </div>
       </div>
     </div>
