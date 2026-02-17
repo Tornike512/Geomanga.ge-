@@ -13,7 +13,6 @@ import {
   useMangaList,
 } from "@/features/manga";
 import { MangaDexGrid, MangaGrid } from "@/features/manga/components";
-import { BLOCKED_MANGA_IDS } from "@/features/manga/constants/blocked-manga";
 import { HIDDEN_TAG_NAMES } from "@/features/manga/constants/hidden-tags";
 import { useAuthors } from "@/features/manga/hooks/use-authors";
 import { useTags } from "@/features/tags/hooks/use-tags";
@@ -410,15 +409,8 @@ function BrowseContent() {
     mangadexAuthorReady,
   );
 
-  // Filter out problematic manga
-  const filteredMangadexData = mangadexData
-    ? {
-        ...mangadexData,
-        items: mangadexData.items.filter(
-          (manga) => !BLOCKED_MANGA_IDS.includes(manga.id),
-        ),
-      }
-    : mangadexData;
+  // Blocked manga are already filtered in browseMangaDex before slicing
+  const filteredMangadexData = mangadexData;
 
   // Group MangaDex tags by group (excluding hidden tags)
   const hiddenNamesLower = HIDDEN_TAG_NAMES.map((n) => n.toLowerCase());

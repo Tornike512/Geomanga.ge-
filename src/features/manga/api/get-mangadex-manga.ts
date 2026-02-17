@@ -11,6 +11,7 @@ import type {
   MangaDexTransformedChapter,
   MangaDexTransformedManga,
 } from "@/types/mangadex.types";
+import { BLOCKED_MANGA_IDS } from "../constants/blocked-manga";
 
 const MANGADEX_API_URL =
   typeof window === "undefined" ? "https://api.mangadex.org" : "/api/mangadex";
@@ -319,8 +320,11 @@ export const browseMangaDex = async (
   const total = data.total || 0;
   const pages = Math.ceil(total / limit);
 
-  // Get requested number of items (MangaDex may return more)
-  const items = data.data.map(transformMangaDexManga).slice(0, limit);
+  // Filter blocked manga before slicing so the +1 over-request backfills removals
+  const items = data.data
+    .filter((manga) => !BLOCKED_MANGA_IDS.includes(manga.id))
+    .slice(0, limit)
+    .map(transformMangaDexManga);
 
   return {
     items,
