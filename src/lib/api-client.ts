@@ -158,9 +158,6 @@ export async function fetchApi<T>(
   const authHeaders: Record<string, string> = {};
   if (requiresAuth && typeof window !== "undefined") {
     const token = getAccessToken();
-    logger.warn(
-      `[fetchApi] requiresAuth=true API_URL=${API_URL} fullUrl=${fullUrl} token=${token ? `${token.substring(0, 20)}...` : "NONE"} cookies=${document.cookie.substring(0, 100)}`,
-    );
     if (token) {
       authHeaders.Authorization = `Bearer ${token}`;
     }
