@@ -608,9 +608,12 @@ export default function ReaderPage() {
       </div>
 
       {/* Comments Section */}
-      {mangaDexChapterId && (
+      {mangaDexChapterId && mangaDexInfo.mangaId && (
         <div className="border-[var(--border)] border-t bg-[var(--background)] px-2 pb-20">
-          <MangadexChapterComments mangadexChapterId={mangaDexChapterId} />
+          <MangadexChapterComments
+            mangadexChapterId={mangaDexChapterId}
+            mangadexMangaId={mangaDexInfo.mangaId}
+          />
         </div>
       )}
 

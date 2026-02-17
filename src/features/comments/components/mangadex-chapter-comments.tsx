@@ -19,10 +19,12 @@ import { CommentItem } from "./comment-item";
 
 interface MangadexChapterCommentsProps {
   readonly mangadexChapterId: string;
+  readonly mangadexMangaId: string;
 }
 
 export function MangadexChapterComments({
   mangadexChapterId,
+  mangadexMangaId,
 }: MangadexChapterCommentsProps) {
   const [page, setPage] = useState(1);
   const pageSize = 20;
@@ -36,7 +38,10 @@ export function MangadexChapterComments({
     },
   );
 
-  const createComment = useCreateMangadexChapterComment(mangadexChapterId);
+  const createComment = useCreateMangadexChapterComment(
+    mangadexChapterId,
+    mangadexMangaId,
+  );
   const deleteComment = useDeleteComment();
   const updateComment = useUpdateComment();
   const toggleLike = useToggleLikeComment();
