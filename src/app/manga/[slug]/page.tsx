@@ -271,7 +271,8 @@ export default function MangaDetailPage() {
                   <div className="flex flex-wrap justify-end gap-2">
                     {!isMangaDex &&
                       user &&
-                      (user.role === UserRole.UPLOADER ||
+                      localManga &&
+                      (user.id === localManga.uploader?.id ||
                         user.role === UserRole.ADMIN) && (
                         <Link
                           href={`/upload/chapter?mangaId=${localManga?.id}`}
