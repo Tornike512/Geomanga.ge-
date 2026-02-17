@@ -247,9 +247,10 @@ export const browseMangaDex = async (
   if (params.contentRating) {
     searchParams.append("contentRating[]", params.contentRating);
   } else {
-    // Default to safe and suggestive
+    // Default to all content ratings to get 20 items
     searchParams.append("contentRating[]", "safe");
     searchParams.append("contentRating[]", "suggestive");
+    searchParams.append("contentRating[]", "erotica");
   }
 
   // Demographic
