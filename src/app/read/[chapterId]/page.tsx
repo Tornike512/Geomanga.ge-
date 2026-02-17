@@ -10,7 +10,7 @@ import { Button } from "@/components/button";
 import { Dropdown } from "@/components/dropdown";
 import { Spinner } from "@/components/spinner";
 import { API_URL } from "@/config";
-import { ChapterComments } from "@/features/comments";
+import { ChapterComments, MangadexChapterComments } from "@/features/comments";
 import { useMangaDexChapterPages } from "@/features/manga";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
 import { useChaptersByManga } from "@/features/reader/hooks/use-chapters-by-manga";
@@ -606,6 +606,13 @@ export default function ReaderPage() {
           })}
         </div>
       </div>
+
+      {/* Comments Section */}
+      {mangaDexChapterId && (
+        <div className="border-[var(--border)] border-t bg-[var(--background)] px-2 pb-20">
+          <MangadexChapterComments mangadexChapterId={mangaDexChapterId} />
+        </div>
+      )}
 
       {/* Footer Navigation */}
       <div

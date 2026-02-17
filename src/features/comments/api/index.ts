@@ -1,8 +1,10 @@
 export { createChapterComment } from "./create-chapter-comment";
 export { createMangaComment } from "./create-manga-comment";
+export { createMangadexChapterComment } from "./create-mangadex-chapter-comment";
 export { deleteComment } from "./delete-comment";
 export { getChapterComments } from "./get-chapter-comments";
 export { getMangaComments } from "./get-manga-comments";
+export { getMangadexChapterComments } from "./get-mangadex-chapter-comments";
 export { likeComment, toggleLikeComment } from "./like-comment";
 export { replyToComment } from "./reply-to-comment";
 export { unlikeComment } from "./unlike-comment";
