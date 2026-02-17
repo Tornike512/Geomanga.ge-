@@ -545,41 +545,58 @@ function BrowseContent() {
     });
   };
 
-  // Toggle genre/tag in draft
+  // Toggle genre/tag in draft - handles include/exclude/deselect cycle
   const toggleLocalDraftGenre = (genreId: number) => {
-    setLocalDraft((prev) => ({
-      ...prev,
-      genres: prev.genres.includes(genreId)
-        ? prev.genres.filter((id) => id !== genreId)
-        : [...prev.genres, genreId],
-    }));
-  };
+    setLocalDraft((prev) => {
+      const isIncluded = prev.genres.includes(genreId);
+      const isExcluded = prev.excluded_genres.includes(genreId);
 
-  const toggleLocalDraftExcludedGenre = (genreId: number) => {
-    setLocalDraft((prev) => ({
-      ...prev,
-      excluded_genres: prev.excluded_genres.includes(genreId)
-        ? prev.excluded_genres.filter((id) => id !== genreId)
-        : [...prev.excluded_genres, genreId],
-    }));
+      if (isIncluded) {
+        // Already included -> move to excluded
+        return {
+          ...prev,
+          genres: prev.genres.filter((id) => id !== genreId),
+          excluded_genres: [...prev.excluded_genres, genreId],
+        };
+      } else if (isExcluded) {
+        // Already excluded -> remove from both (deselect)
+        return {
+          ...prev,
+          excluded_genres: prev.excluded_genres.filter((id) => id !== genreId),
+        };
+      } else {
+        // Not selected -> include
+        return {
+          ...prev,
+          genres: [...prev.genres, genreId],
+        };
+      }
+    });
   };
 
   const toggleLocalDraftTag = (tagId: number) => {
-    setLocalDraft((prev) => ({
-      ...prev,
-      tags: prev.tags.includes(tagId)
-        ? prev.tags.filter((id) => id !== tagId)
-        : [...prev.tags, tagId],
-    }));
-  };
+    setLocalDraft((prev) => {
+      const isIncluded = prev.tags.includes(tagId);
+      const isExcluded = prev.excluded_tags.includes(tagId);
 
-  const toggleLocalDraftExcludedTag = (tagId: number) => {
-    setLocalDraft((prev) => ({
-      ...prev,
-      excluded_tags: prev.excluded_tags.includes(tagId)
-        ? prev.excluded_tags.filter((id) => id !== tagId)
-        : [...prev.excluded_tags, tagId],
-    }));
+      if (isIncluded) {
+        return {
+          ...prev,
+          tags: prev.tags.filter((id) => id !== tagId),
+          excluded_tags: [...prev.excluded_tags, tagId],
+        };
+      } else if (isExcluded) {
+        return {
+          ...prev,
+          excluded_tags: prev.excluded_tags.filter((id) => id !== tagId),
+        };
+      } else {
+        return {
+          ...prev,
+          tags: [...prev.tags, tagId],
+        };
+      }
+    });
   };
 
   const toggleMangadexDraftTag = (tagId: string) => {
@@ -1094,71 +1111,43 @@ function BrowseContent() {
               />
             </div>
 
-            {/* Genres Filter - Include */}
+            {/* Genres Filter */}
             <div className="mb-6">
               <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
-                ჟანრები (ჩართული)
+                ჟანრები{" "}
+                <span className="font-normal text-xs">
+                  (ერთხელ - ჩართე, ორჯელ - გამორიცხე)
+                </span>
               </h3>
               <div className="flex flex-wrap gap-2">
-                {genres?.map((genre) => (
-                  <Button
-                    key={genre.id}
-                    type="button"
-                    variant={
-                      localDraft.genres.includes(genre.id) ||
-                      localDraft.excluded_genres.includes(genre.id)
-                        ? "default"
-                        : "outline"
-                    }
-                    size="sm"
-                    onClick={() => {
-                      if (localDraft.excluded_genres.includes(genre.id)) {
-                        toggleLocalDraftExcludedGenre(genre.id);
-                      } else {
-                        toggleLocalDraftGenre(genre.id);
+                {genres?.map((genre) => {
+                  const isIncluded = localDraft.genres.includes(genre.id);
+                  const isExcluded = localDraft.excluded_genres.includes(
+                    genre.id,
+                  );
+                  return (
+                    <Button
+                      key={genre.id}
+                      type="button"
+                      variant={
+                        isIncluded
+                          ? "default"
+                          : isExcluded
+                            ? "destructive"
+                            : "outline"
                       }
-                    }}
-                    className={`rounded-lg px-3 py-1.5 text-sm ${
-                      localDraft.genres.includes(genre.id)
-                        ? ""
-                        : localDraft.excluded_genres.includes(genre.id)
-                          ? "opacity-50"
+                      size="sm"
+                      onClick={() => toggleLocalDraftGenre(genre.id)}
+                      className={`rounded-lg px-3 py-1.5 text-sm ${
+                        isIncluded || isExcluded
+                          ? ""
                           : "hover:border-[var(--border-hover)]"
-                    }`}
-                  >
-                    {genre.name_ka || genre.name}
-                    {localDraft.excluded_genres.includes(genre.id) && " ✕"}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Genres Filter - Exclude */}
-            <div className="mb-6">
-              <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
-                ჟანრები (გამორიცხული)
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {genres?.map((genre) => (
-                  <Button
-                    key={`exclude-${genre.id}`}
-                    type="button"
-                    variant={
-                      localDraft.excluded_genres.includes(genre.id)
-                        ? "destructive"
-                        : "outline"
-                    }
-                    size="sm"
-                    onClick={() => toggleLocalDraftExcludedGenre(genre.id)}
-                    className={`rounded-lg px-3 py-1.5 text-sm ${
-                      localDraft.excluded_genres.includes(genre.id)
-                        ? ""
-                        : "hover:border-[var(--border-hover)]"
-                    }`}
-                  >
-                    {genre.name_ka || genre.name}
-                  </Button>
-                ))}
+                      }`}
+                    >
+                      {genre.name_ka || genre.name}
+                    </Button>
+                  );
+                })}
               </div>
             </div>
 
@@ -1166,70 +1155,40 @@ function BrowseContent() {
             {Object.entries(backendTagsByGroup).map(([group, groupTags]) => (
               <div key={group} className="mb-6">
                 <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
-                  {TAG_GROUP_LABELS[group] || group} (ჩართული)
+                  {TAG_GROUP_LABELS[group] || group}{" "}
+                  <span className="font-normal text-xs">
+                    (ერთხელ - ჩართე, ორჯელ - გამორიცხე)
+                  </span>
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {groupTags.map((tag) => (
-                    <Button
-                      key={tag.id}
-                      type="button"
-                      variant={
-                        localDraft.tags.includes(tag.id) ||
-                        localDraft.excluded_tags.includes(tag.id)
-                          ? "default"
-                          : "outline"
-                      }
-                      size="sm"
-                      onClick={() => {
-                        if (localDraft.excluded_tags.includes(tag.id)) {
-                          toggleLocalDraftExcludedTag(tag.id);
-                        } else {
-                          toggleLocalDraftTag(tag.id);
+                  {groupTags.map((tag) => {
+                    const isIncluded = localDraft.tags.includes(tag.id);
+                    const isExcluded = localDraft.excluded_tags.includes(
+                      tag.id,
+                    );
+                    return (
+                      <Button
+                        key={tag.id}
+                        type="button"
+                        variant={
+                          isIncluded
+                            ? "default"
+                            : isExcluded
+                              ? "destructive"
+                              : "outline"
                         }
-                      }}
-                      className={`rounded-lg px-3 py-1.5 text-sm ${
-                        localDraft.tags.includes(tag.id)
-                          ? ""
-                          : localDraft.excluded_tags.includes(tag.id)
-                            ? "opacity-50"
+                        size="sm"
+                        onClick={() => toggleLocalDraftTag(tag.id)}
+                        className={`rounded-lg px-3 py-1.5 text-sm ${
+                          isIncluded || isExcluded
+                            ? ""
                             : "hover:border-[var(--border-hover)]"
-                      }`}
-                    >
-                      {tag.name}
-                      {localDraft.excluded_tags.includes(tag.id) && " ✕"}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            ))}
-
-            {/* Tags Filter - Excluded */}
-            {Object.entries(backendTagsByGroup).map(([group, groupTags]) => (
-              <div key={`exclude-${group}`} className="mb-6">
-                <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
-                  {TAG_GROUP_LABELS[group] || group} (გამორიცხული)
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {groupTags.map((tag) => (
-                    <Button
-                      key={`exclude-${tag.id}`}
-                      type="button"
-                      variant={
-                        localDraft.excluded_tags.includes(tag.id)
-                          ? "destructive"
-                          : "outline"
-                      }
-                      size="sm"
-                      onClick={() => toggleLocalDraftExcludedTag(tag.id)}
-                      className={`rounded-lg px-3 py-1.5 text-sm ${
-                        localDraft.excluded_tags.includes(tag.id)
-                          ? ""
-                          : "hover:border-[var(--border-hover)]"
-                      }`}
-                    >
-                      {tag.name}
-                    </Button>
-                  ))}
+                        }`}
+                      >
+                        {tag.name}
+                      </Button>
+                    );
+                  })}
                 </div>
               </div>
             ))}
