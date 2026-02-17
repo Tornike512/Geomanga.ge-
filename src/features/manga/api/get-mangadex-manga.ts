@@ -222,10 +222,12 @@ export const browseMangaDex = async (
 ): Promise<MangaDexPaginatedResponse> => {
   const page = params.page || 1;
   const limit = params.limit ?? 20;
+  // Request one extra to ensure we get at least 20 (MangaDex sometimes returns less)
+  const apiLimit = limit + 1;
   const offset = (page - 1) * limit;
 
   const searchParams = new URLSearchParams();
-  searchParams.set("limit", limit.toString());
+  searchParams.set("limit", apiLimit.toString());
   searchParams.set("offset", offset.toString());
 
   // Add includes for relationships
@@ -317,8 +319,11 @@ export const browseMangaDex = async (
   const total = data.total || 0;
   const pages = Math.ceil(total / limit);
 
+  // Get requested number of items (MangaDex may return more)
+  const items = data.data.map(transformMangaDexManga).slice(0, limit);
+
   return {
-    items: data.data.map(transformMangaDexManga),
+    items,
     total,
     offset,
     limit,
