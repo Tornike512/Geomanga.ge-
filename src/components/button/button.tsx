@@ -34,7 +34,7 @@ export const Button = ({
         // Variant styles
         {
           // Primary (Amber) - warm glow on hover
-          "rounded-lg bg-[var(--accent)] text-[var(--accent-foreground)] shadow-sm hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] hover:brightness-110":
+          "rounded-lg border border-transparent bg-[var(--accent)] text-[var(--accent-foreground)] shadow-sm hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] hover:brightness-110":
             variant === "default",
           // Ghost - transparent, subtle hover
           "rounded-lg text-[var(--foreground)] hover:bg-white/5":
@@ -43,7 +43,7 @@ export const Button = ({
           "rounded-lg border border-[var(--border)] bg-transparent text-[var(--foreground)] hover:border-[var(--border-hover)] hover:bg-white/5":
             variant === "outline",
           // Destructive - red with amber focus
-          "rounded-lg bg-red-600 text-white shadow-sm hover:shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:brightness-110":
+          "rounded-lg border border-transparent bg-red-600 text-white shadow-sm hover:shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:brightness-110":
             variant === "destructive",
           // Unstyled - minimal styling, allows full customization via className
           "": variant === "unstyled",
