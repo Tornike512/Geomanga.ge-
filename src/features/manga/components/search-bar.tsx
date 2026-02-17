@@ -99,7 +99,7 @@ export function SearchBar() {
     fetchNextPage: georgianFetchMore,
   } = useInfiniteSearchManga(
     { q: debouncedQuery, language: "georgian", limit: 6 },
-    language === "georgian" && debouncedQuery.length > 0,
+    language === "georgian" && isOpen,
   );
 
   // Fetch from MangaDex for English manga with infinite scroll
