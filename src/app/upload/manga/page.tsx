@@ -20,7 +20,7 @@ import { useMangaDexTags } from "@/features/manga/hooks/use-mangadex-manga";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
 import { useUploadCover } from "@/features/upload/hooks/use-upload-cover";
 import { useAlertModal } from "@/hooks/use-alert-modal";
-import type { MangaStatus } from "@/types/manga.types";
+import { ContentType, type MangaStatus } from "@/types/manga.types";
 import { getCookie } from "@/utils/cookies";
 import {
   createImagePreview,
@@ -146,6 +146,7 @@ export default function UploadMangaPage() {
     author: "",
     artist: "",
     status: "ongoing" as MangaStatus,
+    contentType: "manga" as ContentType,
     releaseYear: new Date().getFullYear(),
     genreIds: [] as number[],
     mangadexTagIds: [] as string[],
@@ -373,6 +374,7 @@ export default function UploadMangaPage() {
         author: formData.author,
         artist: formData.artist,
         status: formData.status,
+        content_type: formData.contentType,
         genre_ids: formData.genreIds,
         mangadex_tag_ids: formData.mangadexTagIds,
         cover_image_url: "",
@@ -693,8 +695,8 @@ export default function UploadMangaPage() {
                   </div>
                 </div>
 
-                {/* Status & Release Year */}
-                <div className="grid grid-cols-1 gap-6 overflow-visible md:grid-cols-2">
+                {/* Status, Content Type & Release Year */}
+                <div className="grid grid-cols-1 gap-6 overflow-visible md:grid-cols-3">
                   <div className="overflow-visible">
                     <label
                       htmlFor="status"
@@ -718,6 +720,33 @@ export default function UploadMangaPage() {
                         }))
                       }
                       aria-label="მანგის სტატუსი"
+                      className="w-full"
+                    />
+                  </div>
+                  <div className="overflow-visible">
+                    <label
+                      htmlFor="contentType"
+                      className="mb-2 block font-medium text-[var(--muted-foreground)] text-sm"
+                    >
+                      ტიპი *
+                    </label>
+                    <Dropdown
+                      id="contentType"
+                      options={[
+                        { value: ContentType.MANGA, label: "მანგა" },
+                        { value: ContentType.MANHUA, label: "მანჰუა" },
+                        { value: ContentType.MANHWA, label: "მანჰვა" },
+                        { value: ContentType.COMICS, label: "კომიქსი" },
+                        { value: ContentType.OEL_MANGA, label: "OEL მანგა" },
+                      ]}
+                      value={formData.contentType}
+                      onChange={(value) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          contentType: value as ContentType,
+                        }))
+                      }
+                      aria-label="მანგის ტიპი"
                       className="w-full"
                     />
                   </div>
