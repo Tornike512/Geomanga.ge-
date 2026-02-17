@@ -425,16 +425,14 @@ function BrowseContent() {
     return grouped;
   })();
 
-  // Group backend tags by group (for local source, excluding hidden tags)
-  const backendTagsByGroup = (() => {
-    if (!backendTags) return {};
-    const grouped: Record<string, typeof backendTags> = {};
+  // Map MangaDex tag ID → backend tag ID for local filtering
+  const mangadexToBackendId = (() => {
+    if (!backendTags) return {} as Record<string, number>;
+    const map: Record<string, number> = {};
     for (const tag of backendTags) {
-      if (hiddenNamesLower.includes(tag.name.toLowerCase())) continue;
-      if (!grouped[tag.group]) grouped[tag.group] = [];
-      grouped[tag.group].push(tag);
+      map[tag.mangadex_id] = tag.id;
     }
-    return grouped;
+    return map;
   })();
 
   // URL sync - update URL whenever applied filters change
@@ -581,26 +579,28 @@ function BrowseContent() {
     });
   };
 
-  const toggleLocalDraftTag = (tagId: number) => {
+  const toggleLocalDraftTag = (mangadexTagId: string) => {
+    const backendId = mangadexToBackendId[mangadexTagId];
+    if (!backendId) return;
     setLocalDraft((prev) => {
-      const isIncluded = prev.tags.includes(tagId);
-      const isExcluded = prev.excluded_tags.includes(tagId);
+      const isIncluded = prev.tags.includes(backendId);
+      const isExcluded = prev.excluded_tags.includes(backendId);
 
       if (isIncluded) {
         return {
           ...prev,
-          tags: prev.tags.filter((id) => id !== tagId),
-          excluded_tags: [...prev.excluded_tags, tagId],
+          tags: prev.tags.filter((id) => id !== backendId),
+          excluded_tags: [...prev.excluded_tags, backendId],
         };
       } else if (isExcluded) {
         return {
           ...prev,
-          excluded_tags: prev.excluded_tags.filter((id) => id !== tagId),
+          excluded_tags: prev.excluded_tags.filter((id) => id !== backendId),
         };
       } else {
         return {
           ...prev,
-          tags: [...prev.tags, tagId],
+          tags: [...prev.tags, backendId],
         };
       }
     });
@@ -1140,7 +1140,7 @@ function BrowseContent() {
               <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
                 ჟანრები{" "}
                 <span className="font-normal text-xs">
-                  (ერთხელ - ჩართე, ორჯელ - გამორიცხე)
+                  (ერთხელ - ჩართე, ორჯერ - გამორიცხე)
                 </span>
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -1175,21 +1175,24 @@ function BrowseContent() {
               </div>
             </div>
 
-            {/* Tags Filter (from backend, synced from MangaDex) */}
-            {Object.entries(backendTagsByGroup).map(([group, groupTags]) => (
+            {/* Tags Filter (from MangaDex, same as upload page) */}
+            {Object.entries(mangadexTagsByGroup).map(([group, groupTags]) => (
               <div key={group} className="mb-6">
                 <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
                   {TAG_GROUP_LABELS[group] || group}{" "}
                   <span className="font-normal text-xs">
-                    (ერთხელ - ჩართე, ორჯელ - გამორიცხე)
+                    (ერთხელ - ჩართე, ორჯერ - გამორიცხე)
                   </span>
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {groupTags.map((tag) => {
-                    const isIncluded = localDraft.tags.includes(tag.id);
-                    const isExcluded = localDraft.excluded_tags.includes(
-                      tag.id,
-                    );
+                    const backendId = mangadexToBackendId[tag.id];
+                    const isIncluded = backendId
+                      ? localDraft.tags.includes(backendId)
+                      : false;
+                    const isExcluded = backendId
+                      ? localDraft.excluded_tags.includes(backendId)
+                      : false;
                     return (
                       <Button
                         key={tag.id}
@@ -1203,11 +1206,12 @@ function BrowseContent() {
                         }
                         size="sm"
                         onClick={() => toggleLocalDraftTag(tag.id)}
+                        disabled={!backendId}
                         className={`rounded-lg px-3 py-1.5 text-sm ${
                           isIncluded || isExcluded
                             ? ""
                             : "hover:border-[var(--border-hover)]"
-                        }`}
+                        } ${!backendId ? "opacity-40" : ""}`}
                       >
                         {tag.name}
                       </Button>
@@ -1334,7 +1338,7 @@ function BrowseContent() {
                 <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
                   {TAG_GROUP_LABELS[group] || group}{" "}
                   <span className="font-normal text-xs">
-                    (ერთხელ - ჩართე, ორჯელ - გამორიცხე)
+                    (ერთხელ - ჩართე, ორჯერ - გამორიცხე)
                   </span>
                 </h3>
                 <div className="flex flex-wrap gap-2">
