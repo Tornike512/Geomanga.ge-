@@ -339,10 +339,12 @@ export default function ReaderPage() {
     pageRefs.current.clear();
   }, []);
 
-  // Compute prev/next MangaDex chapters (skipping external-only chapters)
-  const mangaDexInternalChapters = mangaDexAllChapters?.filter(
-    (ch) => !ch.external_url,
-  );
+  // Compute prev/next MangaDex chapters sorted by chapter number ascending
+  const mangaDexInternalChapters = mangaDexAllChapters
+    ?.filter((ch) => !ch.external_url)
+    .sort(
+      (a, b) => parseFloat(a.chapter_number) - parseFloat(b.chapter_number),
+    );
   const currentMdIndex = mangaDexInternalChapters?.findIndex(
     (ch) => ch.id === mangaDexChapterId,
   );
