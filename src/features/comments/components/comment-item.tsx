@@ -173,6 +173,14 @@ export function CommentItem({
             <textarea
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  if (editContent.trim() && editContent !== comment.content) {
+                    handleSaveEdit();
+                  }
+                }
+              }}
               className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-[var(--foreground)] text-base focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
               rows={3}
               maxLength={2000}
@@ -229,6 +237,14 @@ export function CommentItem({
             <textarea
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  if (replyContent.trim() && !isReplying) {
+                    handleSubmitReply();
+                  }
+                }
+              }}
               placeholder="დაწერე პასუხი..."
               className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-[var(--foreground)] text-base placeholder:text-[var(--muted-foreground)] focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
               rows={2}
