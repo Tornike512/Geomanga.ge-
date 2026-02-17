@@ -221,7 +221,7 @@ export const browseMangaDex = async (
   params: MangaDexBrowseParams = {},
 ): Promise<MangaDexPaginatedResponse> => {
   const page = params.page || 1;
-  const limit = params.limit || 20;
+  const limit = params.limit ?? 20;
   const offset = (page - 1) * limit;
 
   const searchParams = new URLSearchParams();
