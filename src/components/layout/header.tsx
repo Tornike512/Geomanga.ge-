@@ -46,14 +46,6 @@ export function Header() {
               >
                 ნავიგაცია
               </Link>
-              {user && (
-                <Link
-                  href="/library"
-                  className="text-[var(--muted-foreground)] text-sm transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
-                >
-                  ბიბლიოთეკა
-                </Link>
-              )}
             </nav>
 
             <div className="min-w-0 flex-1">
@@ -137,22 +129,13 @@ export function Header() {
               ნავიგაცია
             </Link>
             {user && (
-              <>
-                <Link
-                  href="/library"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
-                >
-                  ბიბლიოთეკა
-                </Link>
-                <Link
-                  href="/profile"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
-                >
-                  პროფილი
-                </Link>
-              </>
+              <Link
+                href="/profile"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
+              >
+                პროფილი
+              </Link>
             )}
           </div>
         </nav>
