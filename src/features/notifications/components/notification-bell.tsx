@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { BellIcon } from "@/assets";
 import { Button } from "@/components/button";
@@ -14,11 +14,17 @@ interface NotificationBellProps {
   isLoggedIn: boolean;
 }
 
+const TRANSITION_MS = 200;
+
 export function NotificationBell({ isLoggedIn }: NotificationBellProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
   const panelRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const isOpen = isMounted;
 
   const { data: unreadData } = useUnreadCount(isLoggedIn);
   const { data: notificationsData } = useNotifications(
@@ -30,8 +36,8 @@ export function NotificationBell({ isLoggedIn }: NotificationBellProps) {
 
   const unreadCount = unreadData?.count ?? 0;
 
-  // Position panel below the button using its bounding rect
   const openPanel = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       setPanelStyle({
@@ -40,8 +46,15 @@ export function NotificationBell({ isLoggedIn }: NotificationBellProps) {
         right: window.innerWidth - rect.right,
       });
     }
-    setIsOpen(true);
+    setIsMounted(true);
+    // Defer to next frame so the element is in the DOM before adding the visible class
+    requestAnimationFrame(() => setIsVisible(true));
   };
+
+  const closePanel = useCallback(() => {
+    setIsVisible(false);
+    closeTimer.current = setTimeout(() => setIsMounted(false), TRANSITION_MS);
+  }, []);
 
   // Close on outside click
   useEffect(() => {
@@ -53,23 +66,34 @@ export function NotificationBell({ isLoggedIn }: NotificationBellProps) {
         buttonRef.current &&
         !buttonRef.current.contains(e.target as Node)
       ) {
-        setIsOpen(false);
+        closePanel();
       }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [isOpen]);
+  }, [isOpen, closePanel]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    };
+  }, []);
 
   const handleMarkAllRead = () => {
     markAllRead.mutate();
   };
 
-  const panel = isOpen
+  const panel = isMounted
     ? createPortal(
         <div
           ref={panelRef}
           style={panelStyle}
-          className="z-[9999] w-80 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--background)] shadow-xl"
+          className={`z-[9999] w-80 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--background)] shadow-xl transition-all duration-200 ease-out ${
+            isVisible
+              ? "translate-y-0 scale-100 opacity-100"
+              : "-translate-y-1 scale-95 opacity-0"
+          }`}
         >
           <div className="flex items-center justify-between border-[var(--border)] border-b px-4 py-3">
             <span className="font-semibold text-sm">შეტყობინებები</span>
@@ -110,7 +134,7 @@ export function NotificationBell({ isLoggedIn }: NotificationBellProps) {
         ref={buttonRef}
         variant="ghost"
         size="sm"
-        onClick={() => (isOpen ? setIsOpen(false) : openPanel())}
+        onClick={() => (isOpen ? closePanel() : openPanel())}
         className="relative h-auto p-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
         aria-label="შეტყობინებები"
       >
