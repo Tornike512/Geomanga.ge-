@@ -560,8 +560,13 @@ export const getMangaDexChapterPages = async (
     throw new Error("MangaDex API returned an error");
   }
 
-  // Use data-saver quality for faster loading
-  return data.chapter.dataSaver.map(
-    (filename) => `${data.baseUrl}/data-saver/${data.chapter.hash}/${filename}`,
+  // Use data-saver quality for faster loading, fall back to full quality if unavailable
+  const images =
+    data.chapter.dataSaver.length > 0
+      ? data.chapter.dataSaver
+      : data.chapter.data;
+  const quality = data.chapter.dataSaver.length > 0 ? "data-saver" : "data";
+  return images.map(
+    (filename) => `${data.baseUrl}/${quality}/${data.chapter.hash}/${filename}`,
   );
 };
