@@ -566,7 +566,10 @@ export const getMangaDexChapterPages = async (
       ? data.chapter.dataSaver
       : data.chapter.data;
   const quality = data.chapter.dataSaver.length > 0 ? "data-saver" : "data";
+  // Proxy images through our server to avoid CDN cross-origin issues
+  const hostname = data.baseUrl.replace("https://", "");
   return images.map(
-    (filename) => `${data.baseUrl}/${quality}/${data.chapter.hash}/${filename}`,
+    (filename) =>
+      `/api/mangadex-page/${hostname}/${quality}/${data.chapter.hash}/${filename}`,
   );
 };
