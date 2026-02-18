@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
+export const runtime = "edge";
+
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
@@ -15,7 +17,7 @@ export async function GET(
         Referer: "https://mangadex.org/",
         Accept: "image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
       },
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      cache: "force-cache",
     });
 
     if (!response.ok) {
