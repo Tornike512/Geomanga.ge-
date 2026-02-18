@@ -25,7 +25,7 @@ export function MangaComments({ mangaId }: MangaCommentsProps) {
   const [page, setPage] = useState(1);
   const pageSize = 20;
 
-  const { data: currentUser } = useCurrentUser();
+  const { data: currentUser, isLoading: userLoading } = useCurrentUser();
   const { data: commentsData, isLoading } = useMangaComments(mangaId, {
     page,
     page_size: pageSize,
@@ -87,6 +87,7 @@ export function MangaComments({ mangaId }: MangaCommentsProps) {
       <div className="mb-6">
         <CommentForm
           currentUser={currentUser}
+          isUserLoading={userLoading}
           onSubmit={handleSubmitComment}
           isSubmitting={createComment.isPending}
         />

@@ -91,17 +91,19 @@ export default function MangaDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMangaDex, availableLanguages, language]);
 
-  const { data: user } = useCurrentUser();
+  const { data: user, isLoading: userLoading } = useCurrentUser();
   const deleteManga = useDeleteManga();
   const deleteChapter = useDeleteChapter();
   const { confirm, ConfirmModalComponent } = useConfirmModal();
 
   const canDeleteManga =
-    user?.id === localManga?.uploader?.id ||
-    user?.role === UserRole.MODERATOR ||
-    user?.role === UserRole.ADMIN;
+    !userLoading &&
+    (user?.id === localManga?.uploader?.id ||
+      user?.role === UserRole.MODERATOR ||
+      user?.role === UserRole.ADMIN);
   const canDeleteChapter =
-    user?.role === UserRole.MODERATOR || user?.role === UserRole.ADMIN;
+    !userLoading &&
+    (user?.role === UserRole.MODERATOR || user?.role === UserRole.ADMIN);
 
   const handleDeleteManga = async () => {
     if (!localManga) return;
@@ -270,6 +272,7 @@ export default function MangaDetailPage() {
                   {/* Action Buttons */}
                   <div className="flex flex-wrap justify-end gap-2">
                     {!isMangaDex &&
+                      !userLoading &&
                       user &&
                       localManga &&
                       (user.id === localManga.uploader?.id ||
@@ -328,16 +331,20 @@ export default function MangaDetailPage() {
                           </Button>
                         </Link>
                       ))}
-                    {user && !isMangaDex && localManga && (
+                    {!userLoading && user && !isMangaDex && localManga && (
                       <LibraryDropdown mangaId={localManga.id} />
                     )}
-                    {user && isMangaDex && mangaDexManga && mangaDexId && (
-                      <LibraryDropdown
-                        mangadexId={mangaDexId}
-                        mangaTitle={mangaDexManga.title}
-                        coverImageUrl={mangaDexManga.cover_image_url}
-                      />
-                    )}
+                    {!userLoading &&
+                      user &&
+                      isMangaDex &&
+                      mangaDexManga &&
+                      mangaDexId && (
+                        <LibraryDropdown
+                          mangadexId={mangaDexId}
+                          mangaTitle={mangaDexManga.title}
+                          coverImageUrl={mangaDexManga.cover_image_url}
+                        />
+                      )}
                     {!isMangaDex && canDeleteManga && localManga && (
                       <Button
                         variant="destructive"

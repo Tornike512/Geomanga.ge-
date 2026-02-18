@@ -10,6 +10,7 @@ import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { Dropdown } from "@/components/dropdown";
 import { Input } from "@/components/input";
+import { Spinner } from "@/components/spinner";
 import { API_URL } from "@/config";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { useGenres } from "@/features/genres/hooks/use-genres";
@@ -469,7 +470,11 @@ export default function UploadMangaPage() {
 
   // Check if user is logged in
   if (userLoading) {
-    return null;
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   if (!user) {

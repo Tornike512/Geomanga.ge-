@@ -6,6 +6,7 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { Input } from "@/components/input";
+import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { getMangaDetail } from "@/features/manga/api/get-manga-detail";
 import { uploadChapterPagesWithProgress } from "@/features/upload/api/upload-with-progress";
@@ -47,7 +48,11 @@ function ChapterUploadContent() {
   const totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
 
   if (userLoading) {
-    return null;
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   if (!user) {

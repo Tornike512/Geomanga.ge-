@@ -9,12 +9,14 @@ import type { User } from "@/types/user.types";
 
 interface CommentFormProps {
   readonly currentUser: User | null | undefined;
+  readonly isUserLoading?: boolean;
   readonly onSubmit: (content: string) => void;
   readonly isSubmitting?: boolean;
 }
 
 export function CommentForm({
   currentUser,
+  isUserLoading,
   onSubmit,
   isSubmitting,
 }: CommentFormProps) {
@@ -27,6 +29,10 @@ export function CommentForm({
       setContent("");
     }
   };
+
+  if (isUserLoading) {
+    return null;
+  }
 
   if (!currentUser) {
     return (

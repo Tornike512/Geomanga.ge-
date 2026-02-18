@@ -17,7 +17,7 @@ interface MangaRatingProps {
 }
 
 export function MangaRating({ mangaId }: MangaRatingProps) {
-  const { data: user } = useCurrentUser();
+  const { data: user, isLoading: userLoading } = useCurrentUser();
   const { data: mangaRating } = useMangaRating(mangaId);
   const { data: userRating } = useUserRating(mangaId);
   const submitRating = useSubmitRating();
@@ -61,7 +61,7 @@ export function MangaRating({ mangaId }: MangaRatingProps) {
           )}
         </div>
 
-        {user ? (
+        {userLoading ? null : user ? (
           <>
             <div className="flex items-center gap-0.5 sm:gap-1">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((score) => (
