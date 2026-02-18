@@ -131,7 +131,7 @@ function ChapterPagesDropzone({
 
 export default function UploadMangaPage() {
   const router = useRouter();
-  const { data: user } = useCurrentUser();
+  const { data: user, isLoading: userLoading } = useCurrentUser();
   const { data: genres } = useGenres();
   const { data: mangadexTags } = useMangaDexTags();
   const createManga = useCreateManga();
@@ -468,6 +468,10 @@ export default function UploadMangaPage() {
   };
 
   // Check if user is logged in
+  if (userLoading) {
+    return null;
+  }
+
   if (!user) {
     return (
       <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 py-12 text-center sm:px-4 md:px-8">

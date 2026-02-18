@@ -18,7 +18,7 @@ function ChapterUploadContent() {
   const searchParams = useSearchParams();
   const mangaId = searchParams.get("mangaId");
 
-  const { data: user } = useCurrentUser();
+  const { data: user, isLoading: userLoading } = useCurrentUser();
   const createChapter = useCreateChapter(Number(mangaId));
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -45,6 +45,10 @@ function ChapterUploadContent() {
   }, [previewUrls]);
 
   const totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
+
+  if (userLoading) {
+    return null;
+  }
 
   if (!user) {
     return (
