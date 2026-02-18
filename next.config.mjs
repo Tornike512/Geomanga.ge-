@@ -29,6 +29,17 @@ const nextConfig = {
         hostname: 'lh3.googleusercontent.com',
         pathname: '/**',
       },
+      // Cloudflare R2 (free dev URL and custom domains)
+      {
+        protocol: 'https',
+        hostname: '*.r2.dev',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.r2.cloudflarestorage.com',
+        pathname: '/**',
+      },
     ],
   },
  async rewrites() {
