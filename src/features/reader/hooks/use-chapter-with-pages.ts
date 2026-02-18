@@ -6,5 +6,6 @@ export const useChapterWithPages = (chapterId: number) => {
     queryKey: ["chapters", "detail", chapterId],
     queryFn: () => getChapterWithPages(chapterId),
     staleTime: 30 * 60 * 1000, // 30 minutes
+    enabled: chapterId > 0,
   });
 };
