@@ -36,15 +36,24 @@ export function NotificationBell({ isLoggedIn }: NotificationBellProps) {
 
   const unreadCount = unreadData?.count ?? 0;
 
+  const PANEL_WIDTH = 320; // w-80
+
   const openPanel = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
-      setPanelStyle({
+      const vw = window.innerWidth;
+      const style: React.CSSProperties = {
         position: "fixed",
         top: rect.bottom + 8,
-        right: window.innerWidth - rect.right,
-      });
+      };
+      if (vw < 640) {
+        // Center horizontally on small screens
+        style.left = Math.max(8, (vw - PANEL_WIDTH) / 2);
+      } else {
+        style.right = vw - rect.right;
+      }
+      setPanelStyle(style);
     }
     setIsMounted(true);
     // Defer to next frame so the element is in the DOM before adding the visible class
