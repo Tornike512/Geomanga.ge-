@@ -9,6 +9,7 @@ import { Avatar } from "@/components/avatar";
 import { Button } from "@/components/button";
 import { useCurrentUser, useLogout } from "@/features/auth";
 import { SearchBar } from "@/features/manga/components";
+import { NotificationBell } from "@/features/notifications";
 
 export function Header() {
   const pathname = usePathname();
@@ -56,7 +57,10 @@ export function Header() {
               {isLoading ? (
                 <div className="h-9 w-9 animate-pulse rounded-full bg-[var(--muted)]/40" />
               ) : user ? (
-                <UserMenu user={user} />
+                <>
+                  <NotificationBell isLoggedIn={true} />
+                  <UserMenu user={user} />
+                </>
               ) : (
                 <div className="flex items-center gap-3">
                   <Link href="/login">
@@ -71,12 +75,19 @@ export function Header() {
               )}
             </div>
 
+            {/* Bell icon - mobile only, visible when logged in */}
+            {!isLoading && user && (
+              <div className="shrink-0 lg:hidden">
+                <NotificationBell isLoggedIn={true} />
+              </div>
+            )}
+
             {/* Hamburger menu - visible only on < sm screens */}
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-              className="ml-auto h-auto shrink-0 p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] lg:hidden"
+              className="h-auto shrink-0 p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] lg:hidden"
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMobileMenuOpen ? (
