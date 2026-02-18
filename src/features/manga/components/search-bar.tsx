@@ -157,7 +157,7 @@ export function SearchBar() {
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          className="h-10 w-full pr-7 pl-7 sm:h-11 sm:pr-12 sm:pl-10"
+          className="h-10 w-full pr-7 pl-7 text-xs sm:h-11 sm:pr-12 sm:pl-10 sm:text-base"
         />
         <Search className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-2 h-3.5 w-3.5 text-[var(--muted-foreground)] sm:left-3 sm:h-4 sm:w-4" />
         {query && (
