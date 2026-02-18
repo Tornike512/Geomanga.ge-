@@ -208,6 +208,9 @@ export default function ReaderPage() {
   const isMangaDex = chapterId.startsWith("md-");
   const mangaDexChapterId = isMangaDex ? chapterId.slice(3) : null;
 
+  const [mdLoadedCount, setMdLoadedCount] = useState(0);
+  const [localLoadedCount, setLocalLoadedCount] = useState(0);
+
   // State to store MangaDex chapter info from URL params
   const [mangaDexInfo, setMangaDexInfo] = useState<{
     mangaId: string | null;
@@ -428,6 +431,9 @@ export default function ReaderPage() {
 
   // For local chapters
   if (!isMangaDex && localChapter) {
+    const localTotal = localChapter.pages?.length ?? 0;
+    const localAllLoaded = localTotal === 0 || localLoadedCount >= localTotal;
+
     if (!localChapter.pages || localChapter.pages.length === 0) {
       return (
         <div className="flex min-h-screen items-center justify-center bg-black">
@@ -446,6 +452,16 @@ export default function ReaderPage() {
 
     return (
       <div className="min-h-screen bg-black">
+        {/* Loading overlay - visible until all pages are loaded */}
+        {!localAllLoaded && (
+          <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-3 bg-black">
+            <Spinner size="lg" />
+            <p className="text-sm text-white/60">
+              {localLoadedCount} / {localTotal}
+            </p>
+          </div>
+        )}
+
         {/* Header */}
         <div
           className={`fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
@@ -496,7 +512,8 @@ export default function ReaderPage() {
                   height={1800}
                   className="h-auto w-full"
                   priority={page.page_number <= 3}
-                  loading={page.page_number > 3 ? "lazy" : undefined}
+                  onLoad={() => setLocalLoadedCount((c) => c + 1)}
+                  onError={() => setLocalLoadedCount((c) => c + 1)}
                 />
               </div>
             ))}
@@ -564,8 +581,21 @@ export default function ReaderPage() {
   }
 
   // MangaDex reader
+  const mdTotal = mangaDexPages?.length ?? 0;
+  const mdAllLoaded = mdTotal === 0 || mdLoadedCount >= mdTotal;
+
   return (
     <div className="min-h-screen bg-black">
+      {/* Loading overlay - visible until all pages are loaded */}
+      {!mdAllLoaded && (
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-3 bg-black">
+          <Spinner size="lg" />
+          <p className="text-sm text-white/60">
+            {mdLoadedCount} / {mdTotal}
+          </p>
+        </div>
+      )}
+
       {/* Header */}
       <div
         className={`fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
@@ -630,7 +660,9 @@ export default function ReaderPage() {
                   src={pageUrl}
                   alt={`გვერდი ${index + 1}`}
                   className="h-auto w-full"
-                  loading={index <= 2 ? "eager" : "lazy"}
+                  loading="eager"
+                  onLoad={() => setMdLoadedCount((c) => c + 1)}
+                  onError={() => setMdLoadedCount((c) => c + 1)}
                 />
               </div>
             );
