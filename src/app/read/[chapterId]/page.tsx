@@ -1,7 +1,6 @@
 "use client";
 
 import { ArrowLeft, Globe } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -9,7 +8,6 @@ import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { Dropdown } from "@/components/dropdown";
 import { Spinner } from "@/components/spinner";
-import { API_URL } from "@/config";
 import { ChapterComments, MangadexChapterComments } from "@/features/comments";
 import { useMangaDexChapterPages, useMangaDexChapters } from "@/features/manga";
 import { useChapterWithPages } from "@/features/reader/hooks/use-chapter-with-pages";
@@ -505,13 +503,12 @@ export default function ReaderPage() {
                 data-page-id={page.id}
                 className="w-full"
               >
-                <Image
-                  src={`${API_URL}/images/pages/${page.chapter_id}/${page.page_number}`}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={page.image_url}
                   alt={`გვერდი ${page.page_number}`}
-                  width={1200}
-                  height={1800}
                   className="h-auto w-full"
-                  priority={page.page_number <= 3}
+                  loading={page.page_number <= 3 ? "eager" : "lazy"}
                   onLoad={() => setLocalLoadedCount((c) => c + 1)}
                   onError={() => setLocalLoadedCount((c) => c + 1)}
                 />
