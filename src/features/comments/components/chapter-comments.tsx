@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/button";
 import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth";
@@ -30,6 +30,20 @@ export function ChapterComments({ chapterId }: ChapterCommentsProps) {
     page,
     page_size: pageSize,
   });
+
+  // Scroll to comment from URL hash after comments load
+  useEffect(() => {
+    if (!commentsData) return;
+    const hash = window.location.hash;
+    if (!hash) return;
+    const el = document.querySelector(hash);
+    if (el) {
+      setTimeout(
+        () => el.scrollIntoView({ behavior: "smooth", block: "center" }),
+        100,
+      );
+    }
+  }, [commentsData]);
 
   const createComment = useCreateChapterComment(chapterId);
   const deleteComment = useDeleteComment();
