@@ -204,7 +204,7 @@ export default function MangaDetailPage() {
                         ? "warning"
                         : "danger"
                 }
-                className="!text-green-400 absolute top-3 left-3 rounded-[3px] border-2 border-[var(--border)] bg-[var(--muted)]/60 px-1.5 py-0.5 font-bold text-[10px] text-[var(--muted-foreground)] shadow-[0_4px_12px_rgba(0,0,0,0.5)] sm:px-3 sm:py-1.5 sm:text-sm"
+                className="absolute top-3 left-3 px-1.5 py-0.5 font-bold text-[10px] shadow-[0_4px_12px_rgba(0,0,0,0.5)] sm:px-3 sm:py-1.5 sm:text-sm"
               >
                 {STATUS_LABELS[manga.status] || manga.status}
               </Badge>
