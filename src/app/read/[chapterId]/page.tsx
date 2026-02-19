@@ -346,6 +346,34 @@ export default function ReaderPage() {
     pageRefs.current.clear();
   }, []);
 
+  // Scroll to comment from URL hash after all images loaded
+  const hasScrolledToHash = useRef(false);
+  useEffect(() => {
+    if (hasScrolledToHash.current) return;
+    const allLoaded = isMangaDex
+      ? (mangaDexPages?.length ?? 0) === 0 ||
+        mdLoadedCount >= (mangaDexPages?.length ?? 0)
+      : (localChapter?.pages?.length ?? 0) === 0 ||
+        localLoadedCount >= (localChapter?.pages?.length ?? 0);
+    if (!allLoaded) return;
+    const hash = window.location.hash;
+    if (!hash) return;
+    hasScrolledToHash.current = true;
+    // Delay to ensure comments have rendered
+    setTimeout(() => {
+      const el = document.querySelector(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 300);
+  }, [
+    isMangaDex,
+    mdLoadedCount,
+    localLoadedCount,
+    mangaDexPages,
+    localChapter,
+  ]);
+
   // Compute prev/next MangaDex chapters sorted by chapter number ascending
   const mangaDexInternalChapters = mangaDexAllChapters
     ?.filter((ch) => !ch.external_url)
