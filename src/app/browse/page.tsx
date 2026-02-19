@@ -48,8 +48,8 @@ const AGE_RATING_OPTIONS = [
 const CONTENT_TYPE_OPTIONS = [
   { value: "", label: "ყველა ტიპი" },
   { value: ContentType.MANGA, label: "მანგა" },
-  { value: ContentType.MANHUA, label: "მანხუა" },
-  { value: ContentType.MANHWA, label: "მანხვა" },
+  { value: ContentType.MANHUA, label: "მანჰუა" },
+  { value: ContentType.MANHWA, label: "მანჰვა" },
   { value: ContentType.COMICS, label: "კომიქსი" },
   { value: ContentType.OEL_MANGA, label: "OEL-მანგა" },
 ] as const;
