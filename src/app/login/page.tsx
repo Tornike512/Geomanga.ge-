@@ -45,7 +45,7 @@ function LoginContent() {
       <div className="mx-auto w-full max-w-md">
         {/* Minimalist Dark Title */}
         <h1 className="mb-8 text-center font-semibold text-3xl tracking-tight sm:text-4xl">
-          კეთილდგებობით
+          მოგესალმებით
         </h1>
 
         <Card className="p-0">

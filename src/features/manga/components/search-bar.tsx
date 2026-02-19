@@ -263,7 +263,7 @@ export function SearchBar() {
                       </div>
                     ) : hasMore ? (
                       <div className="text-center text-[var(--muted-foreground)] text-xs">
-                        გადაადგილდით ქვემოთ მეტის სანახავად
+                        გადაახვიეთ ქვემოთ მეტის სანახავად
                       </div>
                     ) : (
                       <div className="text-center text-[var(--muted-foreground)] text-xs">
