@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { getMangaDetail } from "@/features/manga/api/get-manga-detail";
 import type { Notification } from "@/types/notification.types";
 import { formatRelativeTime } from "@/utils/formatters";
 
@@ -10,51 +12,69 @@ interface NotificationItemProps {
   onNavigate?: () => void;
 }
 
-function getNotificationUrl(notification: Notification): string | null {
-  const { type, chapter_id, comment_id } = notification;
-
-  if (type === "new_chapter" && chapter_id) {
-    return `/read/${chapter_id}`;
-  }
-
-  if (
-    (type === "reply_to_comment" || type === "comment_on_manga") &&
-    chapter_id
-  ) {
-    if (comment_id) return `/read/${chapter_id}#comment-${comment_id}`;
-    return `/read/${chapter_id}`;
-  }
-
-  return null;
-}
-
 export function NotificationItem({
   notification,
   onMarkRead,
   onNavigate,
 }: NotificationItemProps) {
   const router = useRouter();
+  const [isNavigating, setIsNavigating] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!notification.is_read) {
       onMarkRead(notification.id);
     }
-    const url = getNotificationUrl(notification);
-    if (url) {
+
+    const { type, chapter_id, comment_id, manga_id } = notification;
+
+    // New chapter → go to manga page
+    if (type === "new_chapter" && manga_id) {
+      setIsNavigating(true);
+      try {
+        const manga = await getMangaDetail(manga_id);
+        onNavigate?.();
+        router.push(`/manga/${manga.slug}`);
+      } finally {
+        setIsNavigating(false);
+      }
+      return;
+    }
+
+    // Reply or comment on chapter → go to reader and scroll to comment
+    if (
+      (type === "reply_to_comment" || type === "comment_on_manga") &&
+      chapter_id
+    ) {
       onNavigate?.();
-      router.push(url);
+      if (comment_id) {
+        router.push(`/read/${chapter_id}#comment-${comment_id}`);
+      } else {
+        router.push(`/read/${chapter_id}#comments`);
+      }
+      return;
+    }
+
+    // Comment on manga page (no chapter) → go to manga page
+    if (type === "comment_on_manga" && manga_id) {
+      setIsNavigating(true);
+      try {
+        const manga = await getMangaDetail(manga_id);
+        onNavigate?.();
+        router.push(`/manga/${manga.slug}`);
+      } finally {
+        setIsNavigating(false);
+      }
     }
   };
-
-  const url = getNotificationUrl(notification);
 
   return (
     <button
       type="button"
       onClick={handleClick}
+      disabled={isNavigating}
       className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--muted)]/30 ${
         notification.is_read ? "opacity-60" : ""
-      } ${url ? "cursor-pointer" : "cursor-default"}`}
+      } ${isNavigating ? "opacity-50" : ""}`}
     >
       {!notification.is_read && (
         <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[var(--accent)]" />

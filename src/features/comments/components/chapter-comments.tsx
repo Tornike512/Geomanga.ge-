@@ -70,7 +70,7 @@ export function ChapterComments({ chapterId }: ChapterCommentsProps) {
   const hasPrevPage = page > 1;
 
   return (
-    <div className="py-8">
+    <div id="comments" className="py-8">
       {ConfirmModalComponent}
       <div className="mb-6 flex items-center gap-2">
         <MessageCircle className="h-5 w-5 text-[var(--accent)]" />
