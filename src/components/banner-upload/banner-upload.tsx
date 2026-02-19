@@ -103,7 +103,7 @@ export function BannerUpload({ onFileSelect, error }: BannerUploadProps) {
 
       <Button
         variant="ghost"
-        className={`relative flex h-auto w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors ${
+        className={`relative flex h-auto w-full cursor-pointer flex-col items-center justify-center rounded-[3px] border-2 border-dashed p-6 transition-colors ${
           isDragging
             ? "border-[var(--accent)] bg-[var(--accent)]/5"
             : displayError
@@ -126,7 +126,7 @@ export function BannerUpload({ onFileSelect, error }: BannerUploadProps) {
 
         {preview ? (
           <div className="flex w-full flex-col items-center gap-4">
-            <div className="relative h-48 w-full overflow-hidden rounded-lg border-2 border-[var(--accent)]">
+            <div className="relative h-48 w-full overflow-hidden rounded-[3px] border-2 border-[var(--accent)]">
               <Image
                 src={preview}
                 alt="Banner preview"
@@ -142,7 +142,7 @@ export function BannerUpload({ onFileSelect, error }: BannerUploadProps) {
                 e.stopPropagation();
                 handleRemove();
               }}
-              className="rounded-md bg-red-500/10 px-4 py-2 text-red-400 hover:bg-red-500/20 hover:text-red-400"
+              className="rounded-[3px] bg-red-500/10 px-4 py-2 text-red-400 hover:bg-red-500/20 hover:text-red-400"
             >
               წაშლა
             </Button>

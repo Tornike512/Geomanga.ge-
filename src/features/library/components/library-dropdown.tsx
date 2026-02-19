@@ -148,8 +148,8 @@ export const LibraryDropdown = ({
         role="listbox"
         aria-label="ბიბლიოთეკის კატეგორიები"
         className={cn(
-          "absolute right-0 z-[9999] mt-2 min-w-[200px] overflow-hidden rounded-lg",
-          "border border-[var(--border)] bg-[var(--card-solid)] shadow-black/20 shadow-xl backdrop-blur-md",
+          "absolute right-0 z-[9999] mt-2 min-w-[200px] overflow-hidden rounded-[3px]",
+          "border border-[var(--border)] bg-[var(--card-solid)] shadow-black/20 shadow-xl",
           "origin-top transition-all duration-200 ease-out",
           isOpen
             ? "visible scale-100 opacity-100"

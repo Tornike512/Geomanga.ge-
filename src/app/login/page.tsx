@@ -67,7 +67,7 @@ function LoginContent() {
 
             {/* Success Message */}
             {showSuccessMessage && (
-              <div className="mb-6 rounded-lg border border-green-500/30 bg-green-500/10 p-4">
+              <div className="mb-6 rounded-[3px] border border-green-500/30 bg-green-500/10 p-4">
                 <p className="text-green-400 text-sm">
                   პაროლი წარმატებით შეიცვალა! შეგიძლიათ შეხვიდეთ ახალი პაროლით.
                 </p>
@@ -122,7 +122,7 @@ function LoginContent() {
               </div>
 
               {login.isError && (
-                <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+                <div className="rounded-[3px] border border-red-500/30 bg-red-500/10 p-4">
                   <p className="text-red-400 text-sm">
                     {login.error?.message || "შესვლა ვერ მოხერხდა"}
                   </p>
@@ -161,7 +161,7 @@ export default function LoginPage() {
       fallback={
         <div className="container mx-auto flex max-w-[1920px] flex-1 items-center justify-center px-2 py-4 sm:px-4 md:px-8">
           <div className="mx-auto w-full max-w-md">
-            <div className="h-96 animate-pulse rounded-lg bg-[var(--muted)]/20" />
+            <div className="h-96 animate-pulse rounded-[3px] bg-[var(--muted)]/20" />
           </div>
         </div>
       }

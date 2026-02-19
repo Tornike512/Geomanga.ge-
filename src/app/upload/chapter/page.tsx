@@ -165,7 +165,7 @@ function ChapterUploadContent() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Left Column - Chapter Info */}
           <div className="lg:col-span-1">
-            <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+            <Card className="border border-[var(--border)] bg-[var(--card)] p-6">
               <h3 className="mb-6 font-semibold text-lg tracking-tight">
                 თავის ინფორმაცია
               </h3>
@@ -246,7 +246,7 @@ function ChapterUploadContent() {
 
           {/* Right Column - Pages Upload */}
           <div className="space-y-8 lg:col-span-2">
-            <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+            <Card className="border border-[var(--border)] bg-[var(--card)] p-6">
               <h3 className="mb-6 font-semibold text-lg tracking-tight">
                 თავის გვერდები
               </h3>
@@ -261,7 +261,7 @@ function ChapterUploadContent() {
                   className="hidden"
                   disabled={isUploading}
                 />
-                <div className="mb-6 flex flex-col items-center justify-center rounded-lg border-2 border-[var(--border)] border-dashed bg-[var(--muted)] p-12 text-center transition-colors hover:border-[var(--accent)] hover:bg-[var(--muted)]/50">
+                <div className="mb-6 flex flex-col items-center justify-center rounded-[3px] border-2 border-[var(--border)] border-dashed bg-[var(--muted)] p-12 text-center transition-colors hover:border-[var(--accent)] hover:bg-[var(--muted)]/50">
                   <svg
                     className="mx-auto mb-4 h-16 w-16 text-[var(--muted-foreground)] opacity-40"
                     fill="none"

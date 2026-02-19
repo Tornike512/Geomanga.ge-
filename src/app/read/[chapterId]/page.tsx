@@ -464,7 +464,7 @@ export default function ReaderPage() {
 
         {/* Header */}
         <div
-          className={`fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
+          className={`fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/90 transition-all duration-300 ${uiVisibilityClass}`}
         >
           <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-2">
             <div className="flex min-w-0 flex-1 items-center gap-3 overflow-hidden">
@@ -487,7 +487,7 @@ export default function ReaderPage() {
                 </p>
               </div>
             </div>
-            <div className="shrink-0 rounded-md bg-[var(--accent)] px-2.5 py-1 font-medium text-[var(--accent-foreground)] text-xs">
+            <div className="shrink-0 rounded-[3px] bg-[var(--accent)] px-2.5 py-1 font-medium text-[var(--accent-foreground)] text-xs">
               {localChapter.pages.length} გვერდი
             </div>
           </div>
@@ -544,18 +544,18 @@ export default function ReaderPage() {
 
         {/* Bottom Bar */}
         <div
-          className={`fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
+          className={`fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/90 transition-all duration-300 ${uiVisibilityClass}`}
         >
           <div className="mx-auto flex max-w-[1920px] items-center justify-center gap-3 px-4 py-2">
             {localChapter.previous_chapter_id ? (
               <Link
                 href={`/read/${localChapter.previous_chapter_id}`}
-                className="rounded-md bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
+                className="rounded-[3px] bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
               >
                 წინა
               </Link>
             ) : (
-              <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
+              <span className="cursor-not-allowed rounded-[3px] bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
                 წინა
               </span>
             )}
@@ -565,12 +565,12 @@ export default function ReaderPage() {
             {localChapter.next_chapter_id ? (
               <Link
                 href={`/read/${localChapter.next_chapter_id}`}
-                className="rounded-md bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
+                className="rounded-[3px] bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
               >
                 შემდეგი
               </Link>
             ) : (
-              <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
+              <span className="cursor-not-allowed rounded-[3px] bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
                 შემდეგი
               </span>
             )}
@@ -598,7 +598,7 @@ export default function ReaderPage() {
 
       {/* Header */}
       <div
-        className={`fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
+        className={`fixed top-0 right-0 left-0 z-50 border-[var(--border)] border-b bg-[var(--background)]/90 transition-all duration-300 ${uiVisibilityClass}`}
       >
         <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-2">
           <div className="flex items-center gap-3">
@@ -635,7 +635,7 @@ export default function ReaderPage() {
               </p>
             </div>
           </div>
-          <div className="rounded-md bg-[var(--accent)] px-2.5 py-1 font-medium text-[var(--accent-foreground)] text-xs">
+          <div className="rounded-[3px] bg-[var(--accent)] px-2.5 py-1 font-medium text-[var(--accent-foreground)] text-xs">
             {mangaDexPages?.length || 0} გვერდი
           </div>
         </div>
@@ -682,19 +682,19 @@ export default function ReaderPage() {
 
       {/* Footer Navigation */}
       <div
-        className={`fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/90 backdrop-blur-md transition-all duration-300 ${uiVisibilityClass}`}
+        className={`fixed right-0 bottom-0 left-0 z-50 border-[var(--border)] border-t bg-[var(--background)]/90 transition-all duration-300 ${uiVisibilityClass}`}
       >
         <div className="mx-auto flex max-w-[1920px] items-center justify-center gap-3 px-4 py-2">
           {prevMangaDexChapter ? (
             <button
               type="button"
               onClick={() => navigateToMdChapter(prevMangaDexChapter.id)}
-              className="rounded-md bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
+              className="rounded-[3px] bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
             >
               წინა
             </button>
           ) : (
-            <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
+            <span className="cursor-not-allowed rounded-[3px] bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
               წინა
             </span>
           )}
@@ -707,12 +707,12 @@ export default function ReaderPage() {
             <button
               type="button"
               onClick={() => navigateToMdChapter(nextMangaDexChapter.id)}
-              className="rounded-md bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
+              className="rounded-[3px] bg-[var(--accent)] px-3 py-1 font-medium text-[var(--accent-foreground)] text-xs transition-colors hover:bg-[var(--accent)]/80"
             >
               შემდეგი
             </button>
           ) : (
-            <span className="cursor-not-allowed rounded-md bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
+            <span className="cursor-not-allowed rounded-[3px] bg-[var(--accent)]/40 px-3 py-1 font-medium text-black text-xs">
               შემდეგი
             </span>
           )}

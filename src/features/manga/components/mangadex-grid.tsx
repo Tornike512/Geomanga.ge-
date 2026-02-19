@@ -20,7 +20,7 @@ export function MangaDexGrid({ manga, isLoading }: MangaDexGridProps) {
 
   if (!manga || !Array.isArray(manga) || manga.length === 0) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] backdrop-blur-sm">
+      <div className="flex min-h-[400px] items-center justify-center rounded-[3px] border border-[var(--border)] bg-[var(--card)]">
         <p className="text-[var(--muted-foreground)] text-lg">
           მანგა არ მოიძებნა
         </p>

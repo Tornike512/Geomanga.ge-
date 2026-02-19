@@ -204,7 +204,7 @@ export default function MangaDetailPage() {
                         ? "warning"
                         : "danger"
                 }
-                className="!text-green-400 absolute top-3 left-3 rounded-lg border-2 border-[var(--border)] bg-[var(--muted)]/60 px-1.5 py-0.5 font-bold text-[10px] text-[var(--muted-foreground)] shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-sm"
+                className="!text-green-400 absolute top-3 left-3 rounded-[3px] border-2 border-[var(--border)] bg-[var(--muted)]/60 px-1.5 py-0.5 font-bold text-[10px] text-[var(--muted-foreground)] shadow-[0_4px_12px_rgba(0,0,0,0.5)] sm:px-3 sm:py-1.5 sm:text-sm"
               >
                 {STATUS_LABELS[manga.status] || manga.status}
               </Badge>
@@ -544,7 +544,7 @@ export default function MangaDetailPage() {
                       href={chapter.external_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group block rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                      className="group block rounded-[3px] border border-[var(--border)] bg-[var(--card)] p-4 transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
                     >
                       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                         <div className="flex-1">
@@ -589,7 +589,7 @@ export default function MangaDetailPage() {
                           }),
                         );
                       }}
-                      className="group block rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                      className="group block rounded-[3px] border border-[var(--border)] bg-[var(--card)] p-4 transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
                     >
                       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                         <div className="flex-1">
@@ -620,7 +620,7 @@ export default function MangaDetailPage() {
                 localChapters?.map((chapter) => (
                   <div
                     key={chapter.id}
-                    className="group flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 backdrop-blur-sm transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                    className="group flex items-center gap-2 rounded-[3px] border border-[var(--border)] bg-[var(--card)] p-4 transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]"
                   >
                     <Link
                       href={`/read/${chapter.id}`}
@@ -659,7 +659,7 @@ export default function MangaDetailPage() {
                 ))
               )
             ) : (
-              <div className="flex min-h-[200px] items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] backdrop-blur-sm">
+              <div className="flex min-h-[200px] items-center justify-center rounded-[3px] border border-[var(--border)] bg-[var(--card)]">
                 <p className="text-[var(--muted-foreground)] text-lg">
                   {isMangaDex
                     ? "თავები არ მოიძებნა"

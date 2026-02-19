@@ -65,7 +65,7 @@ export default function PublicProfilePage() {
   return (
     <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-4 py-12 sm:px-6 md:px-8">
       {/* Banner Section */}
-      <div className="relative mb-8 aspect-[3/1] w-full overflow-hidden rounded-lg bg-gradient-to-r from-[var(--accent)]/20 to-[var(--accent)]/10">
+      <div className="relative mb-8 aspect-[3/1] w-full overflow-hidden rounded-[3px] bg-gradient-to-r from-[var(--accent)]/20 to-[var(--accent)]/10">
         {profile.banner_url && (
           <Image
             src={profile.banner_url}
@@ -157,7 +157,7 @@ export default function PublicProfilePage() {
                     href={`/manga/${manga.slug}`}
                     className="group"
                   >
-                    <div className="relative aspect-[3/4] overflow-hidden rounded-lg border border-[var(--border)] transition-all group-hover:border-[var(--accent)]">
+                    <div className="relative aspect-[3/4] overflow-hidden rounded-[3px] border border-[var(--border)] transition-all group-hover:border-[var(--accent)]">
                       {manga.cover_image ? (
                         <Image
                           src={manga.cover_image}
@@ -180,7 +180,7 @@ export default function PublicProfilePage() {
                                 ? "secondary"
                                 : "warning"
                           }
-                          className="!text-green-400 max-w-full truncate rounded-lg border-2 border-[var(--border)] bg-[var(--muted)]/60 px-1.5 py-0.5 font-bold text-[10px] text-[var(--muted-foreground)] shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-sm"
+                          className="!text-green-400 max-w-full truncate rounded-[3px] border-2 border-[var(--border)] bg-[var(--muted)]/60 px-1.5 py-0.5 font-bold text-[10px] text-[var(--muted-foreground)] shadow-[0_4px_12px_rgba(0,0,0,0.5)] sm:px-3 sm:py-1.5 sm:text-sm"
                         >
                           {manga.status === "completed"
                             ? "დასრულებული"

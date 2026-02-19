@@ -135,7 +135,7 @@ export function CommentItem({
                 <MoreVertical className="h-4 w-4" />
               </Button>
               {isMenuOpen && (
-                <div className="absolute right-0 z-50 mt-1 w-40 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] py-1 shadow-lg">
+                <div className="absolute right-0 z-50 mt-1 w-40 overflow-hidden rounded-[3px] border border-[var(--border)] bg-[var(--card)] py-1 shadow-lg">
                   {isOwner && (
                     <Button
                       variant="ghost"
@@ -181,7 +181,7 @@ export function CommentItem({
                   }
                 }
               }}
-              className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-[var(--foreground)] text-base focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+              className="w-full resize-none rounded-[3px] border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-[var(--foreground)] text-base focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
               rows={3}
               maxLength={2000}
             />
@@ -246,7 +246,7 @@ export function CommentItem({
                 }
               }}
               placeholder="დაწერე პასუხი..."
-              className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-[var(--foreground)] text-base placeholder:text-[var(--muted-foreground)] focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+              className="w-full resize-none rounded-[3px] border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-[var(--foreground)] text-base placeholder:text-[var(--muted-foreground)] focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
               rows={2}
               maxLength={2000}
               disabled={isReplying}

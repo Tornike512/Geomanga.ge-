@@ -7,10 +7,8 @@ export function Card({ className, children, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        // Glass effect card - semi-transparent with backdrop blur
-        "rounded-lg border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm transition-all duration-300 ease-out",
-        // Hover state - brightened border, slightly more opaque
-        "hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)]",
+        "rounded-[3px] border border-[var(--border)] bg-[var(--card)] p-6 transition-colors duration-100",
+        "hover:border-[var(--border-hover)]",
         className,
       )}
       {...props}
@@ -32,7 +30,7 @@ export function CardTitle({ className, children, ...props }: CardProps) {
   return (
     <h3
       className={cn(
-        "font-semibold text-2xl text-[var(--foreground)] leading-tight tracking-tight",
+        "font-semibold text-2xl text-[var(--foreground)] leading-tight",
         className,
       )}
       {...props}

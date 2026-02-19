@@ -327,7 +327,7 @@ export default function RegisterPage() {
 
                 {/* Error Message */}
                 {registerForm.formState.errors.root && (
-                  <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+                  <div className="rounded-[3px] border border-red-500/30 bg-red-500/10 p-4">
                     <p className="text-red-400 text-sm">
                       {registerForm.formState.errors.root.message}
                     </p>
@@ -437,7 +437,7 @@ export default function RegisterPage() {
 
                 {/* Error Message */}
                 {otpForm.formState.errors.root && (
-                  <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+                  <div className="rounded-[3px] border border-red-500/30 bg-red-500/10 p-4">
                     <p className="text-red-400 text-sm">
                       {otpForm.formState.errors.root.message}
                     </p>

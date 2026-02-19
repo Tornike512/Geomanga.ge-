@@ -36,7 +36,7 @@ export function CommentForm({
 
   if (!currentUser) {
     return (
-      <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 text-center">
+      <div className="rounded-[3px] border border-[var(--border)] bg-[var(--card)] p-4 text-center">
         <p className="text-[var(--muted-foreground)] text-sm">
           კომენტარის დასატოვებლად{" "}
           <Link href="/login" className="text-[var(--accent)] hover:underline">
@@ -62,7 +62,7 @@ export function CommentForm({
           }
         }}
         placeholder="დაწერე კომენტარი..."
-        className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-[var(--foreground)] text-base placeholder:text-[var(--muted-foreground)] focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+        className="w-full resize-none rounded-[3px] border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-[var(--foreground)] text-base placeholder:text-[var(--muted-foreground)] focus:border-[var(--accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
         rows={3}
         maxLength={2000}
         disabled={isSubmitting}

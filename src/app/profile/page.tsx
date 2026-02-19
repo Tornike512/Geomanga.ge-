@@ -174,7 +174,7 @@ export default function ProfilePage() {
   return (
     <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 py-8 sm:px-4 md:px-8 md:py-12">
       {/* Banner Section */}
-      <div className="relative mb-8 aspect-[3/1] w-full overflow-hidden rounded-lg bg-gradient-to-r from-[var(--accent)]/20 to-[var(--accent)]/10">
+      <div className="relative mb-8 aspect-[3/1] w-full overflow-hidden rounded-[3px] bg-gradient-to-r from-[var(--accent)]/20 to-[var(--accent)]/10">
         {user.banner_url && (
           <Image
             src={user.banner_url}
@@ -420,7 +420,7 @@ export default function ProfilePage() {
                   disabled={!isEditing}
                   maxLength={500}
                   rows={4}
-                  className="w-full rounded-md border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] text-base placeholder:text-[var(--muted-foreground)] focus:border-[var(--accent)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-[3px] border border-[var(--border)] bg-[var(--input)] px-3 py-2 text-[var(--foreground)] text-base placeholder:text-[var(--muted-foreground)] focus:border-[var(--accent)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                   placeholder="მოგვიყევით თქვენს შესახებ..."
                 />
                 <p className="mt-1 text-[var(--muted-foreground)] text-xs">
@@ -947,7 +947,7 @@ function LibraryFullSection() {
           className="w-full"
         />
       </div>
-      <div className="mb-6 hidden overflow-x-auto rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 backdrop-blur-sm lg:block">
+      <div className="mb-6 hidden overflow-x-auto rounded-[3px] border border-[var(--border)] bg-[var(--card)] p-1 lg:block">
         <div className="flex gap-1">
           {(Object.keys(LIBRARY_TABS) as LibraryTab[]).map((tabKey) => (
             <Button
@@ -957,7 +957,7 @@ function LibraryFullSection() {
                 setActiveTab(tabKey);
                 setCurrentPage(1);
               }}
-              className={`flex-1 cursor-pointer whitespace-nowrap rounded-md px-3 py-3 text-center font-medium text-sm transition-all duration-200 ${
+              className={`flex-1 cursor-pointer whitespace-nowrap rounded-[3px] px-3 py-3 text-center font-medium text-sm transition-all duration-200 ${
                 activeTab === tabKey
                   ? "bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_0_20px_rgba(245,158,11,0.3)]"
                   : "text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]"
@@ -1051,7 +1051,7 @@ function LibraryFullSection() {
                       href={`/manga/${entry.manga.slug}`}
                       className="group block overflow-hidden"
                     >
-                      <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                      <div className="overflow-hidden rounded-[3px] border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
                         <div className="relative aspect-[2/3] w-full overflow-hidden">
                           {entry.manga.cover_image_url ? (
                             <Image
@@ -1084,7 +1084,7 @@ function LibraryFullSection() {
                     href={`/manga/md-${entry.mangadex_manga_id}`}
                     className="group block overflow-hidden"
                   >
-                    <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                    <div className="overflow-hidden rounded-[3px] border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
                       <div className="relative aspect-[2/3] w-full overflow-hidden">
                         {entry.cover_image_url ? (
                           <Image
@@ -1134,7 +1134,7 @@ function LibraryFullSection() {
                       href={`/read/${history.chapter.id}`}
                       className="group block overflow-hidden"
                     >
-                      <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                      <div className="overflow-hidden rounded-[3px] border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
                         <div className="relative aspect-[2/3] w-full overflow-hidden">
                           <Image
                             src={
@@ -1165,7 +1165,7 @@ function LibraryFullSection() {
                     href={`/read/md-${history.mangadex_chapter_id}`}
                     className="group block overflow-hidden"
                   >
-                    <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                    <div className="overflow-hidden rounded-[3px] border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--border-hover)] hover:shadow-[0_0_20px_rgba(245,158,11,0.1)]">
                       <div className="relative aspect-[2/3] w-full overflow-hidden">
                         {history.cover_image_url ? (
                           <Image

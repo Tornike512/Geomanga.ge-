@@ -181,7 +181,7 @@ export function SearchBar() {
           <div
             ref={dropdownRef}
             style={dropdownStyle}
-            className={`z-[61] origin-top rounded-lg border border-[var(--border)] bg-[var(--background)]/95 shadow-xl backdrop-blur-md transition-all duration-200 ease-out ${
+            className={`z-[61] origin-top rounded-[3px] border border-[var(--border)] bg-[var(--elevated)] shadow-xl transition-all duration-200 ease-out ${
               isVisible
                 ? "scale-100 opacity-100"
                 : "pointer-events-none scale-95 opacity-0"

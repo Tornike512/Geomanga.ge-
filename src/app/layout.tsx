@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
 import { Footer, Header } from "@/components/layout";
-import { NoiseTexture } from "@/components/noise-texture";
 import { AppProviders } from "@/providers";
 import { cn } from "@/utils/cn";
 
@@ -26,7 +25,7 @@ export default async function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@300..700&family=JetBrains+Mono:wght@400..700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap"
           rel="stylesheet"
         />
         <link
@@ -45,7 +44,6 @@ export default async function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={cn("min-h-screen antialiased")}>
-        <NoiseTexture />
         <AppProviders>
           <div className="mx-auto flex min-h-screen w-full max-w-[1920px] flex-col">
             <Header />

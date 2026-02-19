@@ -125,7 +125,7 @@ export function BannerCropModal({
       {/* Backdrop */}
       <Button
         variant="unstyled"
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/70"
         onClick={handleClose}
         tabIndex={-1}
         aria-label="Close crop modal"
@@ -135,7 +135,7 @@ export function BannerCropModal({
 
       {/* Modal */}
       <div
-        className={`relative z-10 mx-4 flex w-full max-w-7xl flex-col rounded-lg border border-[var(--border)] bg-[var(--card)] shadow-2xl transition-all duration-200 ${
+        className={`relative z-10 mx-4 flex w-full max-w-7xl flex-col rounded-[3px] border border-[var(--border)] bg-[var(--card)] shadow-2xl transition-all duration-200 ${
           isVisible ? "scale-100" : "scale-95"
         }`}
       >

@@ -257,7 +257,7 @@ export default function ForgotPasswordPage() {
 
                 {/* Error Message */}
                 {requestForm.formState.errors.root && (
-                  <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+                  <div className="rounded-[3px] border border-red-500/30 bg-red-500/10 p-4">
                     <p className="text-red-400 text-sm">
                       {requestForm.formState.errors.root.message}
                     </p>
@@ -351,7 +351,7 @@ export default function ForgotPasswordPage() {
 
                 {/* Error Message */}
                 {verifyForm.formState.errors.root && (
-                  <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+                  <div className="rounded-[3px] border border-red-500/30 bg-red-500/10 p-4">
                     <p className="text-red-400 text-sm">
                       {verifyForm.formState.errors.root.message}
                     </p>

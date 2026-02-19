@@ -38,7 +38,7 @@ export function MangaDexList() {
         <Link
           key={manga.id}
           href={`/manga/md-${manga.id}`}
-          className="group overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all hover:border-[var(--accent)]"
+          className="group overflow-hidden rounded-[3px] border border-[var(--border)] bg-[var(--card)] transition-all hover:border-[var(--accent)]"
         >
           <div className="relative aspect-[3/4] w-full overflow-hidden">
             {manga.coverUrl ? (

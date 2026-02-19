@@ -47,14 +47,14 @@ export function MangaCard({ manga, compact, eagerLoad }: MangaCardProps) {
 
   return (
     <Link href={`/manga/${manga.slug}`} className="block h-full">
-      <Card className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] p-0 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:border-[var(--border-hover)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)]">
-        <div className="relative aspect-[3/4] overflow-hidden bg-[var(--muted)]/40">
+      <Card className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-[3px] border border-[var(--border)] bg-[var(--card)] p-0 transition-colors duration-100 hover:border-[var(--border-hover)]">
+        <div className="relative aspect-[3/4] overflow-hidden bg-[var(--elevated)]">
           <Image
             src={getCoverUrl(manga.cover_image_url)}
             alt={manga.title}
             width={300}
             height={400}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-[filter] duration-150 group-hover:brightness-110"
             loading={eagerLoad ? "eager" : "lazy"}
           />
           {/* Translation Status Badge - Top Left */}
@@ -66,7 +66,7 @@ export function MangaCard({ manga, compact, eagerLoad }: MangaCardProps) {
                     ? "success"
                     : "warning"
                 }
-                className="!text-green-400 rounded-lg border-2 border-[var(--border)] bg-[var(--muted)]/60 px-1.5 py-0.5 font-bold text-[10px] text-[var(--muted-foreground)] shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-sm"
+                className="px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-0.5 sm:text-xs"
               >
                 {getTranslationStatusLabel(manga.translation_status)}
               </Badge>
@@ -84,7 +84,7 @@ export function MangaCard({ manga, compact, eagerLoad }: MangaCardProps) {
                       ? "warning"
                       : "danger"
               }
-              className="!text-green-400 rounded-lg border-2 border-[var(--border)] bg-[var(--muted)]/60 px-1.5 py-0.5 font-bold text-[10px] text-[var(--muted-foreground)] shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-3 sm:py-1.5 sm:text-sm"
+              className="px-1.5 py-0.5 text-[10px] sm:px-2 sm:py-0.5 sm:text-xs"
             >
               {getMangaStatusLabel(manga.status)}
             </Badge>
@@ -94,7 +94,7 @@ export function MangaCard({ manga, compact, eagerLoad }: MangaCardProps) {
           className={`flex min-w-0 flex-col ${compact ? "h-auto p-2" : "h-[180px] p-4"}`}
         >
           <h3
-            className={`mb-2 truncate font-medium text-[var(--foreground)] tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)] ${compact ? "text-sm" : "text-base"}`}
+            className={`mb-2 truncate font-medium text-[var(--foreground)] transition-colors duration-100 group-hover:text-[var(--accent)] ${compact ? "text-sm" : "text-base"}`}
           >
             {manga.title}
           </h3>

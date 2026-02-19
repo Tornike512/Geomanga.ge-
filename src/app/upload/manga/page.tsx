@@ -505,7 +505,7 @@ export default function UploadMangaPage() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Left Column - Cover Image */}
           <div className="lg:col-span-1">
-            <Card className="overflow-hidden border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+            <Card className="overflow-hidden border border-[var(--border)] bg-[var(--card)] p-6">
               <h3 className="mb-6 font-semibold text-lg tracking-tight">
                 ყდის სურათი *
               </h3>
@@ -580,7 +580,7 @@ export default function UploadMangaPage() {
 
           {/* Right Column - Form Fields */}
           <div className="space-y-8 overflow-visible lg:col-span-2">
-            <Card className="relative z-10 overflow-visible border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+            <Card className="relative z-10 overflow-visible border border-[var(--border)] bg-[var(--card)] p-6">
               <h3 className="mb-6 font-semibold text-lg tracking-tight">
                 ძირითადი ინფორმაცია
               </h3>
@@ -814,7 +814,7 @@ export default function UploadMangaPage() {
             </Card>
 
             {/* Genres */}
-            <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+            <Card className="border border-[var(--border)] bg-[var(--card)] p-6">
               <h3 className="mb-4 font-semibold text-lg tracking-tight">
                 ჟანრები
               </h3>
@@ -844,7 +844,7 @@ export default function UploadMangaPage() {
 
             {/* Tags (from MangaDex) */}
             {Object.keys(tagsByGroup).length > 0 && (
-              <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+              <Card className="border border-[var(--border)] bg-[var(--card)] p-6">
                 <h3 className="mb-4 font-semibold text-lg tracking-tight">
                   თეგები
                 </h3>
@@ -889,7 +889,7 @@ export default function UploadMangaPage() {
             )}
 
             {/* Chapters */}
-            <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+            <Card className="border border-[var(--border)] bg-[var(--card)] p-6">
               <h3 className="mb-4 font-semibold text-lg tracking-tight">
                 თავები *
               </h3>
@@ -899,7 +899,7 @@ export default function UploadMangaPage() {
                 <div className="mb-6">
                   <div
                     {...getRootProps()}
-                    className={`cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
+                    className={`cursor-pointer rounded-[3px] border-2 border-dashed p-6 text-center transition-colors ${
                       isDragActive
                         ? "border-[var(--accent)] bg-[var(--accent)]/10"
                         : "border-[var(--border)] bg-[var(--muted)] hover:border-[var(--accent)] hover:bg-[var(--muted)]/50"
@@ -941,7 +941,7 @@ export default function UploadMangaPage() {
                     {chapters.map((chapter, index) => (
                       <div
                         key={chapter.id}
-                        className="rounded-lg border border-[var(--border)] bg-[var(--muted)] p-4"
+                        className="rounded-[3px] border border-[var(--border)] bg-[var(--muted)] p-4"
                       >
                         <div className="mb-3 flex items-center justify-between">
                           <h4 className="font-medium text-sm">
@@ -1070,7 +1070,7 @@ export default function UploadMangaPage() {
 
             {/* Upload Progress */}
             {isUploading && (
-              <Card className="border border-[var(--border)] bg-[var(--card)] p-6 backdrop-blur-sm">
+              <Card className="border border-[var(--border)] bg-[var(--card)] p-6">
                 <div className="mb-2 flex items-center justify-between text-sm">
                   <span>{currentStep}</span>
                   <span>{Math.round(uploadProgress)}%</span>

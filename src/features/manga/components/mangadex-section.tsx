@@ -20,7 +20,7 @@ export function MangaDexSection() {
             პოპულარული მანგა MangaDex-დან
           </p>
         </div>
-        <div className="flex min-h-[200px] items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] backdrop-blur-sm">
+        <div className="flex min-h-[200px] items-center justify-center rounded-[3px] border border-[var(--border)] bg-[var(--card)]">
           <p className="text-[var(--muted-foreground)] text-lg">
             მონაცემების ჩატვირთვა ვერ მოხერხდა
           </p>
@@ -46,7 +46,7 @@ export function MangaDexSection() {
           <Spinner size="lg" />
         </div>
       ) : !mangaList || mangaList.length === 0 ? (
-        <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] backdrop-blur-sm">
+        <div className="flex min-h-[400px] items-center justify-center rounded-[3px] border border-[var(--border)] bg-[var(--card)]">
           <p className="text-[var(--muted-foreground)] text-lg">
             მანგა არ მოიძებნა
           </p>

@@ -746,7 +746,7 @@ function BrowseContent() {
           <span className="text-[var(--muted-foreground)] text-sm">
             ავტორი:
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--accent)]/50 bg-[var(--accent)]/10 px-3 py-1.5 font-medium text-[var(--accent)] text-sm">
+          <span className="inline-flex items-center gap-1.5 rounded-[3px] border border-[var(--accent)]/50 bg-[var(--accent)]/10 px-3 py-1.5 font-medium text-[var(--accent)] text-sm">
             {authorFilter}
             <Button
               variant="unstyled"
@@ -764,7 +764,7 @@ function BrowseContent() {
       {genreNameFilter && (
         <div className="mb-4 flex items-center gap-2">
           <span className="text-[var(--muted-foreground)] text-sm">ჟანრი:</span>
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--accent)]/50 bg-[var(--accent)]/10 px-3 py-1.5 font-medium text-[var(--accent)] text-sm">
+          <span className="inline-flex items-center gap-1.5 rounded-[3px] border border-[var(--accent)]/50 bg-[var(--accent)]/10 px-3 py-1.5 font-medium text-[var(--accent)] text-sm">
             {genreNameFilter}
             <Button
               variant="unstyled"
@@ -1069,7 +1069,7 @@ function BrowseContent() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsFilterModalOpen(false)}
-                className="rounded-lg p-2"
+                className="rounded-[3px] p-2"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
@@ -1162,7 +1162,7 @@ function BrowseContent() {
                       }
                       size="sm"
                       onClick={() => toggleLocalDraftGenre(genre.id)}
-                      className={`rounded-lg px-3 py-1.5 text-sm ${
+                      className={`rounded-[3px] px-3 py-1.5 text-sm ${
                         isIncluded || isExcluded
                           ? ""
                           : "hover:border-[var(--border-hover)]"
@@ -1207,7 +1207,7 @@ function BrowseContent() {
                         size="sm"
                         onClick={() => toggleLocalDraftTag(tag.id)}
                         disabled={!backendId}
-                        className={`rounded-lg px-3 py-1.5 text-sm ${
+                        className={`rounded-[3px] px-3 py-1.5 text-sm ${
                           isIncluded || isExcluded
                             ? ""
                             : "hover:border-[var(--border-hover)]"
@@ -1283,7 +1283,7 @@ function BrowseContent() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsFilterModalOpen(false)}
-                className="rounded-lg p-2"
+                className="rounded-[3px] p-2"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
@@ -1362,7 +1362,7 @@ function BrowseContent() {
                         }
                         size="sm"
                         onClick={() => toggleMangadexDraftTag(tag.id)}
-                        className={`rounded-lg px-3 py-1.5 text-sm ${
+                        className={`rounded-[3px] px-3 py-1.5 text-sm ${
                           isIncluded || isExcluded
                             ? ""
                             : "hover:border-[var(--border-hover)]"

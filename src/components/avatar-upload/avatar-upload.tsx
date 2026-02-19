@@ -103,7 +103,7 @@ export function AvatarUpload({ onFileSelect, error }: AvatarUploadProps) {
 
       <Button
         variant="ghost"
-        className={`relative flex h-auto w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors ${
+        className={`relative flex h-auto w-full cursor-pointer flex-col items-center justify-center rounded-[3px] border-2 border-dashed p-6 transition-colors ${
           isDragging
             ? "border-[var(--accent)] bg-[var(--accent)]/5"
             : displayError
@@ -142,7 +142,7 @@ export function AvatarUpload({ onFileSelect, error }: AvatarUploadProps) {
                 e.stopPropagation();
                 handleRemove();
               }}
-              className="rounded-md bg-red-500/10 px-4 py-2 text-red-400 hover:bg-red-500/20 hover:text-red-400"
+              className="rounded-[3px] bg-red-500/10 px-4 py-2 text-red-400 hover:bg-red-500/20 hover:text-red-400"
             >
               წაშლა
             </Button>

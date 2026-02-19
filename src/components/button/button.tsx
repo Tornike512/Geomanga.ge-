@@ -25,30 +25,27 @@ export const Button = ({
       type={type}
       disabled={loading || props.disabled}
       className={cn(
-        // Base styles - Minimalist Dark: smooth, refined, no uppercase
         variant !== "unstyled" &&
-          "inline-flex cursor-pointer items-center justify-center font-medium tracking-normal transition-all duration-200 ease-out",
+          "inline-flex cursor-pointer items-center justify-center font-medium tracking-normal transition-colors duration-100 ease-out",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
-        "disabled:pointer-events-none disabled:opacity-50",
-        variant !== "unstyled" && "active:scale-[0.98]", // Subtle press effect
+        "disabled:pointer-events-none disabled:opacity-40",
         // Variant styles
         {
-          // Primary (Amber) - warm glow on hover
-          "rounded-lg border border-transparent bg-[var(--accent)] text-[var(--accent-foreground)] shadow-sm hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] hover:brightness-110":
+          // Primary — solid violet fill
+          "rounded-[3px] border border-transparent bg-[var(--accent)] text-[var(--accent-foreground)] hover:brightness-110 active:brightness-95":
             variant === "default",
-          // Ghost - transparent, subtle hover
-          "rounded-lg text-[var(--foreground)] hover:bg-white/5":
+          // Ghost — transparent, subtle hover
+          "rounded-[3px] text-[var(--foreground)] hover:bg-white/5":
             variant === "ghost",
-          // Outline - glass effect border
-          "rounded-lg border border-[var(--border)] bg-transparent text-[var(--foreground)] hover:border-[var(--border-hover)] hover:bg-white/5":
+          // Outline — bordered, no fill
+          "rounded-[3px] border border-[var(--border)] bg-transparent text-[var(--foreground)] hover:border-[var(--border-hover)] hover:bg-white/5":
             variant === "outline",
-          // Destructive - red with amber focus
-          "rounded-lg border border-transparent bg-red-600 text-white shadow-sm hover:shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:brightness-110":
+          // Destructive — red
+          "rounded-[3px] border border-transparent bg-red-700 text-white hover:brightness-110 active:brightness-95":
             variant === "destructive",
-          // Unstyled - minimal styling, allows full customization via className
           "": variant === "unstyled",
         },
-        // Size styles (not applied for unstyled variant)
+        // Size styles
         variant !== "unstyled" && {
           "h-11 px-6 py-3 text-base": size === "default",
           "h-9 px-4 py-2 text-sm": size === "sm",

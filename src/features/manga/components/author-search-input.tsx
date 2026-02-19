@@ -133,8 +133,8 @@ export const AuthorSearchInput = ({
         id={listboxId}
         role="listbox"
         className={cn(
-          "absolute left-0 z-[9999] mt-1 w-full overflow-hidden rounded-lg",
-          "border border-[var(--border)] bg-[var(--card-solid)] shadow-black/20 shadow-xl backdrop-blur-md",
+          "absolute left-0 z-[9999] mt-1 w-full overflow-hidden rounded-[3px]",
+          "border border-[var(--border)] bg-[var(--card-solid)] shadow-black/20 shadow-xl",
           "origin-top transition-all duration-200 ease-out",
           isOpen && authors.length > 0
             ? "visible scale-100 opacity-100"

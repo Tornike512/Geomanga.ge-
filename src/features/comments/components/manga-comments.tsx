@@ -140,7 +140,7 @@ export function MangaComments({ mangaId }: MangaCommentsProps) {
           )}
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] py-12">
+        <div className="flex flex-col items-center justify-center rounded-[3px] border border-[var(--border)] bg-[var(--card)] py-12">
           <MessageCircle className="h-12 w-12 text-[var(--muted-foreground)]" />
           <p className="mt-3 text-center text-[var(--muted-foreground)]">
             კომენტარები ჯერ არ არის

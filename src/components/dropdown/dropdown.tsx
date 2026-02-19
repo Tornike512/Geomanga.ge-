@@ -148,7 +148,7 @@ export const Dropdown = ({
     <div
       ref={dropdownRef}
       className={cn(
-        "relative inline-block transition-[min-width] duration-200 ease-out",
+        "relative inline-block transition-[min-width] duration-150 ease-out",
         className,
       )}
       style={expandedWidth ? { minWidth: expandedWidth } : undefined}
@@ -165,23 +165,17 @@ export const Dropdown = ({
         onClick={handleToggle}
         onKeyDown={handleKeyDown}
         className={cn(
-          // Base styles
-          "inline-flex w-full cursor-pointer items-center justify-between gap-2 font-medium text-base tracking-normal",
-          "rounded-lg border px-4 py-2.5",
-          "transition-all duration-200 ease-out",
+          "inline-flex w-full cursor-pointer items-center justify-between gap-2 font-medium text-base",
+          "rounded-[3px] border px-4 py-2.5",
+          "transition-colors duration-100 ease-out",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
-          // Default state - glass effect
-          "border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] backdrop-blur-sm",
-          // Hover state
-          "hover:border-[var(--border-hover)] hover:bg-[var(--card)]",
-          // Open state
+          "border-[var(--border)] bg-[var(--elevated)] text-[var(--foreground)]",
+          "hover:border-[var(--border-hover)]",
           isOpen && [
             "border-[var(--accent)]/50",
-            "ring-2 ring-[var(--accent)]/20",
-            "bg-[var(--muted)]",
+            "ring-1 ring-[var(--accent)]/20",
           ],
-          // Disabled state
-          disabled && "pointer-events-none opacity-50",
+          disabled && "pointer-events-none opacity-40",
         )}
       >
         <span
@@ -193,10 +187,10 @@ export const Dropdown = ({
           {selectedOption?.label || placeholder}
         </span>
 
-        {/* Chevron Icon with rotation animation */}
+        {/* Chevron Icon */}
         <svg
           className={cn(
-            "h-4 w-4 shrink-0 text-[var(--muted-foreground)] transition-transform duration-200 ease-out",
+            "h-4 w-4 shrink-0 text-[var(--muted-foreground)] transition-transform duration-150 ease-out",
             isOpen && "rotate-180 text-[var(--accent)]",
           )}
           xmlns="http://www.w3.org/2000/svg"
@@ -222,15 +216,12 @@ export const Dropdown = ({
         role="listbox"
         aria-label={ariaLabel}
         className={cn(
-          // Base styles
-          "absolute left-0 z-[9999] mt-2 w-max min-w-full overflow-hidden rounded-lg",
-          "border border-[var(--border)] bg-[var(--card-solid)] shadow-black/20 shadow-xl backdrop-blur-md",
-          // Animation styles
-          "origin-top transition-all duration-200 ease-out",
+          "absolute left-0 z-[9999] mt-1 w-max min-w-full overflow-hidden rounded-[3px]",
+          "border border-[var(--border)] bg-[var(--elevated)] shadow-black/30 shadow-lg",
+          "origin-top transition-all duration-150 ease-out",
           isOpen
             ? "visible scale-100 opacity-100"
             : "invisible scale-95 opacity-0",
-          // Max height with scroll
           "max-h-60 overflow-y-auto",
         )}
       >
@@ -255,17 +246,13 @@ export const Dropdown = ({
               onMouseEnter={() => setHighlightedIndex(index)}
               onMouseLeave={() => setHighlightedIndex(-1)}
               className={cn(
-                // Base styles
-                "flex cursor-pointer items-center justify-between px-4 py-2.5 text-base",
-                "transition-all duration-150 ease-out",
-                // Default state
+                "flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm",
+                "transition-colors duration-100 ease-out",
                 "text-[var(--foreground)]",
-                // Highlighted/Hover state
                 (isHighlighted || isSelected) && [
                   "bg-[var(--accent-muted)]",
                   isSelected && "text-[var(--accent)]",
                 ],
-                // Selected state indicator
                 isSelected && "font-medium",
               )}
             >

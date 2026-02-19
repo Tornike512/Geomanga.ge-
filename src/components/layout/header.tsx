@@ -23,12 +23,12 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-[60] w-full overflow-x-hidden border-[var(--border)] border-b bg-[var(--background)]/80 backdrop-blur-md">
+      <header className="sticky top-0 z-[60] w-full overflow-x-hidden border-[#2E2E2E] border-b bg-[#141414]">
         <div className="container mx-auto max-w-[1920px] overflow-x-hidden px-2 sm:px-4 md:px-8">
           <div className="flex h-16 w-full items-center gap-2 overflow-x-hidden sm:gap-6">
             <Link
               href="/"
-              className="flex shrink-0 items-center gap-3 transition-opacity duration-200 hover:opacity-80 focus-visible:text-[var(--accent)] focus-visible:outline-none"
+              className="flex shrink-0 items-center gap-3 opacity-90 transition-opacity duration-150 hover:opacity-100 focus-visible:outline-none"
             >
               <Image
                 src="/images/geomanga-logo.png"
@@ -43,7 +43,7 @@ export function Header() {
             <nav className="hidden shrink-0 items-center gap-6 lg:flex">
               <Link
                 href="/browse"
-                className="text-[var(--muted-foreground)] text-sm transition-colors duration-200 hover:text-[var(--foreground)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
+                className="text-[#888888] text-sm transition-colors duration-100 hover:text-[#F0F0F0] focus-visible:text-[var(--accent)] focus-visible:outline-none"
               >
                 ნავიგაცია
               </Link>
@@ -55,7 +55,7 @@ export function Header() {
 
             <div className="ml-auto hidden shrink-0 items-center gap-4 lg:flex">
               {isLoading ? (
-                <div className="h-9 w-9 animate-pulse rounded-full bg-[var(--muted)]/40" />
+                <div className="h-9 w-9 animate-pulse rounded-[3px] bg-[var(--elevated)]" />
               ) : user ? (
                 <>
                   <NotificationBell isLoggedIn={true} />
@@ -82,12 +82,12 @@ export function Header() {
               </div>
             )}
 
-            {/* Hamburger menu - visible only on < sm screens */}
+            {/* Hamburger menu */}
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-              className="h-auto shrink-0 p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] lg:hidden"
+              className="h-auto shrink-0 p-1 text-[#888888] hover:text-[#F0F0F0] lg:hidden"
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMobileMenuOpen ? (
@@ -102,7 +102,7 @@ export function Header() {
 
       {/* Mobile dropdown menu */}
       <div
-        className={`fixed top-16 right-0 left-0 z-[59] origin-top transform border-[var(--border)] border-b bg-[var(--background)] shadow-lg transition-all duration-300 ease-in-out lg:hidden ${
+        className={`fixed top-16 right-0 left-0 z-[59] origin-top transform border-[#2E2E2E] border-b bg-[#141414] transition-all duration-200 ease-out lg:hidden ${
           isMobileMenuOpen
             ? "scale-y-100 opacity-100"
             : "pointer-events-none scale-y-0 opacity-0"
@@ -113,7 +113,7 @@ export function Header() {
           <Link
             href="/profile"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="block border-[var(--border)] border-b px-4 py-3 transition-colors hover:bg-[var(--accent)]/10"
+            className="block border-[#2E2E2E] border-b px-4 py-3 transition-colors hover:bg-[var(--elevated)]"
           >
             <div className="flex items-center gap-3">
               <Avatar src={user.avatar_url} alt={user.username} size="md" />
@@ -124,18 +124,18 @@ export function Header() {
 
         {/* Navigation links */}
         <nav className="px-4 py-2">
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             <Link
               href="/"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
+              className="block rounded-[3px] px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--elevated)]"
             >
               მთავარი
             </Link>
             <Link
               href="/browse"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
+              className="block rounded-[3px] px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--elevated)]"
             >
               ნავიგაცია
             </Link>
@@ -143,7 +143,7 @@ export function Header() {
               <Link
                 href="/profile"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block rounded-lg px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--accent)]/10"
+                className="block rounded-[3px] px-4 py-3 text-[var(--foreground)] transition-colors hover:bg-[var(--elevated)]"
               >
                 პროფილი
               </Link>
@@ -152,9 +152,9 @@ export function Header() {
         </nav>
 
         {/* Auth section */}
-        <div className="border-[var(--border)] border-t px-4 py-3">
+        <div className="border-[#2E2E2E] border-t px-4 py-3">
           {isLoading ? (
-            <div className="h-10 animate-pulse rounded-lg bg-[var(--muted)]/40" />
+            <div className="h-10 animate-pulse rounded-[3px] bg-[var(--elevated)]" />
           ) : user ? (
             <MobileLogoutButton onLogout={() => setIsMobileMenuOpen(false)} />
           ) : (
@@ -183,7 +183,7 @@ export function Header() {
       {/* Mobile menu backdrop */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 z-[58] bg-black/30 lg:hidden"
+          className="fixed inset-0 z-[58] bg-black/40 lg:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-hidden="true"
         />
@@ -207,7 +207,7 @@ function UserMenu({
     <div className="flex items-center gap-3">
       <Link
         href="/profile"
-        className="flex items-center gap-3 transition-colors duration-200 hover:text-[var(--accent)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
+        className="flex items-center gap-3 transition-colors duration-100 hover:text-[var(--accent)] focus-visible:text-[var(--accent)] focus-visible:outline-none"
       >
         <Avatar src={user.avatar_url} alt={user.username} size="md" />
         <span className="hidden font-medium text-sm sm:inline">

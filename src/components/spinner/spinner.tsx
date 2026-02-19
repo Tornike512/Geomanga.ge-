@@ -28,8 +28,8 @@ export function Spinner({ size = "lg", className }: SpinnerProps) {
       style={{
         borderWidth: borderWidths[size],
         borderStyle: "solid",
-        borderColor: "rgba(245, 158, 11, 0.25)",
-        borderTopColor: "#f59e0b",
+        borderColor: "rgba(124, 58, 237, 0.2)",
+        borderTopColor: "#7C3AED",
       }}
       aria-label="იტვირთება"
     >
