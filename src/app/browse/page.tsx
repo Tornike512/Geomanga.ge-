@@ -6,7 +6,6 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/button";
 import { Dropdown } from "@/components/dropdown";
 import { Input } from "@/components/input";
-import { useGenres } from "@/features/genres/hooks/use-genres";
 import {
   useMangaDexBrowse,
   useMangaDexTags,
@@ -110,8 +109,6 @@ interface LocalFilterState {
   translation_status: TranslationStatus | undefined;
   content_type: ContentType | undefined;
   age_rating: AgeRating | undefined;
-  genres: number[];
-  excluded_genres: number[];
   tags: number[];
   excluded_tags: number[];
   sort_by: MangaListParams["sort_by"];
@@ -135,8 +132,6 @@ interface LocalModalDraft {
   age_rating: AgeRating | undefined;
   content_type: ContentType | undefined;
   translation_status: TranslationStatus | undefined;
-  genres: number[];
-  excluded_genres: number[];
   tags: number[];
   excluded_tags: number[];
 }
@@ -195,19 +190,6 @@ function BrowseContent() {
         ? (searchParams.get("translation_status") as TranslationStatus) ||
           undefined
         : undefined,
-    genres:
-      initialSource === "local"
-        ? searchParams.get("genres")?.split(",").map(Number).filter(Boolean) ||
-          []
-        : [],
-    excluded_genres:
-      initialSource === "local"
-        ? searchParams
-            .get("excluded_genres")
-            ?.split(",")
-            .map(Number)
-            .filter(Boolean) || []
-        : [],
     tags:
       initialSource === "local"
         ? searchParams.get("tags")?.split(",").map(Number).filter(Boolean) || []
@@ -270,8 +252,6 @@ function BrowseContent() {
     age_rating: localFilters.age_rating,
     content_type: localFilters.content_type,
     translation_status: localFilters.translation_status,
-    genres: [...localFilters.genres],
-    excluded_genres: [...localFilters.excluded_genres],
     tags: [...localFilters.tags],
     excluded_tags: [...localFilters.excluded_tags],
   });
@@ -289,12 +269,10 @@ function BrowseContent() {
   );
 
   // Data fetching
-  const { data: genres } = useGenres();
   const { data: mangadexTags } = useMangaDexTags();
   const { data: backendTags } = useTags();
 
   // Resolve genre name → source-specific IDs when data loads or source changes
-  const localGenreIds = localFilters.genres;
   const mangadexTagIds = mangadexFilters.includedTags;
   const mangadexDemographic = mangadexFilters.demographic;
 
@@ -302,13 +280,7 @@ function BrowseContent() {
     if (!genreNameFilter) return;
     const nameLower = genreNameFilter.toLowerCase();
 
-    if (source === "local" && genres) {
-      const match = genres.find((g) => g.name.toLowerCase() === nameLower);
-      if (match && !localGenreIds.includes(match.id)) {
-        setLocalFilters((prev) => ({ ...prev, genres: [match.id], page: 1 }));
-        setLocalDraft((prev) => ({ ...prev, genres: [match.id] }));
-      }
-    } else if (source === "mangadex" && mangadexTags) {
+    if (source === "mangadex" && mangadexTags) {
       const tagMatch = mangadexTags.find(
         (t) => t.name.toLowerCase() === nameLower,
       );
@@ -337,9 +309,7 @@ function BrowseContent() {
   }, [
     genreNameFilter,
     source,
-    genres,
     mangadexTags,
-    localGenreIds,
     mangadexTagIds,
     mangadexDemographic,
   ]);
@@ -348,10 +318,7 @@ function BrowseContent() {
   const genreNotFound = (() => {
     if (!genreNameFilter) return false;
     const nameLower = genreNameFilter.toLowerCase();
-    if (source === "local") {
-      if (!genres) return false;
-      return !genres.some((g) => g.name.toLowerCase() === nameLower);
-    }
+    if (source === "local") return false;
     if (!mangadexTags) return false;
     const hasTag = mangadexTags.some((t) => t.name.toLowerCase() === nameLower);
     const hasDemo = DEMOGRAPHICS.some((d) => d === nameLower);
@@ -372,11 +339,6 @@ function BrowseContent() {
   const { data: localData, isLoading: localLoading } = useMangaList({
     ...localFilters,
     language: "georgian",
-    genres: localFilters.genres.length > 0 ? localFilters.genres : undefined,
-    excluded_genres:
-      localFilters.excluded_genres.length > 0
-        ? localFilters.excluded_genres
-        : undefined,
     tags: localFilters.tags.length > 0 ? localFilters.tags : undefined,
     excluded_tags:
       localFilters.excluded_tags.length > 0
@@ -454,10 +416,6 @@ function BrowseContent() {
         params.set("content_type", localFilters.content_type);
       if (localFilters.translation_status)
         params.set("translation_status", localFilters.translation_status);
-      if (localFilters.genres.length > 0)
-        params.set("genres", localFilters.genres.join(","));
-      if (localFilters.excluded_genres.length > 0)
-        params.set("excluded_genres", localFilters.excluded_genres.join(","));
       if (localFilters.tags.length > 0)
         params.set("tags", localFilters.tags.join(","));
       if (localFilters.excluded_tags.length > 0)
@@ -493,8 +451,6 @@ function BrowseContent() {
         age_rating: localFilters.age_rating,
         content_type: localFilters.content_type,
         translation_status: localFilters.translation_status,
-        genres: [...localFilters.genres],
-        excluded_genres: [...localFilters.excluded_genres],
         tags: [...localFilters.tags],
         excluded_tags: [...localFilters.excluded_tags],
       });
@@ -534,8 +490,6 @@ function BrowseContent() {
       age_rating: undefined,
       content_type: undefined,
       translation_status: undefined,
-      genres: [],
-      excluded_genres: [],
       tags: [],
       excluded_tags: [],
     });
@@ -547,35 +501,6 @@ function BrowseContent() {
       demographic: undefined,
       includedTags: [],
       excludedTags: [],
-    });
-  };
-
-  // Toggle genre/tag in draft - handles include/exclude/deselect cycle
-  const toggleLocalDraftGenre = (genreId: number) => {
-    setLocalDraft((prev) => {
-      const isIncluded = prev.genres.includes(genreId);
-      const isExcluded = prev.excluded_genres.includes(genreId);
-
-      if (isIncluded) {
-        // Already included -> move to excluded
-        return {
-          ...prev,
-          genres: prev.genres.filter((id) => id !== genreId),
-          excluded_genres: [...prev.excluded_genres, genreId],
-        };
-      } else if (isExcluded) {
-        // Already excluded -> remove from both (deselect)
-        return {
-          ...prev,
-          excluded_genres: prev.excluded_genres.filter((id) => id !== genreId),
-        };
-      } else {
-        // Not selected -> include
-        return {
-          ...prev,
-          genres: [...prev.genres, genreId],
-        };
-      }
     });
   };
 
@@ -641,53 +566,6 @@ function BrowseContent() {
 
   const handleSourceSwitch = (newSource: DataSource) => {
     if (newSource === source) return;
-
-    if (newSource === "mangadex" && genres && mangadexTags) {
-      const selectedGenreNames = localFilters.genres
-        .map((id) => genres.find((g) => g.id === id)?.name?.toLowerCase())
-        .filter(Boolean) as string[];
-
-      if (selectedGenreNames.length > 0) {
-        const matchingTagIds = mangadexTags
-          .filter(
-            (tag) =>
-              tag.group === "genre" &&
-              selectedGenreNames.includes(tag.name.toLowerCase()),
-          )
-          .map((tag) => tag.id);
-
-        setMangadexFilters((prev) => ({
-          ...prev,
-          includedTags: matchingTagIds,
-          page: 1,
-        }));
-        setMangadexDraft((prev) => ({
-          ...prev,
-          includedTags: matchingTagIds,
-        }));
-      }
-    } else if (newSource === "local" && genres && mangadexTags) {
-      const selectedTagNames = mangadexFilters.includedTags
-        .map((id) => mangadexTags.find((t) => t.id === id)?.name?.toLowerCase())
-        .filter(Boolean) as string[];
-
-      if (selectedTagNames.length > 0) {
-        const matchingGenreIds = genres
-          .filter((g) => selectedTagNames.includes(g.name.toLowerCase()))
-          .map((g) => g.id);
-
-        setLocalFilters((prev) => ({
-          ...prev,
-          genres: matchingGenreIds,
-          page: 1,
-        }));
-        setLocalDraft((prev) => ({
-          ...prev,
-          genres: matchingGenreIds,
-        }));
-      }
-    }
-
     setSource(newSource);
   };
 
@@ -696,8 +574,6 @@ function BrowseContent() {
     (localFilters.translation_status ? 1 : 0) +
     (localFilters.content_type ? 1 : 0) +
     (localFilters.age_rating ? 1 : 0) +
-    localFilters.genres.length +
-    localFilters.excluded_genres.length +
     localFilters.tags.length +
     localFilters.excluded_tags.length;
 
@@ -770,8 +646,6 @@ function BrowseContent() {
               variant="unstyled"
               onClick={() => {
                 setGenreNameFilter("");
-                setLocalFilters((prev) => ({ ...prev, genres: [], page: 1 }));
-                setLocalDraft((prev) => ({ ...prev, genres: [] }));
                 setMangadexFilters((prev) => ({
                   ...prev,
                   includedTags: [],
@@ -1133,46 +1007,6 @@ function BrowseContent() {
                 aria-label="Filter by translation status"
                 className="w-full"
               />
-            </div>
-
-            {/* Genres Filter */}
-            <div className="mb-6">
-              <h3 className="mb-3 font-medium text-[var(--muted-foreground)] text-sm">
-                ჟანრები{" "}
-                <span className="font-normal text-xs">
-                  (ერთხელ - ჩართე, ორჯერ - გამორიცხე)
-                </span>
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {genres?.map((genre) => {
-                  const isIncluded = localDraft.genres.includes(genre.id);
-                  const isExcluded = localDraft.excluded_genres.includes(
-                    genre.id,
-                  );
-                  return (
-                    <Button
-                      key={genre.id}
-                      type="button"
-                      variant={
-                        isIncluded
-                          ? "default"
-                          : isExcluded
-                            ? "destructive"
-                            : "outline"
-                      }
-                      size="sm"
-                      onClick={() => toggleLocalDraftGenre(genre.id)}
-                      className={`rounded-[3px] px-3 py-1.5 text-sm ${
-                        isIncluded || isExcluded
-                          ? ""
-                          : "hover:border-[var(--border-hover)]"
-                      }`}
-                    >
-                      {genre.name_ka || genre.name}
-                    </Button>
-                  );
-                })}
-              </div>
             </div>
 
             {/* Tags Filter (from MangaDex, same as upload page) */}

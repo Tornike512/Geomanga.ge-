@@ -13,7 +13,6 @@ import { Input } from "@/components/input";
 import { Spinner } from "@/components/spinner";
 import { API_URL } from "@/config";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
-import { useGenres } from "@/features/genres/hooks/use-genres";
 import { AuthorSearchInput } from "@/features/manga/components/author-search-input";
 import { HIDDEN_TAG_NAMES } from "@/features/manga/constants/hidden-tags";
 import { useCreateManga } from "@/features/manga/hooks/use-create-manga";
@@ -133,7 +132,6 @@ function ChapterPagesDropzone({
 export default function UploadMangaPage() {
   const router = useRouter();
   const { data: user, isLoading: userLoading } = useCurrentUser();
-  const { data: genres } = useGenres();
   const { data: mangadexTags } = useMangaDexTags();
   const createManga = useCreateManga();
   const uploadCover = useUploadCover();
@@ -150,7 +148,6 @@ export default function UploadMangaPage() {
     contentType: "manga" as ContentType,
     ageRating: AgeRating.FOR_EVERYONE,
     releaseYear: new Date().getFullYear(),
-    genreIds: [] as number[],
     mangadexTagIds: [] as string[],
   });
   const [chapters, setChapters] = useState<
@@ -212,15 +209,6 @@ export default function UploadMangaPage() {
     multiple: false,
     disabled: isUploading,
   });
-
-  const handleGenreToggle = (genreId: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      genreIds: prev.genreIds.includes(genreId)
-        ? prev.genreIds.filter((id) => id !== genreId)
-        : [...prev.genreIds, genreId],
-    }));
-  };
 
   const handleTagToggle = (tagId: string) => {
     setFormData((prev) => ({
@@ -378,7 +366,7 @@ export default function UploadMangaPage() {
         status: formData.status,
         content_type: formData.contentType,
         age_rating: formData.ageRating,
-        genre_ids: formData.genreIds,
+        genre_ids: [],
         mangadex_tag_ids: formData.mangadexTagIds,
         cover_image_url: "",
       });
@@ -819,26 +807,6 @@ export default function UploadMangaPage() {
                 ჟანრები
               </h3>
               <div className="flex flex-wrap gap-2">
-                {genres?.map((genre) => (
-                  <Button
-                    key={genre.id}
-                    type="button"
-                    variant="ghost"
-                    onClick={() => handleGenreToggle(genre.id)}
-                    className="h-auto p-0 hover:bg-transparent"
-                  >
-                    <Badge
-                      variant={
-                        formData.genreIds.includes(genre.id)
-                          ? "secondary"
-                          : "default"
-                      }
-                      className="cursor-pointer transition-all hover:opacity-80"
-                    >
-                      {genre.name_ka}
-                    </Badge>
-                  </Button>
-                ))}
                 {tagsByGroup.genre?.map((tag) => (
                   <Button
                     key={tag.id}
