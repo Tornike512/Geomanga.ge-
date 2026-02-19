@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/button";
 import { Spinner } from "@/components/spinner";
 import { useCurrentUser } from "@/features/auth";
@@ -30,6 +30,20 @@ export function MangaComments({ mangaId }: MangaCommentsProps) {
     page,
     page_size: pageSize,
   });
+
+  // Scroll to comment from URL hash after comments load
+  useEffect(() => {
+    if (!commentsData) return;
+    const hash = window.location.hash;
+    if (!hash) return;
+    const el = document.querySelector(hash);
+    if (el) {
+      setTimeout(
+        () => el.scrollIntoView({ behavior: "smooth", block: "center" }),
+        100,
+      );
+    }
+  }, [commentsData]);
 
   const createComment = useCreateMangaComment(mangaId);
   const deleteComment = useDeleteComment();
@@ -70,7 +84,7 @@ export function MangaComments({ mangaId }: MangaCommentsProps) {
   const hasPrevPage = page > 1;
 
   return (
-    <div className="py-8">
+    <div id="comments" className="py-8">
       {ConfirmModalComponent}
       <div className="mb-6 flex items-center gap-2">
         <MessageCircle className="h-5 w-5 text-[var(--accent)]" />

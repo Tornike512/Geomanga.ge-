@@ -54,13 +54,17 @@ export function NotificationItem({
       return;
     }
 
-    // Comment on manga page (no chapter) → go to manga page
-    if (type === "comment_on_manga" && manga_id) {
+    // Comment/reply on manga page (no chapter) → go to manga page with comment hash
+    if (
+      (type === "comment_on_manga" || type === "reply_to_comment") &&
+      manga_id
+    ) {
       setIsNavigating(true);
       try {
         const manga = await getMangaDetail(manga_id);
         onNavigate?.();
-        router.push(`/manga/${manga.slug}`);
+        const hash = comment_id ? `#comment-${comment_id}` : "#comments";
+        router.push(`/manga/${manga.slug}${hash}`);
       } finally {
         setIsNavigating(false);
       }
