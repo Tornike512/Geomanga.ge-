@@ -86,7 +86,7 @@ export function CommentItem({
   }, []);
 
   return (
-    <div className="flex gap-3">
+    <div id={`comment-${comment.id}`} className="flex gap-3">
       <Link href={`/user/${comment.user_id}`}>
         <Avatar
           src={comment.user.avatar_url}

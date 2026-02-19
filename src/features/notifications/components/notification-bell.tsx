@@ -128,6 +128,7 @@ export function NotificationBell({ isLoggedIn }: NotificationBellProps) {
                   key={n.id}
                   notification={n}
                   onMarkRead={(id) => markRead.mutate(id)}
+                  onNavigate={closePanel}
                 />
               ))
             )}
