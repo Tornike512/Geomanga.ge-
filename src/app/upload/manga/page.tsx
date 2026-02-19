@@ -839,52 +839,72 @@ export default function UploadMangaPage() {
                     </Badge>
                   </Button>
                 ))}
+                {tagsByGroup.genre?.map((tag) => (
+                  <Button
+                    key={tag.id}
+                    type="button"
+                    variant="ghost"
+                    onClick={() => handleTagToggle(tag.id)}
+                    className="h-auto p-0 hover:bg-transparent"
+                  >
+                    <Badge
+                      variant={
+                        formData.mangadexTagIds.includes(tag.id)
+                          ? "secondary"
+                          : "default"
+                      }
+                      className="cursor-pointer transition-all hover:opacity-80"
+                    >
+                      {tag.name}
+                    </Badge>
+                  </Button>
+                ))}
               </div>
             </Card>
 
             {/* Tags (from MangaDex) */}
-            {Object.keys(tagsByGroup).length > 0 && (
+            {Object.keys(tagsByGroup).some((g) => g !== "genre") && (
               <Card className="border border-[var(--border)] bg-[var(--card)] p-6">
                 <h3 className="mb-4 font-semibold text-lg tracking-tight">
                   თეგები
                 </h3>
-                {Object.entries(tagsByGroup).map(([group, groupTags]) => (
-                  <div key={group} className="mb-4 last:mb-0">
-                    <p className="mb-2 font-medium text-[var(--muted-foreground)] text-sm">
-                      {group === "genre"
-                        ? "ჟანრები"
-                        : group === "theme"
+                {Object.entries(tagsByGroup)
+                  .filter(([group]) => group !== "genre")
+                  .map(([group, groupTags]) => (
+                    <div key={group} className="mb-4 last:mb-0">
+                      <p className="mb-2 font-medium text-[var(--muted-foreground)] text-sm">
+                        {group === "theme"
                           ? "თემები"
                           : group === "format"
                             ? "ფორმატი"
                             : group === "content"
                               ? "კონტენტი"
                               : group}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {groupTags.map((tag) => (
-                        <Button
-                          key={tag.id}
-                          type="button"
-                          variant="ghost"
-                          onClick={() => handleTagToggle(tag.id)}
-                          className="h-auto p-0 hover:bg-transparent"
-                        >
-                          <Badge
-                            variant={
-                              formData.mangadexTagIds.includes(tag.id)
-                                ? "secondary"
-                                : "default"
-                            }
-                            className="cursor-pointer transition-all hover:opacity-80"
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {groupTags.map((tag) => (
+                          <Button
+                            key={tag.id}
+                            type="button"
+                            variant="ghost"
+                            onClick={() => handleTagToggle(tag.id)}
+                            className="h-auto p-0 hover:bg-transparent"
                           >
-                            {tag.name}
-                          </Badge>
-                        </Button>
-                      ))}
+                            <Badge
+                              variant={
+                                formData.mangadexTagIds.includes(tag.id)
+                                  ? "secondary"
+                                  : "default"
+                              }
+                              className="cursor-pointer transition-all hover:opacity-80"
+                            >
+                              {tag.name}
+                            </Badge>
+                          </Button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </Card>
             )}
 
